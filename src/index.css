@@ -1,0 +1,237 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --fh-primary: #d72638;
+  --fh-primary-dark: #b21d2c;
+  --fh-primary-light: #f56b76;
+  --fh-accent: #0ea5a4;
+  --fh-bg: #f4f6f8;
+  --fh-card: #ffffff;
+  --fh-text: #111827;
+  --fh-body: #374151;
+  --fh-muted: #6b7280;
+  --fh-border: #e6e9ee;
+  --fh-divider: #eaedf2;
+}
+
+/* Login background texture and abstract detail */
+/* Login background texture and abstract detail for hero */
+.login-bg {
+  /* Base */
+  background-color: #f9f9f9;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle grid + noise + vignette via two pseudo elements */
+.login-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  /* grid: very light 1px lines */
+  /* layered subtle texture: grid + fine fabric lines + tiny dots */
+  background-image:
+    /* faint grid */
+    linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px),
+    /* fabric-like micro-lines */
+    repeating-linear-gradient(135deg, rgba(0,0,0,0.01) 0 1px, rgba(0,0,0,0.01) 1px 2px, transparent 2px 14px),
+    /* tiny dots */
+    radial-gradient(rgba(0,0,0,0.012) 0.5px, transparent 0.5px),
+    /* diagonal soft light band to draw attention */
+    linear-gradient(120deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.012) 40%, rgba(255,255,255,0) 70%);
+  background-size: 56px 56px, 56px 56px, 18px 18px, 6px 6px, 180% 140%;
+  background-position: 0 0, 0 0, 0 0, 0 0, -20% -10%;
+  background-repeat: repeat, repeat, repeat, repeat, no-repeat;
+  mix-blend-mode: normal;
+  opacity: 0.42; /* very subtle */
+  box-shadow: inset 0 28px 48px rgba(0,0,0,0.02), inset 0 -28px 48px rgba(0,0,0,0.02); /* soft vignette */
+}
+
+/* Glow radial detail in top-right corner, very soft */
+.login-bg::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  top: -6%;
+  right: -6%;
+  width: 48%;
+  height: 48%;
+  background: radial-gradient(circle at 100% 0%, rgba(215,38,56,0.10) 0%, rgba(215,38,56,0.045) 30%, rgba(215,38,56,0.00) 65%);
+  filter: blur(36px);
+  transform: translate3d(0,0,0);
+  /* gentle pulsing to attract attention without being distracting */
+  animation: fh-glow-pulse 6s ease-in-out infinite;
+}
+
+@keyframes fh-glow-pulse {
+  0% { opacity: 0.06; transform: translate3d(0,0,0) scale(1); }
+  50% { opacity: 0.14; transform: translate3d(0,2px,0) scale(1.02); }
+  100% { opacity: 0.06; transform: translate3d(0,0,0) scale(1); }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+  background: var(--fh-bg);
+  color: var(--fh-body);
+}
+
+.dark {
+  --fh-bg: #0b0f12;
+  --fh-card: #0f1720;
+  --fh-text: #e6eef6;
+  --fh-body: #cbd5e1;
+  --fh-muted: #94a3b8;
+}
+
+/* Components */
+@layer components {
+  .fh-card {
+    @apply bg-[var(--fh-card)] rounded-card shadow-card border border-[var(--fh-border)];
+  }
+
+  .fh-hero {
+    @apply p-6 rounded-card bg-[var(--fh-card)] border border-[var(--fh-border)] shadow-card;
+  }
+
+  .auth-card {
+    max-width: 420px;
+  }
+
+/* dark mode adjustments for login background */
+.dark .login-bg {
+  background-color: #0b0f12; /* dark base */
+}
+
+.dark .login-bg::before {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px),
+    radial-gradient(rgba(255,255,255,0.01) 0.5px, transparent 0.5px);
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+
+.dark .login-bg::after {
+  background: radial-gradient(circle at 100% 0%, rgba(215,38,56,0.06) 0%, rgba(215,38,56,0.02) 25%, rgba(215,38,56,0.00) 60%);
+  filter: blur(28px);
+}
+
+.auth-card {
+  position: relative;
+  z-index: 10;
+}
+
+/* decorative belt stripe behind the card (very subtle, blurred) */
+.belt-stripe {
+  width: 340px;
+  height: 36px;
+  position: relative;
+  z-index: 5; /* below auth-card (z-10) */
+  transform: rotate(-12deg) translateY(-6px);
+  margin-top: -18px; /* nudge closer to the card */
+  background: linear-gradient(90deg, rgba(215,38,56,0.10) 0%, rgba(215,38,56,0.06) 50%, rgba(215,38,56,0.00) 100%);
+  filter: blur(8px);
+  opacity: 0.18;
+  pointer-events: none;
+  border-radius: 48px;
+}
+
+@media (max-width: 640px) {
+  .belt-stripe {
+    width: 260px;
+    height: 28px;
+    transform: rotate(-12deg) translateY(-4px);
+    margin-top: -14px;
+    opacity: 0.14;
+  }
+}
+
+  /* Input sizing and visual rules for premium look */
+  .fh-input {
+    @apply w-full px-4 py-2 rounded-input border border-[var(--fh-border)] bg-[var(--fh-card)] text-[var(--fh-body)] transition-shadow duration-150;
+    min-height: 44px; /* h-11 ~ 44px */
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .fh-input:focus {
+    outline: none;
+    box-shadow: 0 8px 28px rgba(16,24,40,0.06), 0 0 0 6px rgba(215,38,56,0.06);
+    border-color: var(--fh-primary);
+  }
+
+  .fh-input-error {
+    border-color: #dc2626; /* red-600 */
+    box-shadow: 0 6px 20px rgba(220,38,38,0.04);
+  }
+
+  .fh-btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-pill font-semibold transition-all duration-200 ease-in-out;
+  }
+
+  .fh-btn-primary {
+    @apply fh-btn bg-[var(--fh-primary)] text-white hover:bg-[var(--fh-primary-dark)] shadow-card;
+    transform: translateZ(0);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+
+  .fh-btn-primary:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 12px 30px rgba(215,38,56,0.12);
+  }
+
+  .fh-btn-secondary {
+    @apply fh-btn bg-white border border-[var(--fh-border)] text-[var(--fh-body)] hover:shadow-soft;
+  }
+
+  .fh-input {
+    @apply w-full px-3 py-2 rounded-input border border-[var(--fh-border)] bg-[var(--fh-card)] text-[var(--fh-body)] transition-shadow duration-150;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  }
+
+  .fh-input:focus {
+    outline: none;
+    box-shadow: 0 6px 20px rgba(16,24,40,0.06), 0 0 0 4px rgba(215,38,56,0.06);
+    border-color: var(--fh-primary);
+  }
+
+  .fh-input-error {
+    border-color: #dc2626; /* red-600 */
+    box-shadow: 0 6px 20px rgba(220,38,38,0.04);
+  }
+
+  .fh-badge {
+    @apply inline-block px-2 py-1 text-xs rounded-full bg-[var(--fh-divider)] text-[var(--fh-body)];
+  }
+
+  .fh-table {
+    @apply w-full table-auto border-collapse bg-transparent;
+  }
+
+  .fh-skeleton {
+    @apply animate-pulse bg-[var(--fh-divider)];
+  }
+
+  /* subtle animation for left hero illustration */
+  .hero-svg {
+    animation: floaty 6s ease-in-out infinite;
+  }
+
+  @keyframes floaty {
+    0% { transform: translateY(0) }
+    50% { transform: translateY(-6px) }
+    100% { transform: translateY(0) }
+  }
+}
