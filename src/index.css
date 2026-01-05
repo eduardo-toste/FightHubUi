@@ -3,17 +3,40 @@
 @tailwind utilities;
 
 :root {
-  --fh-primary: #d72638;
-  --fh-primary-dark: #b21d2c;
-  --fh-primary-light: #f56b76;
-  --fh-accent: #0ea5a4;
-  --fh-bg: #f4f6f8;
+  /* Cores principais - Jiu-Jitsu (vermelho elegante e sofisticado) */
+  --fh-primary: #dc2626;
+  --fh-primary-dark: #b91c1c;
+  --fh-primary-light: #ef4444;
+  /* Accent - Azul do kimono e tatame (mais suave) */
+  --fh-accent: #2563eb;
+  --fh-accent-light: #3b82f6;
+  /* Cores de tatame (mais neutras) */
+  --fh-tatame: #f0f9ff;
+  --fh-tatame-dark: #e0f2fe;
+  /* Neutros - Escala de cinzas harmoniosa */
+  --fh-bg: #f8fafc;
   --fh-card: #ffffff;
-  --fh-text: #111827;
-  --fh-body: #374151;
-  --fh-muted: #6b7280;
-  --fh-border: #e6e9ee;
-  --fh-divider: #eaedf2;
+  --fh-text: #0f172a;
+  --fh-body: #334155;
+  --fh-muted: #64748b;
+  --fh-border: #e2e8f0;
+  --fh-divider: #f1f5f9;
+  --fh-gray-50: #f9fafb;
+  --fh-gray-100: #f3f4f6;
+  --fh-gray-200: #e5e7eb;
+  --fh-gray-300: #d1d5db;
+  --fh-gray-400: #9ca3af;
+  --fh-gray-500: #6b7280;
+  --fh-gray-600: #4b5563;
+  --fh-gray-700: #374151;
+  --fh-gray-800: #1f2937;
+  --fh-gray-900: #111827;
+  /* Faixas de jiu-jitsu */
+  --fh-belt-white: #ffffff;
+  --fh-belt-blue: #2563eb;
+  --fh-belt-purple: #7c3aed;
+  --fh-belt-brown: #92400e;
+  --fh-belt-black: #1a1a1a;
 }
 
 /* Login background texture and abstract detail */
@@ -156,6 +179,159 @@ body {
     margin-top: -14px;
     opacity: 0.14;
   }
+}
+
+/* Novo design de login - Background com textura de tatame */
+.login-bg-new {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 30%, #e2e8f0 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Textura de tatame (padrão de esteira) */
+.login-bg-new::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    /* Padrão de esteira/tatame - linhas horizontais sutis (cinza) */
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(226, 232, 240, 0.4) 2px,
+      rgba(226, 232, 240, 0.4) 4px
+    ),
+    /* Padrão de esteira - linhas verticais sutis (cinza) */
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(226, 232, 240, 0.3) 2px,
+      rgba(226, 232, 240, 0.3) 4px
+    ),
+    /* Gradientes suaves remetendo ao ambiente de academia */
+    radial-gradient(circle at 20% 50%, rgba(220, 38, 38, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(220, 38, 38, 0.015) 0%, transparent 50%);
+  background-size: 
+    100% 8px,
+    8px 100%,
+    60% 60%,
+    50% 50%,
+    100% 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+.dark .login-bg-new {
+  background: linear-gradient(135deg, #0f1720 0%, #1a1f2e 50%, #1e293b 100%);
+}
+
+.dark .login-bg-new::before {
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(30, 64, 175, 0.1) 2px,
+      rgba(30, 64, 175, 0.1) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(30, 64, 175, 0.08) 2px,
+      rgba(30, 64, 175, 0.08) 4px
+    ),
+    radial-gradient(circle at 20% 50%, rgba(196, 30, 58, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(30, 64, 175, 0.12) 0%, transparent 50%);
+  opacity: 0.4;
+}
+
+/* Card de login moderno - Estilo Jiu-Jitsu */
+.login-card-new {
+  background: var(--fh-card);
+  border: 1px solid var(--fh-border);
+  border-radius: 24px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.5) inset,
+    0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  /* Textura sutil de tecido (remetendo ao kimono) */
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(232, 245, 233, 0.03) 10px,
+      rgba(232, 245, 233, 0.03) 20px
+    );
+}
+
+.login-card-new::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(196, 30, 58, 0.4) 50%, 
+    transparent 100%);
+  opacity: 0.6;
+}
+
+.login-card-new::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(30, 64, 175, 0.3) 50%, 
+    transparent 100%);
+  opacity: 0.4;
+}
+
+.login-card-new:hover {
+  box-shadow: 
+    0 25px 70px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset,
+    0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  transform: translateY(-2px);
+  border-color: rgba(196, 30, 58, 0.2);
+}
+
+.dark .login-card-new {
+  background: rgba(15, 23, 32, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(30, 64, 175, 0.05) 10px,
+      rgba(30, 64, 175, 0.05) 20px
+    );
+}
+
+.dark .login-card-new:hover {
+  box-shadow: 
+    0 25px 70px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  border-color: rgba(196, 30, 58, 0.3);
 }
 
   /* Input sizing and visual rules for premium look */
