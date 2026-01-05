@@ -1,11 +1,6 @@
+// Badge component removed during cleanup — keep a noop placeholder to avoid import errors.
 import React from 'react';
 
-export default function Badge({
-  children,
-  className = '',
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return <span className={`fh-badge ${className}`}>{children}</span>;
+export default function Badge() {
+  return null;
 }
