@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useAuth } from '../context/AuthContext'
-import { Eye, EyeOff, Mail, Lock, Target } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, Target, X, Info } from 'lucide-react'
 
 const schema = z.object({
   email: z.string().email('Email inválido'),
@@ -27,6 +27,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = React.useState(false)
   const [isFocused, setIsFocused] = useState<string | null>(null)
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; delay: number }>>([])
+  const [showInfoModal, setShowInfoModal] = useState(false)
 
   const emailValue = watch('email')
   const passwordValue = watch('password')
@@ -54,65 +55,77 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen login-bg-new flex items-center justify-center p-4 md:p-6 relative overflow-hidden">
-      {/* Partículas de fundo animadas (sem efeito de mouse para evitar tremores) */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="particle-float absolute w-1.5 h-1.5 bg-[var(--fh-primary)] rounded-full opacity-15"
-            style={{
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-              animation: `float ${3 + particle.delay}s ease-in-out infinite`,
-              animationDelay: `${particle.delay}s`
-            }}
-          />
-        ))}
+    <div className="min-h-screen tatame-bg flex items-center justify-center p-4 md:p-6 relative overflow-hidden">
+      {/* Linhas do tatame (área de combate) */}
+      <div className="absolute inset-0 tatame-lines pointer-events-none" />
+      
+      {/* Elementos decorativos - círculos do tatame */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Círculo central do tatame */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border-2 border-[var(--fh-primary)]/12 rounded-full" />
+        {/* Círculos menores */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-[var(--fh-accent)]/10 rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] border border-[var(--fh-primary)]/8 rounded-full" />
       </div>
 
-      {/* Faixas decorativas de jiu-jitsu (sem movimento de mouse) */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Faixa decorativa horizontal (remetendo ao kimono) */}
-        <div className="absolute w-full h-1.5 bg-gradient-to-r from-transparent via-[var(--fh-primary)]/15 to-transparent top-[20%]" />
-        <div className="absolute w-full h-1.5 bg-gradient-to-r from-transparent via-[var(--fh-accent)]/12 to-transparent bottom-[25%]" />
-        
-        {/* Formas geométricas decorativas (fixas, sem movimento) */}
-        <div className="absolute w-96 h-96 rounded-full bg-gradient-to-br from-[var(--fh-primary)]/6 to-transparent blur-3xl top-[10%] left-[10%]" />
-        <div className="absolute w-80 h-80 rounded-full bg-gradient-to-tr from-[var(--fh-accent)]/5 to-transparent blur-3xl bottom-[15%] right-[15%]" />
+      {/* Gradientes sutis */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-[var(--fh-primary)]/3 to-transparent" />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[var(--fh-accent)]/3 to-transparent" />
       </div>
 
-      <div className="relative w-full max-w-md z-10">
+      <div className="relative w-full max-w-lg z-10">
         {/* Logo e Header com animação */}
-        <div className="mb-8 text-center animate-fade-in">
-          <h1 className="text-5xl font-black bg-gradient-to-r from-[var(--fh-primary)] via-[var(--fh-primary-dark)] to-[var(--fh-primary)] bg-clip-text text-transparent mb-2 animate-gradient leading-tight">
-            FightHub
-          </h1>
-          <p className="text-sm text-[var(--fh-muted)] font-medium tracking-wide leading-relaxed">
-            Jiu-Jitsu • Disciplina • Evolução
-          </p>
-          <div className="mt-2 flex items-center justify-center gap-2">
-            <Target className="w-4 h-4 text-[var(--fh-primary)] animate-sparkle flex-shrink-0" />
-            <span className="text-xs text-[var(--fh-muted)] font-medium leading-relaxed">Sua jornada no tatame começa aqui</span>
-            <Target className="w-4 h-4 text-[var(--fh-primary)] animate-sparkle flex-shrink-0" />
+        <div className="mb-10 text-center animate-fade-in">
+          <div className="inline-block relative mb-5">
+            {/* Efeito de brilho atrás do logo */}
+            <div className="absolute inset-0 bg-[var(--fh-primary)]/15 blur-2xl rounded-full animate-pulse-slow" />
+            <h1 className="relative text-5xl md:text-6xl font-black leading-[1.1] tracking-tight">
+              <span className="bg-gradient-to-r from-[var(--fh-primary)] via-[var(--fh-primary-dark)] to-[var(--fh-primary)] bg-clip-text text-transparent animate-gradient inline-block">
+                FIGHT
+              </span>
+              <span className="text-[var(--fh-text)] mx-2 inline-block">•</span>
+              <span className="bg-gradient-to-r from-[var(--fh-accent)] via-[var(--fh-accent-light)] to-[var(--fh-accent)] bg-clip-text text-transparent inline-block">
+                HUB
+              </span>
+            </h1>
+          </div>
+          <div className="relative">
+            <p className="text-base font-bold text-[var(--fh-body)] tracking-wide uppercase mb-2 leading-normal">
+              Jiu-Jitsu Academy
+            </p>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-16 bg-gradient-to-r from-transparent to-[var(--fh-primary)]" />
+              <Target className="w-4 h-4 text-[var(--fh-primary)] animate-sparkle flex-shrink-0" />
+              <div className="h-px w-16 bg-gradient-to-l from-transparent to-[var(--fh-primary)]" />
+            </div>
+            <p className="text-sm text-[var(--fh-muted)] font-medium leading-relaxed px-2">
+              Centro de treinamento e evolução
+            </p>
           </div>
         </div>
 
-        {/* Card de Login */}
-        <div className="login-card-new relative backdrop-blur-sm">
-          {/* Faixa decorativa no topo do card (remetendo ao kimono) */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--fh-primary)] via-[var(--fh-accent)] to-[var(--fh-primary)] opacity-60" />
+        {/* Card de Login - Estilo Tatame */}
+        <div className="tatame-card relative">
+          {/* Borda superior destacada (remetendo à linha do tatame) */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--fh-primary)] via-[var(--fh-accent)] to-[var(--fh-primary)]" />
           
-          {/* Brilho animado no card */}
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[var(--fh-primary)]/5 via-transparent to-[var(--fh-accent)]/5 opacity-0 hover:opacity-100 transition-opacity duration-500" />
+          {/* Linhas decorativas laterais */}
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[var(--fh-primary)]/20 via-transparent to-[var(--fh-primary)]/20" />
+          <div className="absolute right-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[var(--fh-accent)]/20 via-transparent to-[var(--fh-accent)]/20" />
           
-          <div className="relative p-8 md:p-10">
+          <div className="relative p-8 md:p-10 bg-[var(--fh-card)]/95 backdrop-blur-md">
             <header className="mb-8 text-center">
-              <h2 className="text-3xl font-bold text-[var(--fh-text)] mb-2 leading-tight">
-                Bem-vindo ao tatame
+              <h2 className="text-2xl font-bold text-[var(--fh-text)] mb-3 leading-[1.3] uppercase tracking-wide">
+                Acesse o Tatame
               </h2>
-              <p className="text-sm text-[var(--fh-muted)] leading-relaxed">
-                Entre para continuar seu treino e evolução
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="h-px w-12 bg-[var(--fh-primary)] flex-shrink-0" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[var(--fh-primary)] flex-shrink-0" />
+                <div className="h-px w-12 bg-[var(--fh-accent)] flex-shrink-0" />
+              </div>
+              <p className="text-sm text-[var(--fh-muted)] leading-relaxed font-medium px-2">
+                Entre com suas credenciais para continuar
               </p>
             </header>
 
@@ -237,26 +250,26 @@ export default function LoginPage() {
                 </a>
               </div>
 
-              {/* Botão de Submit */}
+              {/* Botão de Submit - Estilo Impactante */}
               <button
                 type="submit"
                 disabled={isSubmitting}
                 className="w-full relative group mt-8"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] rounded-xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300" />
-                <div className="relative bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white font-bold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-xl hover:shadow-[var(--fh-primary)]/30 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 leading-normal">
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] rounded-lg blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300" />
+                <div className="relative bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white font-bold py-3.5 px-6 rounded-lg shadow-xl hover:shadow-[var(--fh-primary)]/40 transform hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 leading-normal uppercase tracking-wide text-sm min-h-[48px]">
                   {isSubmitting ? (
                     <>
                       <svg className="animate-spin h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                       </svg>
-                      <span>Entrando no tatame...</span>
+                      <span>Entrando...</span>
                     </>
                   ) : (
                     <>
                       <Target className="w-5 h-5 flex-shrink-0" />
-                      <span>Entrar no tatame</span>
+                      <span>Entrar no Tatame</span>
                     </>
                   )}
                 </div>
@@ -267,18 +280,121 @@ export default function LoginPage() {
             <div className="mt-8 pt-6 border-t border-[var(--fh-border)] text-center">
               <p className="text-sm text-[var(--fh-muted)] leading-relaxed">
                 Ainda não tem conta?{' '}
-                <a 
-                  href="#" 
+                <button
+                  type="button"
+                  onClick={() => setShowInfoModal(true)}
                   className="font-semibold text-[var(--fh-primary)] hover:text-[var(--fh-primary-dark)] transition-colors relative group inline-block"
                 >
-                  Criar conta
+                  Saiba Mais
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--fh-primary)] group-hover:w-full transition-all duration-300" />
-                </a>
+                </button>
               </p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal de Informações */}
+      {showInfoModal && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
+          onClick={() => setShowInfoModal(false)}
+        >
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          
+          {/* Modal Content */}
+          <div 
+            className="relative w-full max-w-lg tatame-modal animate-fade-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Borda superior do modal */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--fh-primary)] via-[var(--fh-accent)] to-[var(--fh-primary)]" />
+            
+            <div className="relative bg-[var(--fh-card)] rounded-lg shadow-2xl overflow-hidden">
+              {/* Header do Modal */}
+              <div className="px-6 py-4 border-b border-[var(--fh-border)] bg-gradient-to-r from-[var(--fh-primary)]/5 to-[var(--fh-accent)]/5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center">
+                      <Info className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-[var(--fh-text)] leading-tight">
+                      Como Criar uma Conta
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setShowInfoModal(false)}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--fh-muted)] hover:text-[var(--fh-text)] hover:bg-[var(--fh-border)] transition-colors"
+                    aria-label="Fechar modal"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Body do Modal */}
+              <div className="px-6 py-6 max-h-[70vh] overflow-y-auto">
+                <div className="space-y-4 text-[var(--fh-body)] leading-relaxed">
+                  <p className="text-sm font-medium text-[var(--fh-text)]">
+                    A criação de contas no FightHub é feita somente pela administração da academia.
+                    Isso significa que não é possível criar uma conta manualmente por aqui.
+                  </p>
+
+                  <div>
+                    <h4 className="text-base font-bold text-[var(--fh-text)] mb-3 flex items-center gap-2">
+                      <div className="w-1 h-1 rounded-full bg-[var(--fh-primary)]" />
+                      Como funciona:
+                    </h4>
+                    <ol className="space-y-3 ml-4">
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white text-xs font-bold flex items-center justify-center">
+                          1
+                        </span>
+                        <span className="text-sm">
+                          Um administrador da academia realiza o seu cadastro no sistema usando o e-mail que você informou à academia.
+                        </span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white text-xs font-bold flex items-center justify-center">
+                          2
+                        </span>
+                        <span className="text-sm">
+                          Em seguida, você receberá um convite no seu e-mail para finalizar o cadastro.
+                        </span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white text-xs font-bold flex items-center justify-center">
+                          3
+                        </span>
+                        <span className="text-sm">
+                          No convite, você poderá confirmar seus dados e definir sua senha para acessar a plataforma.
+                        </span>
+                      </li>
+                    </ol>
+                  </div>
+
+                  <div className="pt-4 border-t border-[var(--fh-border)]">
+                    <p className="text-sm text-[var(--fh-muted)]">
+                      Se você ainda não recebeu o convite, verifique também <strong className="text-[var(--fh-body)]">Spam/Lixo Eletrônico</strong> ou entre em contato com a academia para confirmar se o e-mail cadastrado está correto.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer do Modal */}
+              <div className="px-6 py-4 border-t border-[var(--fh-border)] tatame-modal-footer">
+                <button
+                  onClick={() => setShowInfoModal(false)}
+                  className="w-full bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white font-bold py-2.5 px-6 rounded-lg hover:shadow-lg transition-all duration-200 transform hover:scale-[1.01] active:scale-[0.99] uppercase tracking-wide text-sm leading-normal"
+                >
+                  Entendi
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes float {
@@ -324,7 +440,7 @@ export default function LoginPage() {
         }
         
         .animate-fade-in {
-          animation: fade-in 0.5s ease-out;
+          animation: fade-in 0.3s ease-out;
         }
         
         .animate-shake {

@@ -3,24 +3,24 @@
 @tailwind utilities;
 
 :root {
-  /* Cores principais - Jiu-Jitsu (vermelho elegante e sofisticado) */
-  --fh-primary: #dc2626;
-  --fh-primary-dark: #b91c1c;
-  --fh-primary-light: #ef4444;
-  /* Accent - Azul do kimono e tatame (mais suave) */
-  --fh-accent: #2563eb;
+  /* Cores principais - Jiu-Jitsu (tons terrosos e profissionais) */
+  --fh-primary: #c2410c;
+  --fh-primary-dark: #9a3412;
+  --fh-primary-light: #ea580c;
+  /* Accent - Azul profundo e elegante */
+  --fh-accent: #1e3a8a;
   --fh-accent-light: #3b82f6;
-  /* Cores de tatame (mais neutras) */
-  --fh-tatame: #f0f9ff;
-  --fh-tatame-dark: #e0f2fe;
-  /* Neutros - Escala de cinzas harmoniosa */
-  --fh-bg: #f8fafc;
+  /* Cores de tatame (tons neutros e suaves) */
+  --fh-tatame: #f8fafc;
+  --fh-tatame-dark: #f1f5f9;
+  /* Neutros - Escala de cinzas harmoniosa e profissional */
+  --fh-bg: #fafafa;
   --fh-card: #ffffff;
-  --fh-text: #0f172a;
-  --fh-body: #334155;
-  --fh-muted: #64748b;
-  --fh-border: #e2e8f0;
-  --fh-divider: #f1f5f9;
+  --fh-text: #1c1c1c;
+  --fh-body: #3f3f3f;
+  --fh-muted: #6b7280;
+  --fh-border: #e5e7eb;
+  --fh-divider: #f3f4f6;
   --fh-gray-50: #f9fafb;
   --fh-gray-100: #f3f4f6;
   --fh-gray-200: #e5e7eb;
@@ -33,10 +33,10 @@
   --fh-gray-900: #111827;
   /* Faixas de jiu-jitsu */
   --fh-belt-white: #ffffff;
-  --fh-belt-blue: #2563eb;
-  --fh-belt-purple: #7c3aed;
-  --fh-belt-brown: #92400e;
-  --fh-belt-black: #1a1a1a;
+  --fh-belt-blue: #1e3a8a;
+  --fh-belt-purple: #6b21a8;
+  --fh-belt-brown: #78350f;
+  --fh-belt-black: #1c1c1c;
 }
 
 /* Login background texture and abstract detail */
@@ -181,157 +181,191 @@ body {
   }
 }
 
-/* Novo design de login - Background com textura de tatame */
-.login-bg-new {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 30%, #e2e8f0 100%);
+/* Background realista de tatame */
+.tatame-bg {
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 50%, #f0f0f0 100%);
   position: relative;
   overflow: hidden;
 }
 
-/* Textura de tatame (padrão de esteira) */
-.login-bg-new::before {
+/* Textura realista de tatame (padrão de esteira) */
+.tatame-bg::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image: 
-    /* Padrão de esteira/tatame - linhas horizontais sutis (cinza) */
+    /* Padrão de esteira - linhas horizontais sutis */
     repeating-linear-gradient(
       0deg,
       transparent,
-      transparent 2px,
-      rgba(226, 232, 240, 0.4) 2px,
-      rgba(226, 232, 240, 0.4) 4px
+      transparent 3px,
+      rgba(229, 231, 235, 0.5) 3px,
+      rgba(229, 231, 235, 0.5) 6px
     ),
-    /* Padrão de esteira - linhas verticais sutis (cinza) */
+    /* Padrão de esteira - linhas verticais sutis */
     repeating-linear-gradient(
       90deg,
       transparent,
-      transparent 2px,
-      rgba(226, 232, 240, 0.3) 2px,
-      rgba(226, 232, 240, 0.3) 4px
+      transparent 3px,
+      rgba(229, 231, 235, 0.4) 3px,
+      rgba(229, 231, 235, 0.4) 6px
     ),
-    /* Gradientes suaves remetendo ao ambiente de academia */
-    radial-gradient(circle at 20% 50%, rgba(220, 38, 38, 0.04) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
-    linear-gradient(135deg, rgba(220, 38, 38, 0.015) 0%, transparent 50%);
-  background-size: 
-    100% 8px,
-    8px 100%,
-    60% 60%,
-    50% 50%,
-    100% 100%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.5;
-}
-
-.dark .login-bg-new {
-  background: linear-gradient(135deg, #0f1720 0%, #1a1f2e 50%, #1e293b 100%);
-}
-
-.dark .login-bg-new::before {
-  background-image: 
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(30, 64, 175, 0.1) 2px,
-      rgba(30, 64, 175, 0.1) 4px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(30, 64, 175, 0.08) 2px,
-      rgba(30, 64, 175, 0.08) 4px
-    ),
-    radial-gradient(circle at 20% 50%, rgba(196, 30, 58, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(30, 64, 175, 0.12) 0%, transparent 50%);
-  opacity: 0.4;
-}
-
-/* Card de login moderno - Estilo Jiu-Jitsu */
-.login-card-new {
-  background: var(--fh-card);
-  border: 1px solid var(--fh-border);
-  border-radius: 24px;
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.08),
-    0 0 0 1px rgba(255, 255, 255, 0.5) inset,
-    0 1px 0 rgba(255, 255, 255, 0.6) inset;
-  backdrop-filter: blur(10px);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  /* Textura sutil de tecido (remetendo ao kimono) */
-  background-image: 
+    /* Textura de tecido sutil */
     repeating-linear-gradient(
       45deg,
       transparent,
-      transparent 10px,
-      rgba(232, 245, 233, 0.03) 10px,
-      rgba(232, 245, 233, 0.03) 20px
+      transparent 8px,
+      rgba(209, 213, 219, 0.08) 8px,
+      rgba(209, 213, 219, 0.08) 9px
     );
-}
-
-.login-card-new::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(196, 30, 58, 0.4) 50%, 
-    transparent 100%);
+  background-size: 
+    100% 12px,
+    12px 100%,
+    20px 20px;
+  pointer-events: none;
+  z-index: 0;
   opacity: 0.6;
 }
 
-.login-card-new::after {
+.tatame-bg::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 30% 40%, rgba(194, 65, 12, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(30, 58, 138, 0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Linhas do tatame (área de combate) */
+.tatame-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.tatame-lines::before {
+  content: '';
+  position: absolute;
+  top: 50%;
   left: 0;
   right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(30, 64, 175, 0.3) 50%, 
-    transparent 100%);
-  opacity: 0.4;
+  height: 1.5px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(194, 65, 12, 0.15) 20%,
+    rgba(194, 65, 12, 0.25) 50%,
+    rgba(194, 65, 12, 0.15) 80%,
+    transparent 100%
+  );
+  transform: translateY(-50%);
 }
 
-.login-card-new:hover {
-  box-shadow: 
-    0 25px 70px rgba(0, 0, 0, 0.12),
-    0 0 0 1px rgba(255, 255, 255, 0.6) inset,
-    0 1px 0 rgba(255, 255, 255, 0.7) inset;
-  transform: translateY(-2px);
-  border-color: rgba(196, 30, 58, 0.2);
+.tatame-lines::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(30, 58, 138, 0.15) 20%,
+    rgba(30, 58, 138, 0.25) 50%,
+    rgba(30, 58, 138, 0.15) 80%,
+    transparent 100%
+  );
+  transform: translateX(-50%);
 }
 
-.dark .login-card-new {
-  background: rgba(15, 23, 32, 0.8);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+.dark .tatame-bg {
+  background: linear-gradient(135deg, #0f1720 0%, #1e293b 50%, #334155 100%);
+}
+
+.dark .tatame-bg::before {
   background-image: 
     repeating-linear-gradient(
-      45deg,
+      0deg,
       transparent,
-      transparent 10px,
-      rgba(30, 64, 175, 0.05) 10px,
-      rgba(30, 64, 175, 0.05) 20px
+      transparent 3px,
+      rgba(30, 64, 175, 0.15) 3px,
+      rgba(30, 64, 175, 0.15) 6px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(30, 64, 175, 0.12) 3px,
+      rgba(30, 64, 175, 0.12) 6px
     );
+  opacity: 0.6;
 }
 
-.dark .login-card-new:hover {
+/* Card de login - Estilo Tatame */
+.tatame-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid var(--fh-border);
+  border-radius: 16px;
   box-shadow: 
-    0 25px 70px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-  border-color: rgba(196, 30, 58, 0.3);
+    0 25px 80px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset,
+    0 2px 4px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.tatame-card:hover {
+  box-shadow: 
+    0 30px 90px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.9) inset,
+    0 4px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+.dark .tatame-card {
+  background: rgba(15, 23, 32, 0.9);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 25px 80px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.dark .tatame-card:hover {
+  box-shadow: 
+    0 30px 90px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  border-color: rgba(220, 38, 38, 0.4);
+}
+
+/* Modal personalizado - Estilo Tatame */
+.tatame-modal {
+  animation: modal-fade-in 0.3s ease-out;
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.tatame-modal-footer {
+  background-color: var(--fh-gray-50);
+}
+
+.dark .tatame-modal-footer {
+  background-color: rgba(15, 23, 32, 0.5);
 }
 
   /* Input sizing and visual rules for premium look */

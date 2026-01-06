@@ -1,26 +1,26 @@
 const theme = {
   colors: {
-    // Primary accent - Jiu-Jitsu (vermelho elegante e sofisticado)
-    primary: '#dc2626',
-    primaryDark: '#b91c1c',
-    primaryLight: '#ef4444',
+    // Primary accent - Jiu-Jitsu (tons terrosos e profissionais)
+    primary: '#c2410c',
+    primaryDark: '#9a3412',
+    primaryLight: '#ea580c',
 
-    // Accent - Azul do kimono e tatame (mais suave)
-    accent: '#2563eb',
+    // Accent - Azul profundo e elegante
+    accent: '#1e3a8a',
     accentLight: '#3b82f6',
 
-    // Cores de tatame (mais neutras)
-    tatame: '#f0f9ff',
-    tatameDark: '#e0f2fe',
+    // Cores de tatame (tons neutros e suaves)
+    tatame: '#f8fafc',
+    tatameDark: '#f1f5f9',
 
     // Neutral / grayscale palette for backgrounds, borders and text
-    bg: '#f8fafc',
+    bg: '#fafafa',
     card: '#ffffff',
-    text: '#0f172a',
-    body: '#334155',
-    muted: '#64748b',
-    border: '#e2e8f0',
-    divider: '#f1f5f9',
+    text: '#1c1c1c',
+    body: '#3f3f3f',
+    muted: '#6b7280',
+    border: '#e5e7eb',
+    divider: '#f3f4f6',
 
     // Escala de cinzas completa
     gray50: '#f9fafb',
@@ -36,10 +36,10 @@ const theme = {
 
     // Faixas de jiu-jitsu
     beltWhite: '#ffffff',
-    beltBlue: '#2563eb',
-    beltPurple: '#7c3aed',
-    beltBrown: '#92400e',
-    beltBlack: '#1a1a1a',
+    beltBlue: '#1e3a8a',
+    beltPurple: '#6b21a8',
+    beltBrown: '#78350f',
+    beltBlack: '#1c1c1c',
   },
   radius: {
     card: '12px',
