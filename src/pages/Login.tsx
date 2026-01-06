@@ -47,7 +47,8 @@ export default function LoginPage() {
     try {
       setAuthError(null)
       await login(values.email, values.password)
-      window.location.href = '/dashboard'
+      // Redirecionar para home após login bem-sucedido
+      window.location.href = '/home'
     } catch (err: any) {
       const msg = err?.message || 'Erro ao autenticar — verifique suas credenciais e tente novamente'
       setAuthError(msg)

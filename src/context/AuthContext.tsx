@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { setToken as saveToken, getToken, clearToken } from '../lib/auth';
+import { setToken as saveToken, setRefreshToken as saveRefreshToken, getToken, clearToken } from '../lib/auth';
 import api from '../lib/apiClient';
 import { getBaseUrl } from '../lib/env';
 
 type User = {
+  id?: string;
   email: string;
   name?: string;
+  role?: string;
 };
 
 const AuthContext = createContext<any>(undefined);
@@ -14,13 +16,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Buscar dados do usuário quando tiver token
+  const fetchUserProfile = async () => {
+    const token = getToken();
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+
+    const base = getBaseUrl();
+    if (!base) {
+      // Modo mock
+      setUser({ email: 'admin@fighthub.test', name: 'Admin FightHub' });
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const res = await api.get('/usuarios/me');
+      const userData = res.data;
+      setUser({
+        id: userData.id,
+        email: userData.email,
+        name: userData.nome,
+        role: userData.role,
+      });
+    } catch (err) {
+      // Se falhar ao buscar perfil, limpa tokens
+      console.error('Erro ao buscar perfil do usuário:', err);
+      clearToken();
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const token = getToken();
-    if (token) {
-      // In a real app, fetch user profile. Here we mock.
-      setUser({ email: 'admin@fighthub.test', name: 'Admin FightHub' });
-    }
+    fetchUserProfile();
 
     // apply saved theme
     try {
@@ -45,23 +79,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     try {
-      const res = await api.post('/auth/login', { email, password });
-      const { accessToken } = res.data;
+      // Backend espera 'senha' ao invés de 'password'
+      const res = await api.post('/auth/login', { email, senha: password });
+      const { accessToken, refreshToken } = res.data;
       saveToken(accessToken);
-      setUser({ email });
-    } catch (err) {
-      return Promise.reject(err);
+      if (refreshToken) {
+        saveRefreshToken(refreshToken);
+      }
+      
+      // Buscar dados do usuário após login
+      await fetchUserProfile();
+    } catch (err: any) {
+      // Extrair mensagem de erro do backend
+      const errorMessage = err?.response?.data?.message || 
+                          err?.message || 
+                          'Erro ao autenticar — verifique suas credenciais e tente novamente';
+      return Promise.reject(new Error(errorMessage));
     }
   }
 
-  function logout() {
+  async function logout() {
+    const base = getBaseUrl();
+    if (base) {
+      try {
+        // Chamar endpoint de logout do backend
+        await api.post('/auth/logout');
+      } catch (err) {
+        // Ignora erros no logout (pode ser que o token já esteja expirado)
+        console.warn('Erro ao fazer logout no backend:', err);
+      }
+    }
     clearToken();
     setUser(null);
     if (typeof window !== 'undefined') window.location.href = '/login';
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

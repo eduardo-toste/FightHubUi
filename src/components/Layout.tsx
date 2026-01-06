@@ -1,48 +1,10 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import { Bell, Search, Moon, Sun } from 'lucide-react';
 
-const Sidebar: React.FC = () => {
-  const loc = useLocation();
-  const items = [
-    { to: '/dashboard', label: 'Dashboard' },
-    { to: '/aulas', label: 'Aulas' },
-    { to: '/alunos', label: 'Alunos' },
-    { to: '/turmas', label: 'Turmas' },
-    { to: '/config', label: 'Configurações' },
-  ];
-
-  return (
-    <aside className="w-64 h-screen p-6 bg-[var(--fh-card)] border-r border-[var(--fh-divider)]">
-      <div className="mb-6">
-        <div className="text-2xl font-extrabold text-[var(--fh-primary)]">
-          FightHub
-        </div>
-        <div className="text-xs text-[var(--fh-muted)]">
-          Disciplina. Evolução. Conquista.
-        </div>
-      </div>
-      <nav className="flex flex-col gap-3 mt-6">
-        {items.map((it) => (
-          <Link
-            key={it.to}
-            to={it.to}
-            className={`px-4 py-2 rounded-lg flex items-center gap-3 text-sm font-medium ${
-              loc.pathname === it.to
-                ? 'bg-[var(--fh-primary)] text-white'
-                : 'text-[var(--fh-body)] hover:bg-[var(--fh-divider)]'
-            }`}
-          >
-            <span className="w-3 h-3 bg-[var(--fh-border)] rounded-sm" />
-            {it.label}
-          </Link>
-        ))}
-      </nav>
-    </aside>
-  );
-};
-
-const Topbar: React.FC<{ userName?: string; onLogout?: () => void }> = ({
+const Topbar: React.FC<{ userName?: string; userRole?: string; onLogout?: () => void }> = ({
   userName,
+  userRole,
   onLogout,
 }) => {
   const [isDark, setIsDark] = React.useState(() => {
@@ -60,52 +22,76 @@ const Topbar: React.FC<{ userName?: string; onLogout?: () => void }> = ({
       setIsDark(next);
       localStorage.setItem('fh_theme_dark', next ? '1' : '0');
     } catch (e) {
-      // log and ignore theme toggle errors in non-browser environments
-      // eslint-disable-next-line no-console
       console.warn('toggleTheme error', e);
     }
   }
 
   return (
-    <div className="flex items-center justify-between p-4 bg-white dark:bg-slate-800">
-      <div className="text-lg font-semibold">Painel</div>
-      <div className="flex items-center gap-4">
-        <button
-          onClick={toggleTheme}
-          className="px-2 py-1 border rounded"
-          aria-label={isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
-        >
-          {isDark ? (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="4" />
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
-            </svg>
-          )}
-        </button>
-        <div>{userName}</div>
-        <button onClick={onLogout} className="text-sm text-red-600">
-          Sair
-        </button>
+    <header className="sticky top-0 z-30 bg-[var(--fh-card)] border-b border-[var(--fh-border)] shadow-sm">
+      <div className="flex items-center justify-between px-6 py-4">
+        {/* Search Bar */}
+        <div className="flex-1 max-w-md">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--fh-muted)]" />
+            <input
+              type="text"
+              placeholder="Buscar..."
+              className="w-full pl-10 pr-4 py-2 rounded-xl border border-[var(--fh-border)] bg-[var(--fh-gray-50)] text-[var(--fh-body)] placeholder:text-[var(--fh-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] transition-all"
+            />
+          </div>
+        </div>
+
+        {/* Right Section */}
+        <div className="flex items-center gap-4">
+          {/* Notifications */}
+          <button className="relative w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[var(--fh-border)] text-[var(--fh-muted)] hover:text-[var(--fh-text)] transition-colors">
+            <Bell size={20} />
+            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[var(--fh-card)]" />
+          </button>
+
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[var(--fh-border)] text-[var(--fh-muted)] hover:text-[var(--fh-text)] transition-colors"
+            aria-label={isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
+          >
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+
+          {/* User Avatar */}
+          <div className="flex items-center gap-3 pl-4 border-l border-[var(--fh-border)]">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-accent)] flex items-center justify-center text-white font-bold text-sm shadow-lg">
+              {userName?.charAt(0).toUpperCase() || 'U'}
+            </div>
+            <div className="hidden md:block">
+              <div className="text-sm font-semibold text-[var(--fh-text)]">
+                {userName || 'Usuário'}
+              </div>
+              {userRole && (
+                <div className="text-xs text-[var(--fh-muted)] capitalize">
+                  {userRole.toLowerCase()}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </header>
   );
 };
 
 const Layout: React.FC<{
   children: React.ReactNode;
   userName?: string;
+  userRole?: string;
   onLogout?: () => void;
-}> = ({ children, userName, onLogout }) => {
+}> = ({ children, userName, userRole, onLogout }) => {
   return (
     <div className="flex bg-[var(--fh-bg)] min-h-screen">
-      <Sidebar />
-      <div className="flex-1 min-h-screen">
-        <Topbar userName={userName} onLogout={onLogout} />
-        <main className="p-6">{children}</main>
+      <Sidebar userName={userName} userRole={userRole} onLogout={onLogout} />
+      <div className="flex-1 flex flex-col min-h-screen lg:ml-0">
+        <Topbar userName={userName} userRole={userRole} onLogout={onLogout} />
+        <main className="flex-1 p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );
