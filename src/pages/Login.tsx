@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useAuth } from '../context/AuthContext'
 import { Eye, EyeOff, Mail, Lock, Target, X, Info } from 'lucide-react'
+import RecuperarSenhaModal from '../components/RecuperarSenhaModal'
 
 const schema = z.object({
   email: z.string().email('Email inválido'),
@@ -28,6 +29,7 @@ export default function LoginPage() {
   const [isFocused, setIsFocused] = useState<string | null>(null)
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; delay: number }>>([])
   const [showInfoModal, setShowInfoModal] = useState(false)
+  const [showRecuperarSenhaModal, setShowRecuperarSenhaModal] = useState(false)
 
   const emailValue = watch('email')
   const passwordValue = watch('password')
@@ -147,7 +149,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <label 
                   htmlFor="email" 
-                  className="block text-sm font-semibold text-[var(--fh-body)] mb-2 flex items-center gap-2 leading-normal"
+                  className="text-sm font-semibold text-[var(--fh-body)] mb-2 flex items-center gap-2 leading-normal"
                 >
                   <Mail className="w-4 h-4 text-[var(--fh-primary)] flex-shrink-0" />
                   <span>Email</span>
@@ -188,7 +190,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <label 
                   htmlFor="password" 
-                  className="block text-sm font-semibold text-[var(--fh-body)] mb-2 flex items-center gap-2 leading-normal"
+                  className="text-sm font-semibold text-[var(--fh-body)] mb-2 flex items-center gap-2 leading-normal"
                 >
                   <Lock className="w-4 h-4 text-[var(--fh-primary)] flex-shrink-0" />
                   <span>Senha</span>
@@ -242,13 +244,14 @@ export default function LoginPage() {
                   />
                   <span className="group-hover:text-[var(--fh-body)] transition-colors">Manter conectado</span>
                 </label>
-                <a 
-                  href="#" 
+                <button
+                  type="button"
+                  onClick={() => setShowRecuperarSenhaModal(true)}
                   className="text-sm font-medium text-[var(--fh-primary)] hover:text-[var(--fh-primary-dark)] transition-colors relative group leading-normal"
                 >
                   Esqueci minha senha
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[var(--fh-primary)] group-hover:w-full transition-all duration-300" />
-                </a>
+                </button>
               </div>
 
               {/* Botão de Submit - Estilo Impactante */}
@@ -396,6 +399,12 @@ export default function LoginPage() {
           </div>
         </div>
       )}
+
+      {/* Modal de Recuperação de Senha */}
+      <RecuperarSenhaModal 
+        isOpen={showRecuperarSenhaModal} 
+        onClose={() => setShowRecuperarSenhaModal(false)} 
+      />
 
       <style>{`
         @keyframes float {
