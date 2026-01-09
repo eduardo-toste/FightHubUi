@@ -458,74 +458,124 @@ const AlunoDetail: React.FC = () => {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Informações Pessoais */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <User className="w-5 h-5 text-orange-600" />
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <h2 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                <User className="w-6 h-6 text-orange-600" />
                 Informações Pessoais
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500 flex items-center gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-gray-500 flex items-center gap-2">
                     <Mail className="w-4 h-4" />
                     Email
                   </label>
-                  <p className="text-lg font-medium text-gray-900">{aluno.email || 'Não informado'}</p>
+                  <p className="text-lg font-medium text-gray-900 bg-gray-50 p-3 rounded-lg">{aluno.email || 'Não informado'}</p>
                 </div>
                 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500 flex items-center gap-2">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-gray-500 flex items-center gap-2">
                     <Phone className="w-4 h-4" />
                     Telefone
                   </label>
-                  <p className="text-lg font-medium text-gray-900">{aluno.telefone || 'Não informado'}</p>
+                  <p className="text-lg font-medium text-gray-900 bg-gray-50 p-3 rounded-lg">{aluno.telefone || 'Não informado'}</p>
                 </div>
                 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500 flex items-center gap-2">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-gray-500 flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
                     Data de Nascimento
                   </label>
-                  <p className="text-lg font-medium text-gray-900">{formatDate(aluno.dataNascimento)}</p>
+                  <p className="text-lg font-medium text-gray-900 bg-gray-50 p-3 rounded-lg">{formatDate(aluno.dataNascimento)}</p>
                 </div>
                 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-500 flex items-center gap-2">
+                <div className="space-y-3">
+                  <label className="text-sm font-semibold text-gray-500 flex items-center gap-2">
                     <BookOpen className="w-4 h-4" />
                     Data de Matrícula
                   </label>
-                  <p className="text-lg font-medium text-gray-900">{formatDate(aluno.dataMatricula)}</p>
+                  <p className="text-lg font-medium text-gray-900 bg-gray-50 p-3 rounded-lg">{formatDate(aluno.dataMatricula)}</p>
                 </div>
                 
-                <div className="space-y-2 md:col-span-2">
-                  <label className="text-sm font-medium text-gray-500 flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    Endereço
-                  </label>
-                  <p className="text-lg font-medium text-gray-900">
-                    {aluno.endereco?.logradouro || 'Não informado'}
-                  </p>
-                </div>
               </div>
             </div>
 
-            {/* Responsáveis */}
-            {aluno.responsaveis && aluno.responsaveis.length > 0 && (
+            {/* Endereço Detalhado */}
+            {aluno.endereco && (
               <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-blue-600" />
+                  <MapPin className="w-5 h-5 text-orange-600" />
+                  Endereço
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-500">Logradouro</label>
+                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.logradouro || 'Não informado'}</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-500">Número</label>
+                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.numero || 'S/N'}</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-500">Complemento</label>
+                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.complemento || 'Não informado'}</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-500">Bairro</label>
+                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.bairro || 'Não informado'}</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-500">Cidade</label>
+                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.cidade || 'Não informado'}</p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-500">CEP</label>
+                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.cep || 'Não informado'}</p>
+                  </div>
+                </div>
+                
+                {/* Endereço Completo em Destaque */}
+                <div className="mt-6 p-4 bg-orange-50 rounded-xl border border-orange-100">
+                  <label className="text-sm font-semibold text-orange-800 mb-2 block">Endereço Completo</label>
+                  <p className="text-lg font-medium text-orange-900">
+                    {[
+                      aluno.endereco.logradouro,
+                      aluno.endereco.numero && `Nº ${aluno.endereco.numero}`,
+                      aluno.endereco.complemento,
+                      aluno.endereco.bairro,
+                      aluno.endereco.cidade,
+                      aluno.endereco.estado && `- ${aluno.endereco.estado}`,
+                      aluno.endereco.cep
+                    ].filter(Boolean).join(', ') || 'Endereço não informado'}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Responsáveis */}
+            {aluno.responsaveis && aluno.responsaveis.length > 0 && (
+              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <h2 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                  <Shield className="w-6 h-6 text-blue-600" />
                   Responsáveis
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {aluno.responsaveis.map((responsavel, index) => (
-                    <div key={responsavel.id} className="p-6 bg-blue-50 rounded-xl border border-blue-100">
-                      <h3 className="font-semibold text-blue-900 mb-2">Responsável {index + 1}</h3>
-                      <div className="space-y-2">
-                        <p className="text-blue-800">
-                          <strong>Nome:</strong> {responsavel.nome}
-                        </p>
-                        <p className="text-blue-800">
-                          <strong>Email:</strong> {responsavel.email}
-                        </p>
+                    <div key={responsavel.id} className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 hover:shadow-md transition-all duration-200">
+                      <h3 className="font-bold text-blue-900 mb-4 text-lg">Responsável {index + 1}</h3>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="text-sm font-semibold text-blue-700">Nome</label>
+                          <p className="text-blue-900 font-medium">{responsavel.nome}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-semibold text-blue-700">Email</label>
+                          <p className="text-blue-900 font-medium">{responsavel.email}</p>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -536,8 +586,11 @@ const AlunoDetail: React.FC = () => {
 
           {/* Sidebar - Actions */}
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-              <h2 className="text-lg font-bold text-gray-900 mb-6">Ações</h2>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <Award className="w-5 h-5 text-orange-600" />
+                Ações
+              </h2>
               
               <div className="space-y-4">
                 {canEditStudent && (
@@ -626,16 +679,19 @@ const AlunoDetail: React.FC = () => {
             </div>
 
             {/* Quick Stats */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Informações Rápidas</h2>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-green-600" />
+                Informações Rápidas
+              </h2>
               
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
-                    <Clock className="w-4 h-4" />
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl border border-green-200">
+                  <div className="flex items-center gap-3 text-sm font-semibold text-green-700">
+                    <Clock className="w-5 h-5" />
                     Tempo na Academia
                   </div>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-bold text-green-900 bg-green-200 px-3 py-1 rounded-full">
                     {aluno.dataMatricula 
                       ? Math.ceil((Date.now() - new Date(aluno.dataMatricula).getTime()) / (1000 * 60 * 60 * 24 * 30)) + ' meses'
                       : 'N/A'
@@ -643,12 +699,12 @@ const AlunoDetail: React.FC = () => {
                   </span>
                 </div>
                 
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
-                    <Award className="w-4 h-4" />
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
+                  <div className="flex items-center gap-3 text-sm font-semibold text-blue-700">
+                    <Award className="w-5 h-5" />
                     Graduação Atual
                   </div>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-bold text-blue-900 bg-blue-200 px-3 py-1 rounded-full">
                     {aluno.graduacaoAluno?.belt || 'N/A'}
                   </span>
                 </div>
