@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/Login';
+import AtivacaoPage from '../pages/Ativacao';
 import DashboardPage from '../pages/Dashboard';
 import AulasPage from '../pages/Aulas';
 import AlunosList from '../pages/alunos/AlunosList';
@@ -29,6 +30,7 @@ export default function Router() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/ativar" element={<AtivacaoPage />} />
       <Route
         path="/home"
         element={
