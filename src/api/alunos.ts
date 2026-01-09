@@ -13,7 +13,7 @@ export const alunosApi = {
   // Listar alunos com paginação
   listar: async (page = 0, size = 10) => {
     const { data } = await api.get<PageResponse<AlunoResponse>>('/alunos', {
-      params: { page, size, sort: 'nomeCompleto,asc' }
+      params: { page, size }
     })
     return data
   },
@@ -47,5 +47,20 @@ export const alunosApi = {
   // Promover faixa
   promoverFaixa: async (id: string) => {
     await api.patch(`/alunos/${id}/promover/faixa`)
+  },
+
+  // Rebaixar faixa
+  rebaixarFaixa: async (id: string) => {
+    await api.patch(`/alunos/${id}/rebaixar/faixa`)
+  },
+
+  // Promover grau
+  promoverGrau: async (id: string) => {
+    await api.patch(`/alunos/${id}/promover/grau`)
+  },
+
+  // Rebaixar grau
+  rebaixarGrau: async (id: string) => {
+    await api.patch(`/alunos/${id}/rebaixar/grau`)
   }
 }

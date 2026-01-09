@@ -1,6 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getAulas } from '../mocks/aulas';
 import { AulaItem } from '../types';
 import Layout from '../components/Layout';
 import { useAuth } from '../context/AuthContext';
@@ -9,7 +7,9 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 
 export default function AulasPage() {
-  const { data = [], isLoading } = useQuery<AulaItem[]>(['aulas'], getAulas);
+  // Temporary empty data until aulas API is implemented
+  const data: AulaItem[] = [];
+  const isLoading = false;
   const [filter, setFilter] = useState('');
   const [status, setStatus] = useState('');
   const [page, setPage] = useState(1);

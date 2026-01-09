@@ -15,7 +15,10 @@ export default function Button({
 }: ButtonProps) {
   const base = 'fh-btn'
   const variantClass =
-    variant === 'primary' ? 'fh-btn-primary' : variant === 'secondary' ? 'fh-btn-secondary' : 'fh-btn-secondary'
+    variant === 'primary' ? 'fh-btn-primary' : 
+    variant === 'secondary' ? 'fh-btn-secondary' :
+    variant === 'ghost' ? 'fh-btn-ghost' :
+    variant === 'outline' ? 'fh-btn-outline' : 'fh-btn-secondary'
   const isDisabled = rest.disabled || loading
 
   return (
@@ -32,3 +35,5 @@ export default function Button({
     </button>
   )
 }
+
+export { Button }

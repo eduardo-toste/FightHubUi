@@ -48,6 +48,10 @@ export interface AlunoResponse {
   dataNascimento: string
   dataMatricula: string
   matriculaAtiva: boolean
+  graduacaoAluno?: {
+    belt: string
+    level?: string
+  }
 }
 
 export interface AlunoDetalhadoResponse {
@@ -59,6 +63,10 @@ export interface AlunoDetalhadoResponse {
   dataNascimento: string
   dataMatricula: string
   matriculaAtiva: boolean
+  graduacaoAluno?: {
+    belt: string
+    level?: string
+  }
   endereco?: EnderecoResponse
   responsaveis: ResponsavelResumoResponse[]
 }
