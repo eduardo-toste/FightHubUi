@@ -3,6 +3,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/Login';
 import DashboardPage from '../pages/Dashboard';
 import AulasPage from '../pages/Aulas';
+import AlunosList from '../pages/alunos/AlunosList';
+import AlunoCreate from '../pages/alunos/AlunoCreate';
+import AlunoDetail from '../pages/alunos/AlunoDetail';
 import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
@@ -47,6 +50,30 @@ export default function Router() {
         element={
           <PrivateRoute>
             <AulasPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/alunos"
+        element={
+          <PrivateRoute>
+            <AlunosList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/alunos/novo"
+        element={
+          <PrivateRoute>
+            <AlunoCreate />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/alunos/:id"
+        element={
+          <PrivateRoute>
+            <AlunoDetail />
           </PrivateRoute>
         }
       />
