@@ -1,7 +1,6 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 import { Bell, Search } from 'lucide-react';
-import { ThemeToggle } from './ThemeToggle';
 
 const Topbar: React.FC<{ userName?: string; userRole?: string; onLogout?: () => void }> = ({
   userName,
@@ -30,9 +29,6 @@ const Topbar: React.FC<{ userName?: string; userRole?: string; onLogout?: () => 
             <Bell size={20} />
             <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[var(--fh-card)]" />
           </button>
-
-          {/* Theme Toggle */}
-          <ThemeToggle />
 
           {/* User Avatar */}
           <div className="flex items-center gap-3 pl-4 border-l border-[var(--fh-border)]">
