@@ -40,6 +40,15 @@ export default function UsuarioDetail() {
     email: '',
     telefone: '',
     cpf: '',
+    endereco: {
+      cep: '',
+      logradouro: '',
+      numero: '',
+      complemento: '',
+      bairro: '',
+      cidade: '',
+      estado: '',
+    },
   });
 
   useEffect(() => {
@@ -56,6 +65,15 @@ export default function UsuarioDetail() {
         email: usuario.email,
         telefone: usuario.telefone || '',
         cpf: usuario.cpf,
+        endereco: usuario.endereco || {
+          cep: '',
+          logradouro: '',
+          numero: '',
+          complemento: '',
+          bairro: '',
+          cidade: '',
+          estado: '',
+        },
       });
     }
   }, [usuario]);
@@ -66,6 +84,7 @@ export default function UsuarioDetail() {
       email: formData.email !== usuario?.email ? formData.email : undefined,
       telefone: formData.telefone !== usuario?.telefone ? formData.telefone : undefined,
       cpf: formData.cpf !== usuario?.cpf ? formData.cpf : undefined,
+      endereco: JSON.stringify(formData.endereco) !== JSON.stringify(usuario?.endereco) ? formData.endereco : undefined,
     };
 
     // Remove campos undefined
@@ -196,6 +215,15 @@ export default function UsuarioDetail() {
                       email: usuario.email,
                       telefone: usuario.telefone || '',
                       cpf: usuario.cpf,
+                      endereco: usuario.endereco || {
+                        cep: '',
+                        logradouro: '',
+                        numero: '',
+                        complemento: '',
+                        bairro: '',
+                        cidade: '',
+                        estado: '',
+                      },
                     });
                   }}
                   className="px-4 py-2 bg-[var(--fh-card)] hover:bg-[var(--fh-gray-100)] text-[var(--fh-text)] border border-[var(--fh-border)] rounded-lg transition-all shadow-sm hover:shadow"
@@ -281,39 +309,107 @@ export default function UsuarioDetail() {
         </div>
 
         {/* Endereço */}
-        {usuario.endereco && (
-          <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-6">
-            <h2 className="text-xl font-bold text-[var(--fh-text)] mb-4">Endereço</h2>
+        <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-6">
+          <h2 className="text-xl font-bold text-[var(--fh-text)] mb-4">Endereço</h2>
+          {(usuario.endereco || isEditing) ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)]">CEP</label>
-                <p className="text-[var(--fh-text)]">{usuario.endereco.cep}</p>
+                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">CEP</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={formData.endereco.cep}
+                    onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, cep: e.target.value } })}
+                    className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                    placeholder="00000-000"
+                  />
+                ) : (
+                  <p className="text-[var(--fh-text)]">{usuario.endereco?.cep || '—'}</p>
+                )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)]">Logradouro</label>
-                <p className="text-[var(--fh-text)]">{usuario.endereco.logradouro}</p>
+                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">Logradouro</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={formData.endereco.logradouro}
+                    onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, logradouro: e.target.value } })}
+                    className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                  />
+                ) : (
+                  <p className="text-[var(--fh-text)]">{usuario.endereco?.logradouro || '—'}</p>
+                )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)]">Número</label>
-                <p className="text-[var(--fh-text)]">{usuario.endereco.numero}</p>
+                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">Número</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={formData.endereco.numero}
+                    onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, numero: e.target.value } })}
+                    className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                  />
+                ) : (
+                  <p className="text-[var(--fh-text)]">{usuario.endereco?.numero || '—'}</p>
+                )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)]">Complemento</label>
-                <p className="text-[var(--fh-text)]">{usuario.endereco.complemento || '—'}</p>
+                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">Complemento</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={formData.endereco.complemento}
+                    onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, complemento: e.target.value } })}
+                    className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                  />
+                ) : (
+                  <p className="text-[var(--fh-text)]">{usuario.endereco?.complemento || '—'}</p>
+                )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)]">Bairro</label>
-                <p className="text-[var(--fh-text)]">{usuario.endereco.bairro}</p>
+                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">Bairro</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={formData.endereco.bairro}
+                    onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, bairro: e.target.value } })}
+                    className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                  />
+                ) : (
+                  <p className="text-[var(--fh-text)]">{usuario.endereco?.bairro || '—'}</p>
+                )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)]">Cidade</label>
-                <p className="text-[var(--fh-text)]">
-                  {usuario.endereco.cidade} - {usuario.endereco.estado}
-                </p>
+                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">Cidade/Estado</label>
+                {isEditing ? (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={formData.endereco.cidade}
+                      onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, cidade: e.target.value } })}
+                      className="flex-1 px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                      placeholder="Cidade"
+                    />
+                    <input
+                      type="text"
+                      value={formData.endereco.estado}
+                      onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, estado: e.target.value.toUpperCase() } })}
+                      className="w-20 px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                      placeholder="UF"
+                      maxLength={2}
+                    />
+                  </div>
+                ) : (
+                  <p className="text-[var(--fh-text)]">
+                    {usuario.endereco?.cidade || '—'} {usuario.endereco?.estado ? `- ${usuario.endereco.estado}` : ''}
+                  </p>
+                )}
               </div>
             </div>
-          </div>
-        )}
+          ) : (
+            <p className="text-[var(--fh-muted)] text-center py-8">Endereço não cadastrado</p>
+          )}
+        </div>
 
         {/* Modal de Alteração de Role */}
         {showRoleModal && (
