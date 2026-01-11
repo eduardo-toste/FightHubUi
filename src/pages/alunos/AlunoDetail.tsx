@@ -15,13 +15,15 @@ import {
   User,
   Award,
   BookOpen,
-  Clock
+  Clock,
+  AlertTriangle
 } from 'lucide-react'
 import { useToast } from '../../context/ToastContext'
 import useAuth from '../../hooks/useAuth'
 import { alunosApi } from '../../api/alunos'
 import { Button } from '../../components/Button'
 import { ConfirmModal } from '../../components/ConfirmModal'
+import Layout from '../../components/Layout'
 import type { AlunoDetalhadoResponse } from '../../types'
 
 // Interface para o formulário de edição
@@ -143,7 +145,7 @@ const AlunoDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { showSuccess, showError } = useToast()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   
   const [aluno, setAluno] = useState<AlunoDetalhadoResponse | null>(null)
   const [loading, setLoading] = useState(true)
@@ -406,77 +408,129 @@ const AlunoDetail: React.FC = () => {
   // Tela amigável para cadastro incompleto
   if (incompleteProfile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-6">
-        <div className="max-w-2xl w-full">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-yellow-200 dark:border-yellow-800/50 overflow-hidden">
-            {/* Header com ícone */}
-            <div className="bg-gradient-to-r from-yellow-400 to-orange-400 dark:from-yellow-600 dark:to-orange-600 p-8 text-center">
-              <div className="w-24 h-24 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg">
-                <svg className="w-12 h-12 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <h1 className="text-3xl font-bold text-white mb-2">Cadastro Incompleto</h1>
-              <p className="text-yellow-50 text-lg">Este aluno ainda não finalizou o cadastro</p>
+      <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center shadow-lg">
+              <AlertTriangle className="w-6 h-6 text-white" />
             </div>
+            <div>
+              <h1 className="text-3xl font-bold text-[var(--fh-text)]">Cadastro Incompleto</h1>
+              <p className="text-[var(--fh-muted)] mt-1">Este aluno ainda não finalizou o cadastro</p>
+            </div>
+          </div>
 
-            {/* Conteúdo */}
-            <div className="p-8">
-              <div className="space-y-6">
-                <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 dark:border-yellow-600 p-6 rounded-r-xl">
-                  <h3 className="text-lg font-semibold text-yellow-900 dark:text-yellow-200 mb-3 flex items-center gap-2">
-                    <User className="w-5 h-5" />
-                    O que aconteceu?
-                  </h3>
-                  <p className="text-yellow-800 dark:text-yellow-300 leading-relaxed">
-                    Este aluno foi cadastrado no sistema, mas ainda não realizou a primeira ativação da conta 
-                    e não preencheu todas as informações necessárias, como endereço, telefone e outros dados pessoais.
-                  </p>
-                </div>
-
-                <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 dark:border-blue-600 p-6 rounded-r-xl">
-                  <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-200 mb-3 flex items-center gap-2">
-                    <Mail className="w-5 h-5" />
-                    O que fazer?
-                  </h3>
-                  <ul className="space-y-2 text-blue-800 dark:text-blue-300">
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-600 dark:text-blue-400 font-bold mt-1">•</span>
-                      <span>Entre em contato com o aluno e solicite que ele acesse o sistema pela primeira vez</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-600 dark:text-blue-400 font-bold mt-1">•</span>
-                      <span>Oriente-o a preencher todas as informações do perfil</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-blue-600 dark:text-blue-400 font-bold mt-1">•</span>
-                      <span>Após o cadastro completo, todos os dados ficarão disponíveis aqui</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl border border-gray-200 dark:border-gray-600">
-                  <p className="text-gray-600 dark:text-gray-300 text-sm text-center italic">
-                    💡 Dica: O aluno deve ter recebido um email com as instruções de primeiro acesso
-                  </p>
-                </div>
+          {/* Card de Aviso Principal */}
+          <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 dark:from-yellow-500/20 dark:to-orange-500/20 border-2 border-yellow-500/50 dark:border-yellow-500/50 rounded-xl p-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-6 h-6 text-white" />
               </div>
-
-              {/* Botão de voltar */}
-              <div className="mt-8 flex justify-center">
-                <Button 
-                  onClick={() => navigate('/alunos')} 
-                  variant="primary"
-                  className="px-8 py-3 text-lg"
-                >
-                  <ArrowLeft className="w-5 h-5 mr-2" />
-                  Voltar para Lista de Alunos
-                </Button>
+              <div className="flex-1">
+                <h2 className="text-xl font-bold text-yellow-700 dark:text-yellow-400 mb-2">
+                  Atenção: Perfil Não Ativado
+                </h2>
+                <p className="text-[var(--fh-text)] leading-relaxed">
+                  Este aluno foi cadastrado no sistema, mas ainda não realizou a primeira ativação da conta 
+                  e não preencheu todas as informações necessárias, como endereço, telefone e outros dados pessoais.
+                </p>
               </div>
             </div>
           </div>
+
+          {/* Cards de Informação */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* O que aconteceu? */}
+            <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
+                  <User className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-[var(--fh-text)]">O que aconteceu?</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 rounded-full bg-yellow-500 mt-2 flex-shrink-0" />
+                  <p className="text-[var(--fh-text)] text-sm">
+                    O aluno foi cadastrado por um administrador
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 rounded-full bg-yellow-500 mt-2 flex-shrink-0" />
+                  <p className="text-[var(--fh-text)] text-sm">
+                    Ainda não fez o primeiro acesso ao sistema
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 rounded-full bg-yellow-500 mt-2 flex-shrink-0" />
+                  <p className="text-[var(--fh-text)] text-sm">
+                    Dados completos não estão disponíveis
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* O que fazer? */}
+            <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-[var(--fh-text)]">O que fazer?</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">
+                    1
+                  </div>
+                  <p className="text-[var(--fh-text)] text-sm">
+                    Entre em contato com o aluno
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">
+                    2
+                  </div>
+                  <p className="text-[var(--fh-text)] text-sm">
+                    Solicite o primeiro acesso ao sistema
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">
+                    3
+                  </div>
+                  <p className="text-[var(--fh-text)] text-sm">
+                    Oriente o preenchimento do perfil completo
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Dica */}
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200/50 dark:border-blue-600/50 rounded-xl p-4">
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">💡</div>
+              <p className="text-blue-800 dark:text-blue-300 text-sm">
+                <strong>Dica:</strong> O aluno deve ter recebido um email com as instruções de primeiro acesso. 
+                Após a ativação, todos os dados ficarão disponíveis aqui.
+              </p>
+            </div>
+          </div>
+
+          {/* Botão de Voltar */}
+          <div className="flex justify-start">
+            <button
+              onClick={() => navigate('/alunos')}
+              className="px-6 py-3 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white rounded-lg transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Voltar para Lista de Alunos
+            </button>
+          </div>
         </div>
-      </div>
+      </Layout>
     )
   }
 
