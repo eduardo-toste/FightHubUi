@@ -5,6 +5,7 @@ import * as z from 'zod'
 import { useAuth } from '../context/AuthContext'
 import { Eye, EyeOff, Mail, Lock, Target, X, Info } from 'lucide-react'
 import RecuperarSenhaModal from '../components/RecuperarSenhaModal'
+import { ThemeToggle } from '../components/ThemeToggle'
 
 const schema = z.object({
   email: z.string().email('Email inválido'),
@@ -106,6 +107,11 @@ export default function LoginPage() {
               Centro de treinamento e evolução
             </p>
           </div>
+        </div>
+
+        {/* Theme Toggle - canto superior direito */}
+        <div className="absolute top-6 right-6 z-20">
+          <ThemeToggle />
         </div>
 
         {/* Card de Login - Estilo Tatame */}

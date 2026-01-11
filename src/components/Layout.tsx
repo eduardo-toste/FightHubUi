@@ -1,31 +1,13 @@
 import React from 'react';
 import Sidebar from './Sidebar';
-import { Bell, Search, Moon, Sun } from 'lucide-react';
+import { Bell, Search } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 const Topbar: React.FC<{ userName?: string; userRole?: string; onLogout?: () => void }> = ({
   userName,
   userRole,
   onLogout,
 }) => {
-  const [isDark, setIsDark] = React.useState(() => {
-    try {
-      return document.documentElement.classList.contains('dark');
-    } catch {
-      return false;
-    }
-  });
-
-  function toggleTheme() {
-    try {
-      document.documentElement.classList.toggle('dark');
-      const next = !isDark;
-      setIsDark(next);
-      localStorage.setItem('fh_theme_dark', next ? '1' : '0');
-    } catch (e) {
-      console.warn('toggleTheme error', e);
-    }
-  }
-
   return (
     <header className="sticky top-0 z-30 bg-[var(--fh-card)] border-b border-[var(--fh-border)] shadow-sm">
       <div className="flex items-center justify-between px-6 py-4">
@@ -50,13 +32,7 @@ const Topbar: React.FC<{ userName?: string; userRole?: string; onLogout?: () => 
           </button>
 
           {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[var(--fh-border)] text-[var(--fh-muted)] hover:text-[var(--fh-text)] transition-colors"
-            aria-label={isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
-          >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
+          <ThemeToggle />
 
           {/* User Avatar */}
           <div className="flex items-center gap-3 pl-4 border-l border-[var(--fh-border)]">

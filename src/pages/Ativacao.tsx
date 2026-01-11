@@ -6,6 +6,7 @@ import * as z from 'zod'
 import { ativacaoApi, type AtivacaoData, type EnderecoData } from '../api/ativacao'
 import { Eye, EyeOff, Phone, MapPin, CheckCircle, AlertCircle, Home, User } from 'lucide-react'
 import { Button } from '../components/Button'
+import { ThemeToggle } from '../components/ThemeToggle'
 
 const enderecoSchema = z.object({
   cep: z.string().min(8, 'CEP inválido').max(9),
@@ -155,23 +156,23 @@ export default function AtivacaoPage() {
   // Tela de sucesso
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-6">
         <div className="max-w-md w-full">
-          <div className="bg-white rounded-3xl shadow-2xl border border-green-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-green-400 to-green-600 p-8 text-center">
-              <div className="w-24 h-24 mx-auto mb-4 bg-white rounded-full flex items-center justify-center shadow-lg">
-                <CheckCircle className="w-12 h-12 text-green-600" />
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-green-200 dark:border-green-800 overflow-hidden">
+            <div className="bg-gradient-to-r from-green-400 to-green-600 dark:from-green-600 dark:to-green-800 p-8 text-center">
+              <div className="w-24 h-24 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg">
+                <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" />
               </div>
               <h1 className="text-3xl font-bold text-white mb-2">Conta Ativada!</h1>
               <p className="text-green-50 text-lg">Seu cadastro foi concluído com sucesso</p>
             </div>
 
             <div className="p-8 text-center">
-              <p className="text-gray-700 mb-6">
+              <p className="text-gray-700 dark:text-gray-300 mb-6">
                 Sua conta está ativa e pronta para uso. Você será redirecionado para a página de login em instantes.
               </p>
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full animate-pulse"></div>
                 <span>Redirecionando...</span>
               </div>
             </div>
@@ -193,6 +194,11 @@ export default function AtivacaoPage() {
       </div>
 
       <div className="relative w-full max-w-2xl z-10">
+        {/* Theme Toggle - canto superior direito */}
+        <div className="absolute top-0 right-0 z-20">
+          <ThemeToggle />
+        </div>
+        
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="inline-block relative mb-5">
@@ -206,12 +212,12 @@ export default function AtivacaoPage() {
               </span>
             </h1>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Ativação de Conta</h2>
-          <p className="text-gray-600">Complete seu cadastro para começar</p>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Ativação de Conta</h2>
+          <p className="text-gray-600 dark:text-gray-400">Complete seu cadastro para começar</p>
         </div>
 
         {/* Card do formulário */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-200 p-8">
+        <div className="tatame-card p-8">
           
           {/* Erro de token */}
           {error && (

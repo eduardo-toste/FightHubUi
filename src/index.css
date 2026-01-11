@@ -108,14 +108,45 @@ body {
   font-family: 'Segoe UI', system-ui, Arial, sans-serif;
   background: var(--fh-bg);
   color: var(--fh-body);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Tema Escuro - Paleta Profissional */
 .dark {
-  --fh-bg: #0b0f12;
-  --fh-card: #0f1720;
-  --fh-text: #e6eef6;
+  /* Backgrounds escuros mas não pretos puros */
+  --fh-bg: #0a0e14;
+  --fh-card: #141a24;
+  --fh-tatame: #0f1419;
+  --fh-tatame-dark: #0a0e14;
+  
+  /* Textos claros com bom contraste */
+  --fh-text: #f1f5f9;
   --fh-body: #cbd5e1;
   --fh-muted: #94a3b8;
+  
+  /* Bordas e divisores sutis */
+  --fh-border: #1e293b;
+  --fh-divider: #1a2332;
+  
+  /* Escala de cinzas invertida */
+  --fh-gray-50: #1e293b;
+  --fh-gray-100: #1a2332;
+  --fh-gray-200: #1e293b;
+  --fh-gray-300: #334155;
+  --fh-gray-400: #475569;
+  --fh-gray-500: #64748b;
+  --fh-gray-600: #94a3b8;
+  --fh-gray-700: #cbd5e1;
+  --fh-gray-800: #e2e8f0;
+  --fh-gray-900: #f1f5f9;
+  
+  /* Cores primárias ajustadas para dark mode */
+  --fh-primary: #ea580c;
+  --fh-primary-dark: #c2410c;
+  --fh-primary-light: #fb923c;
+  
+  --fh-accent: #3b82f6;
+  --fh-accent-light: #60a5fa;
 }
 
 /* Components */
@@ -134,21 +165,24 @@ body {
 
 /* dark mode adjustments for login background */
 .dark .login-bg {
-  background-color: #0b0f12; /* dark base */
+  background: linear-gradient(135deg, #0a0e14 0%, #141a24 50%, #1e293b 100%);
 }
 
 .dark .login-bg::before {
   background-image:
-    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px),
-    radial-gradient(rgba(255,255,255,0.01) 0.5px, transparent 0.5px);
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.015) 0 1px, rgba(255,255,255,0.015) 1px 2px, transparent 2px 14px),
+    radial-gradient(rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
+    linear-gradient(120deg, rgba(59, 130, 246,0.06) 0%, rgba(59, 130, 246,0.02) 40%, rgba(59, 130, 246,0) 70%);
   mix-blend-mode: overlay;
-  opacity: 0.5;
+  opacity: 0.7;
+  box-shadow: inset 0 28px 48px rgba(0,0,0,0.4), inset 0 -28px 48px rgba(0,0,0,0.4);
 }
 
 .dark .login-bg::after {
-  background: radial-gradient(circle at 100% 0%, rgba(215,38,56,0.06) 0%, rgba(215,38,56,0.02) 25%, rgba(215,38,56,0.00) 60%);
-  filter: blur(28px);
+  background: radial-gradient(circle at 100% 0%, rgba(234, 88, 12,0.15) 0%, rgba(234, 88, 12,0.08) 30%, rgba(234, 88, 12,0.00) 65%);
+  filter: blur(40px);
 }
 
 .auth-card {
@@ -283,7 +317,7 @@ body {
 }
 
 .dark .tatame-bg {
-  background: linear-gradient(135deg, #0f1720 0%, #1e293b 50%, #334155 100%);
+  background: linear-gradient(135deg, #0a0e14 0%, #141a24 50%, #1e293b 100%);
 }
 
 .dark .tatame-bg::before {
@@ -292,17 +326,58 @@ body {
       0deg,
       transparent,
       transparent 3px,
-      rgba(30, 64, 175, 0.15) 3px,
-      rgba(30, 64, 175, 0.15) 6px
+      rgba(59, 130, 246, 0.08) 3px,
+      rgba(59, 130, 246, 0.08) 6px
     ),
     repeating-linear-gradient(
       90deg,
       transparent,
       transparent 3px,
-      rgba(30, 64, 175, 0.12) 3px,
-      rgba(30, 64, 175, 0.12) 6px
+      rgba(59, 130, 246, 0.06) 3px,
+      rgba(59, 130, 246, 0.06) 6px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(234, 88, 12, 0.05) 8px,
+      rgba(234, 88, 12, 0.05) 9px
     );
-  opacity: 0.6;
+  opacity: 0.8;
+}
+
+.dark .tatame-bg::after {
+  background: 
+    radial-gradient(circle at 30% 40%, rgba(234, 88, 12, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
+}
+
+.dark .tatame-lines::before {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(234, 88, 12, 0.25) 20%,
+    rgba(234, 88, 12, 0.35) 50%,
+    rgba(234, 88, 12, 0.25) 80%,
+    transparent 100%
+  );
+}
+
+.dark .tatame-lines::after {
+  background: linea20, 26, 36, 0.95);
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  box-shadow: 
+    0 25px 80px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(59, 130, 246, 0.15) inset,
+    0 0 40px rgba(234, 88, 12, 0.1);
+}
+
+.dark .tatame-card:hover {
+  box-shadow: 
+    0 30px 90px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(59, 130, 246, 0.25) inset,
+    0 0 50px rgba(234, 88, 12, 0.15);
+  border-color: rgba(234, 88, 12, 0.4);
 }
 
 /* Card de login - Estilo Tatame */
