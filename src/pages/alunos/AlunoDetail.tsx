@@ -406,13 +406,13 @@ const AlunoDetail: React.FC = () => {
   // Tela amigável para cadastro incompleto
   if (incompleteProfile) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-50 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-6">
         <div className="max-w-2xl w-full">
-          <div className="bg-white rounded-3xl shadow-2xl border border-yellow-200 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-yellow-200 dark:border-yellow-800/50 overflow-hidden">
             {/* Header com ícone */}
-            <div className="bg-gradient-to-r from-yellow-400 to-orange-400 p-8 text-center">
-              <div className="w-24 h-24 mx-auto mb-4 bg-white rounded-full flex items-center justify-center shadow-lg">
-                <svg className="w-12 h-12 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+            <div className="bg-gradient-to-r from-yellow-400 to-orange-400 dark:from-yellow-600 dark:to-orange-600 p-8 text-center">
+              <div className="w-24 h-24 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg">
+                <svg className="w-12 h-12 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -423,40 +423,40 @@ const AlunoDetail: React.FC = () => {
             {/* Conteúdo */}
             <div className="p-8">
               <div className="space-y-6">
-                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-r-xl">
-                  <h3 className="text-lg font-semibold text-yellow-900 mb-3 flex items-center gap-2">
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 dark:border-yellow-600 p-6 rounded-r-xl">
+                  <h3 className="text-lg font-semibold text-yellow-900 dark:text-yellow-200 mb-3 flex items-center gap-2">
                     <User className="w-5 h-5" />
                     O que aconteceu?
                   </h3>
-                  <p className="text-yellow-800 leading-relaxed">
+                  <p className="text-yellow-800 dark:text-yellow-300 leading-relaxed">
                     Este aluno foi cadastrado no sistema, mas ainda não realizou a primeira ativação da conta 
                     e não preencheu todas as informações necessárias, como endereço, telefone e outros dados pessoais.
                   </p>
                 </div>
 
-                <div className="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-r-xl">
-                  <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 dark:border-blue-600 p-6 rounded-r-xl">
+                  <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-200 mb-3 flex items-center gap-2">
                     <Mail className="w-5 h-5" />
                     O que fazer?
                   </h3>
-                  <ul className="space-y-2 text-blue-800">
+                  <ul className="space-y-2 text-blue-800 dark:text-blue-300">
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-600 font-bold mt-1">•</span>
+                      <span className="text-blue-600 dark:text-blue-400 font-bold mt-1">•</span>
                       <span>Entre em contato com o aluno e solicite que ele acesse o sistema pela primeira vez</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-600 font-bold mt-1">•</span>
+                      <span className="text-blue-600 dark:text-blue-400 font-bold mt-1">•</span>
                       <span>Oriente-o a preencher todas as informações do perfil</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-blue-600 font-bold mt-1">•</span>
+                      <span className="text-blue-600 dark:text-blue-400 font-bold mt-1">•</span>
                       <span>Após o cadastro completo, todos os dados ficarão disponíveis aqui</span>
                     </li>
                   </ul>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-xl">
-                  <p className="text-gray-600 text-sm text-center italic">
+                <div className="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-xl border border-gray-200 dark:border-gray-600">
+                  <p className="text-gray-600 dark:text-gray-300 text-sm text-center italic">
                     💡 Dica: O aluno deve ter recebido um email com as instruções de primeiro acesso
                   </p>
                 </div>
@@ -482,13 +482,13 @@ const AlunoDetail: React.FC = () => {
 
   if (!aluno) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-24 h-24 mx-auto mb-8 bg-gray-100 rounded-2xl flex items-center justify-center">
-            <User className="w-12 h-12 text-gray-400" />
+          <div className="w-24 h-24 mx-auto mb-8 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center">
+            <User className="w-12 h-12 text-gray-400 dark:text-gray-500" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Aluno não encontrado</h1>
-          <p className="text-gray-600 mb-8">Não foi possível encontrar os dados deste aluno.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Aluno não encontrado</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-8">Não foi possível encontrar os dados deste aluno.</p>
           <Button onClick={() => navigate('/alunos')} variant="primary">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Voltar para Lista

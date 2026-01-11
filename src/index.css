@@ -548,6 +548,116 @@ body {
     @apply inline-block px-2 py-1 text-xs rounded-full bg-[var(--fh-divider)] text-[var(--fh-body)];
   }
 
+  /* Dark mode adjustments */
+  .dark .fh-skeleton {
+    @apply bg-[var(--fh-gray-700)];
+  }
+
+  /* Status badges dark mode */
+  .dark .bg-green-50 {
+    @apply bg-green-900/30;
+  }
+  
+  .dark .bg-green-100 {
+    @apply bg-green-900/40;
+  }
+  
+  .dark .text-green-800 {
+    @apply text-green-300;
+  }
+  
+  .dark .bg-red-50 {
+    @apply bg-red-900/30;
+  }
+  
+  .dark .bg-red-100 {
+    @apply bg-red-900/40;
+  }
+  
+  .dark .text-red-800 {
+    @apply text-red-300;
+  }
+  
+  .dark .bg-blue-50 {
+    @apply bg-blue-900/30;
+  }
+  
+  .dark .bg-blue-100 {
+    @apply bg-blue-900/40;
+  }
+  
+  .dark .text-blue-600 {
+    @apply text-blue-300;
+  }
+  
+  .dark .bg-yellow-50 {
+    @apply bg-yellow-900/30;
+  }
+  
+  .dark .bg-yellow-100 {
+    @apply bg-yellow-900/40;
+  }
+  
+  .dark .bg-yellow-200 {
+    @apply bg-yellow-900/50;
+  }
+  
+  .dark .text-yellow-800 {
+    @apply text-yellow-300;
+  }
+  
+  .dark .text-yellow-700 {
+    @apply text-yellow-200;
+  }
+
+  /* Dark mode input focus */
+  .dark .fh-input:focus {
+    box-shadow: 0 6px 20px rgba(234, 88, 12, 0.15), 0 0 0 4px rgba(234, 88, 12, 0.12);
+  }
+
+  /* Dark mode button adjustments */
+  .dark .fh-btn-secondary {
+    @apply bg-[var(--fh-card)] border-[var(--fh-border)] text-[var(--fh-text)] hover:bg-[var(--fh-gray-100)];
+  }
+
+  .dark .fh-btn-ghost:hover {
+    @apply bg-[var(--fh-gray-200)];
+  }
+
+  /* Dark mode tables */
+  .dark .border-t {
+    @apply border-[var(--fh-border)];
+  }
+
+  .dark .border-b {
+    @apply border-[var(--fh-border)];
+  }
+
+  /* Dark mode specific overrides for dashboard cards */
+  .dark .bg-gray-50 {
+    @apply bg-gray-800/50;
+  }
+
+  .dark .bg-gray-100 {
+    @apply bg-gray-800/60;
+  }
+
+  .dark .border-gray-100 {
+    @apply border-gray-700;
+  }
+
+  .dark .text-gray-700 {
+    @apply text-gray-300;
+  }
+
+  .dark .text-green-600 {
+    @apply text-green-400;
+  }
+
+  .dark .text-green-700 {
+    @apply text-green-300;
+  }
+
   .fh-table {
     @apply w-full table-auto border-collapse bg-transparent;
   }
