@@ -10,7 +10,9 @@ import {
   X,
   LogOut,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  UserCog,
+  UserCircle
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -24,13 +26,21 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
 
-  const menuItems = [
-    { to: '/home', label: 'Home', icon: LayoutDashboard },
-    { to: '/aulas', label: 'Aulas', icon: BookOpen },
-    { to: '/alunos', label: 'Alunos', icon: Users },
-    { to: '/turmas', label: 'Turmas', icon: GraduationCap },
-    { to: '/config', label: 'Configurações', icon: Settings },
+  // Definir itens de menu baseado no role
+  const baseMenuItems = [
+    { to: '/home', label: 'Home', icon: LayoutDashboard, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
+    { to: '/aulas', label: 'Aulas', icon: BookOpen, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO'] },
+    { to: '/alunos', label: 'Alunos', icon: Users, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'RESPONSAVEL'] },
+    { to: '/turmas', label: 'Turmas', icon: GraduationCap, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
+    { to: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['ADMIN', 'COORDENADOR'] },
+    { to: '/perfil', label: 'Minha Conta', icon: UserCircle, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
+    { to: '/config', label: 'Configurações', icon: Settings, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
   ];
+
+  // Filtrar itens baseado no role do usuário
+  const menuItems = baseMenuItems.filter(item => 
+    !userRole || item.roles.includes(userRole)
+  );
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -103,23 +113,29 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
       {/* User Section */}
       {!isCollapsed && (
         <div className="mt-auto pt-6 border-t border-[var(--fh-border)]">
-          <div className="px-4 py-3 rounded-xl bg-[var(--fh-gray-50)]">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-accent)] flex items-center justify-center text-white font-bold text-sm">
-                {userName?.charAt(0).toUpperCase() || 'U'}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold text-[var(--fh-text)] truncate">
-                  {userName || 'Usuário'}
+          <Link 
+            to="/perfil"
+            onClick={() => setIsMobileOpen(false)}
+            className="block"
+          >
+            <div className="px-4 py-3 rounded-xl bg-[var(--fh-gray-50)] hover:bg-[var(--fh-border)] transition-colors">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-accent)] flex items-center justify-center text-white font-bold text-sm">
+                  {userName?.charAt(0).toUpperCase() || 'U'}
                 </div>
-                {userRole && (
-                  <div className="text-xs text-[var(--fh-muted)] capitalize">
-                    {userRole.toLowerCase()}
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold text-[var(--fh-text)] truncate">
+                    {userName || 'Usuário'}
                   </div>
-                )}
+                  {userRole && (
+                    <div className="text-xs text-[var(--fh-muted)] capitalize">
+                      {userRole.toLowerCase()}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
           {onLogout && (
             <button
               onClick={onLogout}

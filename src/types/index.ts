@@ -37,6 +37,87 @@ export type AulaItem = {
 };
 
 // ============================================
+// USUARIO TYPES
+// ============================================
+export type Role = 'ADMIN' | 'PROFESSOR' | 'ALUNO' | 'RESPONSAVEL' | 'COORDENADOR';
+
+export interface EnderecoResponse {
+  cep: string;
+  logradouro: string;
+  numero: string;
+  complemento?: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+}
+
+export interface UsuarioResponse {
+  id: string;
+  nome: string;
+  cpf: string;
+  email: string;
+  telefone?: string;
+  role: Role;
+  ativo: boolean;
+}
+
+export interface UsuarioDetalhadoResponse {
+  id: string;
+  nome: string;
+  cpf: string;
+  email: string;
+  telefone?: string;
+  foto?: string;
+  role: Role;
+  loginSocial: boolean;
+  ativo: boolean;
+  endereco?: EnderecoResponse;
+}
+
+export interface UpdateRoleRequest {
+  role: Role;
+}
+
+export interface UpdateStatusRequest {
+  usuarioAtivo: boolean;
+}
+
+export interface UsuarioUpdateCompletoRequest {
+  nome: string;
+  email: string;
+  foto?: string;
+  telefone?: string;
+  cpf: string;
+  endereco?: EnderecoResponse;
+  role: Role;
+  ativo: boolean;
+}
+
+export interface UsuarioUpdateParcialRequest {
+  nome?: string;
+  email?: string;
+  foto?: string;
+  telefone?: string;
+  cpf?: string;
+  endereco?: EnderecoResponse;
+  role?: Role;
+  ativo?: boolean;
+}
+
+export interface UpdateSenhaRequest {
+  senhaAtual: string;
+  senhaNova: string;
+}
+
+export interface PagedUsuarioResponse {
+  content: UsuarioResponse[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
+// ============================================
 // ALUNO TYPES
 // ============================================
 export interface AlunoResponse {

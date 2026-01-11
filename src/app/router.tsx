@@ -7,6 +7,9 @@ import AulasPage from '../pages/Aulas';
 import AlunosList from '../pages/alunos/AlunosList';
 import AlunoCreate from '../pages/alunos/AlunoCreate';
 import AlunoDetail from '../pages/alunos/AlunoDetail';
+import UsuariosList from '../pages/usuarios/UsuariosList';
+import UsuarioDetail from '../pages/usuarios/UsuarioDetail';
+import MeuPerfil from '../pages/usuarios/MeuPerfil';
 import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
@@ -76,6 +79,30 @@ export default function Router() {
         element={
           <PrivateRoute>
             <AlunoDetail />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/usuarios"
+        element={
+          <PrivateRoute>
+            <UsuariosList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/usuarios/:id"
+        element={
+          <PrivateRoute>
+            <UsuarioDetail />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/perfil"
+        element={
+          <PrivateRoute>
+            <MeuPerfil />
           </PrivateRoute>
         }
       />
