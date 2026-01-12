@@ -10,8 +10,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  UserCog,
-  UserCircle
+  UserCog
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -32,7 +31,6 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
     { to: '/alunos', label: 'Alunos', icon: Users, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'RESPONSAVEL'] },
     { to: '/turmas', label: 'Turmas', icon: GraduationCap, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
     { to: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['ADMIN', 'COORDENADOR'] },
-    { to: '/perfil', label: 'Minha Conta', icon: UserCircle, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
   ];
 
   // Filtrar itens baseado no role do usuário
@@ -111,33 +109,10 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
       {/* User Section */}
       {!isCollapsed && (
         <div className="mt-auto pt-6 border-t border-[var(--fh-border)]">
-          <Link 
-            to="/perfil"
-            onClick={() => setIsMobileOpen(false)}
-            className="block"
-          >
-            <div className="px-4 py-3 rounded-xl bg-[var(--fh-gray-50)] hover:bg-[var(--fh-border)] transition-colors">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-accent)] flex items-center justify-center text-white font-bold text-sm">
-                  {userName?.charAt(0).toUpperCase() || 'U'}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-[var(--fh-text)] truncate">
-                    {userName || 'Usuário'}
-                  </div>
-                  {userRole && (
-                    <div className="text-xs text-[var(--fh-muted)] capitalize">
-                      {userRole.toLowerCase()}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </Link>
           {onLogout && (
             <button
               onClick={onLogout}
-              className="w-full mt-3 flex items-center gap-3 px-4 py-3 rounded-xl text-[var(--fh-body)] hover:bg-red-50 hover:text-red-600 transition-all duration-200"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[var(--fh-body)] hover:bg-red-50 hover:text-red-600 transition-all duration-200"
             >
               <LogOut size={20} className="text-[var(--fh-muted)]" />
               <span className="font-medium text-sm">Sair</span>

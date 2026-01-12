@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { Bell, Search } from 'lucide-react';
 
@@ -7,6 +8,8 @@ const Topbar: React.FC<{ userName?: string; userRole?: string; onLogout?: () => 
   userRole,
   onLogout,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <header className="sticky top-0 z-30 bg-[var(--fh-card)] border-b border-[var(--fh-border)] shadow-sm">
       <div className="flex items-center justify-between px-6 py-4">
@@ -31,7 +34,10 @@ const Topbar: React.FC<{ userName?: string; userRole?: string; onLogout?: () => 
           </button>
 
           {/* User Avatar */}
-          <div className="flex items-center gap-3 pl-4 border-l border-[var(--fh-border)]">
+          <div 
+            onClick={() => navigate('/perfil')}
+            className="flex items-center gap-3 pl-4 border-l border-[var(--fh-border)] cursor-pointer hover:opacity-80 transition-opacity"
+          >
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-accent)] flex items-center justify-center text-white font-bold text-sm shadow-lg">
               {userName?.charAt(0).toUpperCase() || 'U'}
             </div>
