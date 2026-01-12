@@ -5,7 +5,6 @@ import {
   BookOpen, 
   Users, 
   GraduationCap, 
-  Settings, 
   Menu, 
   X,
   LogOut,
@@ -34,7 +33,6 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
     { to: '/turmas', label: 'Turmas', icon: GraduationCap, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
     { to: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['ADMIN', 'COORDENADOR'] },
     { to: '/perfil', label: 'Minha Conta', icon: UserCircle, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
-    { to: '/config', label: 'Configurações', icon: Settings, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
   ];
 
   // Filtrar itens baseado no role do usuário
