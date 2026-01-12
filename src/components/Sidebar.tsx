@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
-  BookOpen, 
   Users, 
-  GraduationCap, 
   Menu, 
   X,
   LogOut,
@@ -20,16 +18,21 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const saved = localStorage.getItem('sidebarCollapsed');
+    return saved === 'true';
+  });
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    localStorage.setItem('sidebarCollapsed', String(isCollapsed));
+  }, [isCollapsed]);
 
   // Definir itens de menu baseado no role
   const baseMenuItems = [
     { to: '/home', label: 'Home', icon: LayoutDashboard, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
-    { to: '/aulas', label: 'Aulas', icon: BookOpen, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO'] },
     { to: '/alunos', label: 'Alunos', icon: Users, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'RESPONSAVEL'] },
-    { to: '/turmas', label: 'Turmas', icon: GraduationCap, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
     { to: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['ADMIN', 'COORDENADOR'] },
   ];
 
@@ -83,11 +86,11 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
               key={item.to}
               to={item.to}
               onClick={() => setIsMobileOpen(false)}
-              className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+              className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 min-h-[48px] ${
                 active
                   ? 'bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white shadow-lg shadow-[var(--fh-primary)]/30'
                   : 'text-[var(--fh-body)] hover:bg-[var(--fh-border)] hover:text-[var(--fh-primary)]'
-              } ${isCollapsed ? 'justify-center px-3' : ''}`}
+              } ${isCollapsed ? 'justify-center !px-3' : ''}`}
             >
               <Icon 
                 size={20} 

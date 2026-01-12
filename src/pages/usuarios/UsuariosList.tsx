@@ -58,15 +58,17 @@ export default function UsuariosList() {
     <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
-            <UserCog className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-[var(--fh-text)]">Usuários</h1>
-            <p className="text-[var(--fh-muted)] mt-1">
-              Gerencie todos os usuários do sistema
-            </p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
+              <UserCog className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-[var(--fh-text)]">Usuários</h1>
+              <p className="text-[var(--fh-muted)] mt-1">
+                Gerencie todos os usuários do sistema
+              </p>
+            </div>
           </div>
         </div>
 
