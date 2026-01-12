@@ -114,7 +114,7 @@ export default function AlunosList() {
         const faixa = aluno.graduacaoAluno.belt || '-'
         const grau = aluno.graduacaoAluno.level || ''
         return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--fh-primary)]/10 text-[var(--fh-primary)]">
+          <span className="inline-block px-2.5 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-blue-500/10 to-indigo-500/10 text-blue-700 border border-blue-300/50 dark:from-blue-500/20 dark:to-indigo-500/20 dark:text-blue-400 dark:border-blue-500/50 whitespace-nowrap">
             {faixa} {grau && `(${grau})`}
           </span>
         )
@@ -134,15 +134,15 @@ export default function AlunosList() {
       key: 'matriculaAtiva',
       label: 'Status',
       render: (aluno: AlunoResponse) => (
-        <span 
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            aluno.matriculaAtiva 
-              ? 'bg-green-100 text-green-800' 
-              : 'bg-red-100 text-red-800'
-          }`}
-        >
-          {aluno.matriculaAtiva ? 'Ativa' : 'Inativa'}
-        </span>
+        aluno.matriculaAtiva ? (
+          <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-700 border border-green-300/50 dark:from-green-500/20 dark:to-emerald-500/20 dark:text-green-400 dark:border-green-500/50">
+            Ativo
+          </span>
+        ) : (
+          <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-gray-500/10 to-slate-500/10 text-gray-700 border border-gray-300/50 dark:from-gray-500/20 dark:to-slate-500/20 dark:text-gray-400 dark:border-gray-500/50">
+            Inativo
+          </span>
+        )
       )
     }
   ]
@@ -153,14 +153,14 @@ export default function AlunosList() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center">
-              <Users className="text-white" size={24} />
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
+              <Users className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-[var(--fh-text)]">
+              <h1 className="text-3xl font-bold text-[var(--fh-text)]">
                 Alunos
               </h1>
-              <p className="text-sm text-[var(--fh-muted)]">
+              <p className="text-[var(--fh-muted)] mt-1">
                 Gerenciamento de alunos da academia
               </p>
             </div>
@@ -169,7 +169,7 @@ export default function AlunosList() {
           {(user?.role === 'ADMIN' || user?.role === 'COORDENADOR') && (
             <button
               onClick={() => navigate('/alunos/novo')}
-              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white rounded-xl font-semibold hover:shadow-lg hover:opacity-90 transition-all shadow-md"
             >
               <Plus size={20} />
               Novo Aluno
@@ -178,7 +178,7 @@ export default function AlunosList() {
         </div>
 
         {/* Filters */}
-        <div className="bg-[var(--fh-card)] rounded-lg border border-[var(--fh-border)] p-4 space-y-4">
+        <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-4 space-y-4">
           <div className="flex items-center gap-4">
             <div className="flex-1 relative">
               <Search 
@@ -190,13 +190,13 @@ export default function AlunosList() {
                 placeholder="Buscar por nome ou email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-[var(--fh-bg)] border border-[var(--fh-border)] rounded-lg text-[var(--fh-text)] focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)] focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[var(--fh-border)] bg-[var(--fh-gray-50)] text-[var(--fh-body)] placeholder:text-[var(--fh-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] transition-all"
               />
             </div>
             <button 
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-2 px-4 py-2.5 border border-[var(--fh-border)] rounded-lg hover:bg-[var(--fh-divider)] transition-colors ${
-                showFilters ? 'bg-[var(--fh-divider)]' : ''
+              className={`flex items-center gap-2 px-4 py-2.5 border border-[var(--fh-border)] rounded-xl hover:bg-[var(--fh-gray-50)] transition-colors ${
+                showFilters ? 'bg-[var(--fh-gray-50)]' : ''
               }`}
             >
               <Filter size={20} />
@@ -205,7 +205,7 @@ export default function AlunosList() {
             {hasActiveFilters && (
               <button 
                 onClick={handleClearFilters}
-                className="flex items-center gap-2 px-4 py-2.5 text-[var(--fh-muted)] hover:text-[var(--fh-text)] hover:bg-[var(--fh-divider)] rounded-lg transition-colors"
+                className="flex items-center gap-2 px-4 py-2.5 text-[var(--fh-muted)] hover:text-[var(--fh-text)] hover:bg-[var(--fh-gray-50)] rounded-xl transition-colors"
               >
                 <X size={20} />
                 Limpar
@@ -223,7 +223,7 @@ export default function AlunosList() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                  className="w-full px-3 py-2 bg-[var(--fh-bg)] border border-[var(--fh-border)] rounded-lg text-[var(--fh-text)] focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)] focus:border-transparent"
+                  className="w-full px-3 py-2.5 rounded-xl border border-[var(--fh-border)] bg-[var(--fh-gray-50)] text-[var(--fh-body)] focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] transition-all"
                 >
                   <option value="all">Todas</option>
                   <option value="active">Ativa</option>
@@ -240,7 +240,7 @@ export default function AlunosList() {
                   placeholder="Ex: Branca, Azul..."
                   value={graduacaoFilter}
                   onChange={(e) => setGraduacaoFilter(e.target.value)}
-                  className="w-full px-3 py-2 bg-[var(--fh-bg)] border border-[var(--fh-border)] rounded-lg text-[var(--fh-text)] focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)] focus:border-transparent"
+                  className="w-full px-3 py-2.5 rounded-xl border border-[var(--fh-border)] bg-[var(--fh-gray-50)] text-[var(--fh-body)] placeholder:text-[var(--fh-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] transition-all"
                 />
               </div>
             </div>

@@ -115,9 +115,6 @@ export default function UsuariosList() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-[var(--fh-muted)] uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[var(--fh-muted)] uppercase tracking-wider">
-                    Ações
-                  </th>
                 </tr>
               </thead>
               <tbody className="bg-[var(--fh-card)] divide-y divide-[var(--fh-border)]">
@@ -164,22 +161,11 @@ export default function UsuariosList() {
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/usuarios/${usuario.id}`);
-                          }}
-                          className="text-[var(--fh-primary)] hover:text-[var(--fh-primary-dark)] font-medium transition-colors"
-                        >
-                          Ver detalhes
-                        </button>
-                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-[var(--fh-muted)]">
+                    <td colSpan={6} className="px-6 py-12 text-center text-[var(--fh-muted)]">
                       {searchTerm
                         ? 'Nenhum usuário encontrado com os critérios de busca.'
                         : 'Nenhum usuário cadastrado.'}
