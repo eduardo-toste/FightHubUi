@@ -4,7 +4,7 @@ import { useUsuarioDetalhado } from '../../features/usuarios/useUsuarios';
 import { Role, UsuarioUpdateParcialRequest } from '../../types';
 import useAuth from '../../hooks/useAuth';
 import Layout from '../../components/Layout';
-import { ArrowLeft, UserCog } from 'lucide-react';
+import { ArrowLeft, UserCog, AlertTriangle, Mail, User } from 'lucide-react';
 
 const roleLabels: Record<Role, string> = {
   ADMIN: 'Administrador',
@@ -34,6 +34,7 @@ export default function UsuarioDetail() {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<boolean | null>(null);
+  const [incompleteProfile, setIncompleteProfile] = useState(false);
 
   const [formData, setFormData] = useState({
     nome: '',
@@ -60,6 +61,13 @@ export default function UsuarioDetail() {
 
   useEffect(() => {
     if (usuario) {
+      // Verificar se o perfil está incompleto
+      if (!usuario.endereco || !usuario.telefone) {
+        setIncompleteProfile(true);
+      } else {
+        setIncompleteProfile(false);
+      }
+      
       setFormData({
         nome: usuario.nome,
         email: usuario.email,
@@ -77,6 +85,18 @@ export default function UsuarioDetail() {
       });
     }
   }, [usuario]);
+
+  // Verificar se o erro é de endereço nulo
+  useEffect(() => {
+    if (error && (
+      error.includes('endereco') || 
+      error.includes('null') || 
+      error.includes('NullPointer') ||
+      error.includes('Cannot invoke')
+    )) {
+      setIncompleteProfile(true);
+    }
+  }, [error]);
 
   const handleSaveChanges = async () => {
     const updateData: UsuarioUpdateParcialRequest = {
@@ -121,11 +141,140 @@ export default function UsuarioDetail() {
     }
   };
 
-  if (loading && !usuario) {
+  if (loading && !usuario && !incompleteProfile) {
     return (
       <Layout userName={currentUser?.name} userRole={currentUser?.role} onLogout={logout}>
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--fh-primary)]"></div>
+        </div>
+      </Layout>
+    );
+  }
+
+  // Tela de cadastro incompleto
+  if (incompleteProfile) {
+    return (
+      <Layout userName={currentUser?.name} userRole={currentUser?.role} onLogout={logout}>
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center shadow-lg">
+              <AlertTriangle className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-[var(--fh-text)]">Cadastro Incompleto</h1>
+              <p className="text-[var(--fh-muted)] mt-1">Este usuário ainda não finalizou o cadastro</p>
+            </div>
+          </div>
+
+          {/* Card de Aviso Principal */}
+          <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 dark:from-yellow-500/20 dark:to-orange-500/20 border-2 border-yellow-500/50 dark:border-yellow-500/50 rounded-xl p-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-full bg-yellow-500 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-6 h-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-xl font-bold text-yellow-700 dark:text-yellow-400 mb-2">
+                  Atenção: Perfil Não Ativado
+                </h2>
+                <p className="text-[var(--fh-text)] leading-relaxed">
+                  Este usuário foi cadastrado no sistema, mas ainda não realizou a primeira ativação da conta 
+                  e não preencheu todas as informações necessárias, como endereço, telefone e outros dados pessoais.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Cards de Informação */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* O que aconteceu? */}
+            <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
+                  <User className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-[var(--fh-text)]">O que aconteceu?</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 rounded-full bg-yellow-500 mt-2 flex-shrink-0" />
+                  <p className="text-[var(--fh-text)] text-sm">
+                    O usuário foi cadastrado por um administrador
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 rounded-full bg-yellow-500 mt-2 flex-shrink-0" />
+                  <p className="text-[var(--fh-text)] text-sm">
+                    Ainda não fez o primeiro acesso ao sistema
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-2 h-2 rounded-full bg-yellow-500 mt-2 flex-shrink-0" />
+                  <p className="text-[var(--fh-text)] text-sm">
+                    Dados completos não estão disponíveis
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* O que fazer? */}
+            <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-[var(--fh-text)]">O que fazer?</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">
+                    1
+                  </div>
+                  <p className="text-[var(--fh-text)] text-sm">
+                    Entre em contato com o usuário
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">
+                    2
+                  </div>
+                  <p className="text-[var(--fh-text)] text-sm">
+                    Solicite o primeiro acesso ao sistema
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 text-white text-xs font-bold">
+                    3
+                  </div>
+                  <p className="text-[var(--fh-text)] text-sm">
+                    Oriente o preenchimento do perfil completo
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Dica */}
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200/50 dark:border-blue-600/50 rounded-xl p-4">
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">💡</div>
+              <p className="text-blue-800 dark:text-blue-300 text-sm">
+                <strong>Dica:</strong> O usuário deve ter recebido um email com as instruções de primeiro acesso. 
+                Após a ativação, todos os dados ficarão disponíveis aqui.
+              </p>
+            </div>
+          </div>
+
+          {/* Botão de Voltar */}
+          <div className="flex justify-start">
+            <button
+              onClick={() => navigate('/usuarios')}
+              className="px-6 py-3 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white rounded-lg transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Voltar para Lista de Usuários
+            </button>
+          </div>
         </div>
       </Layout>
     );
