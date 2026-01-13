@@ -58,52 +58,61 @@ export default function AlunoCreate() {
 
   return (
     <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate('/alunos')}
-            className="p-2 hover:bg-[var(--fh-card)] rounded-lg transition-colors"
+            className="p-2.5 hover:bg-[var(--fh-gray-50)] rounded-xl transition-colors border border-transparent hover:border-[var(--fh-border)]"
+            aria-label="Voltar para lista de alunos"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft size={24} className="text-[var(--fh-text)]" />
           </button>
+          
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
               <UserPlus className="text-white" size={24} />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-[var(--fh-text)]">Novo Aluno</h1>
-              <p className="text-sm text-[var(--fh-muted)]">Cadastre um novo aluno na academia</p>
+              <h1 className="text-3xl font-bold text-[var(--fh-text)]">Novo Aluno</h1>
+              <p className="text-[var(--fh-muted)] mt-1">
+                Cadastre um novo aluno na academia
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Form */}
-        <div className="bg-[var(--fh-card)] rounded-lg border border-[var(--fh-border)] p-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {error && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                {error}
-              </div>
-            )}
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-600 text-red-800 dark:text-red-300 px-4 py-3 rounded-xl">
+            {error}
+          </div>
+        )}
 
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-[var(--fh-text)] border-b border-[var(--fh-border)] pb-2">
-                Dados Pessoais
-              </h3>
+        {/* Form */}
+        <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            {/* Dados Pessoais Section */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 pb-3 border-b border-[var(--fh-border)]">
+                <div className="w-1 h-6 bg-gradient-to-b from-[var(--fh-primary)] to-[var(--fh-primary-dark)] rounded-full"></div>
+                <h3 className="text-lg font-semibold text-[var(--fh-text)]">
+                  Dados Pessoais
+                </h3>
+              </div>
 
               <TextField
                 id="nome"
-                label="Nome Completo *"
+                label="Nome Completo"
                 placeholder="Ex: João Silva Santos"
                 {...register('nome')}
                 error={errors.nome?.message}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <TextField
                   id="email"
-                  label="Email *"
+                  label="Email"
                   type="email"
                   placeholder="joao@exemplo.com"
                   {...register('email')}
@@ -112,7 +121,7 @@ export default function AlunoCreate() {
 
                 <TextField
                   id="cpf"
-                  label="CPF *"
+                  label="CPF"
                   placeholder="000.000.000-00"
                   {...register('cpf')}
                   error={errors.cpf?.message}
@@ -121,31 +130,38 @@ export default function AlunoCreate() {
 
               <TextField
                 id="dataNascimento"
-                label="Data de Nascimento *"
+                label="Data de Nascimento"
                 type="date"
                 {...register('dataNascimento')}
                 error={errors.dataNascimento?.message}
               />
             </div>
 
-            <div className="flex gap-4 pt-4 border-t border-[var(--fh-border)]">
+            {/* Form Actions */}
+            <div className="flex gap-4 pt-6 border-t border-[var(--fh-border)]">
               <button
                 type="button"
                 onClick={() => navigate('/alunos')}
-                className="flex-1 px-4 py-2.5 border border-[var(--fh-border)] rounded-lg font-semibold hover:bg-[var(--fh-bg)] transition-colors"
+                className="flex-1 px-6 py-3 border border-[var(--fh-border)] rounded-xl font-semibold text-[var(--fh-text)] hover:bg-[var(--fh-gray-50)] transition-all"
+                disabled={loading}
               >
                 Cancelar
               </button>
               <PrimaryButton
                 type="submit"
                 loading={loading}
-                className="flex-1 flex items-center justify-center gap-2"
+                className="flex-1 flex items-center justify-center gap-2 py-3"
               >
                 <Save size={20} />
                 {loading ? 'Salvando...' : 'Salvar Aluno'}
               </PrimaryButton>
             </div>
           </form>
+        </div>
+
+        {/* Help Text */}
+        <div className="text-sm text-[var(--fh-muted)] text-center">
+          * Todos os campos são obrigatórios para o cadastro inicial
         </div>
       </div>
     </Layout>
