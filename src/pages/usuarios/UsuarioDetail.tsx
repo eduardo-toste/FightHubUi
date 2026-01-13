@@ -4,7 +4,7 @@ import { useUsuarioDetalhado } from '../../features/usuarios/useUsuarios';
 import { Role, UsuarioUpdateParcialRequest } from '../../types';
 import useAuth from '../../hooks/useAuth';
 import Layout from '../../components/Layout';
-import { ArrowLeft, UserCog, AlertTriangle, Mail, User } from 'lucide-react';
+import { ArrowLeft, UserCog, AlertTriangle, Mail, User, Shield, Power, Edit3 } from 'lucide-react';
 
 const roleLabels: Record<Role, string> = {
   ADMIN: 'Administrador',
@@ -20,6 +20,15 @@ const roleColors: Record<Role, string> = {
   PROFESSOR: 'bg-gradient-to-r from-blue-500/10 to-cyan-500/10 text-blue-700 border border-blue-300/50 dark:from-blue-500/20 dark:to-cyan-500/20 dark:text-blue-400 dark:border-blue-500/50',
   ALUNO: 'bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-700 border border-green-300/50 dark:from-green-500/20 dark:to-emerald-500/20 dark:text-green-400 dark:border-green-500/50',
   RESPONSAVEL: 'bg-gradient-to-r from-amber-500/10 to-orange-500/10 text-amber-700 border border-amber-300/50 dark:from-amber-500/20 dark:to-orange-500/20 dark:text-amber-400 dark:border-amber-500/50',
+};
+
+// Hierarquia de roles (maior número = maior permissão)
+const roleHierarchy: Record<Role, number> = {
+  ADMIN: 5,
+  COORDENADOR: 4,
+  PROFESSOR: 3,
+  RESPONSAVEL: 2,
+  ALUNO: 1,
 };
 
 export default function UsuarioDetail() {
@@ -291,103 +300,121 @@ export default function UsuarioDetail() {
   }
 
   const isAdmin = currentUser?.role === 'ADMIN';
+  
+  // Verificar se o usuário atual pode alterar a role do usuário visualizado
+  const canChangeRole = currentUser && usuario && 
+    roleHierarchy[currentUser.role] > roleHierarchy[usuario.role];
 
   return (
     <Layout userName={currentUser?.name} userRole={currentUser?.role} onLogout={logout}>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-start">
-          <div>
-            <button
-              onClick={() => navigate('/usuarios')}
-              className="text-[var(--fh-muted)] hover:text-[var(--fh-text)] mb-4 flex items-center gap-2 transition-colors"
-            >
-              <ArrowLeft size={20} />
-              Voltar para usuários
-            </button>
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
-                <UserCog className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold text-[var(--fh-text)]">{usuario.nome}</h1>
+        <div>
+          <button
+            onClick={() => navigate('/usuarios')}
+            className="text-[var(--fh-muted)] hover:text-[var(--fh-text)] mb-4 flex items-center gap-2 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            Voltar para usuários
+          </button>
+          
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
+              <UserCog className="w-6 h-6 text-white" />
             </div>
-            <div className="flex gap-2 mt-2">
-              <span className={`px-3 py-1 text-sm font-semibold rounded-full ${roleColors[usuario.role]}`}>
-                {roleLabels[usuario.role]}
-              </span>
-              {usuario.ativo ? (
-                <span className="px-3 py-1 text-sm font-semibold rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-700 border border-green-300/50 dark:from-green-500/20 dark:to-emerald-500/20 dark:text-green-400 dark:border-green-500/50">
-                  Ativo
+            <div>
+              <h1 className="text-3xl font-bold text-[var(--fh-text)]">{usuario.nome}</h1>
+              <div className="flex gap-2 mt-2">
+                <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${roleColors[usuario.role]}`}>
+                  {roleLabels[usuario.role]}
                 </span>
-              ) : (
-                <span className="px-3 py-1 text-sm font-semibold rounded-full bg-gradient-to-r from-gray-500/10 to-slate-500/10 text-gray-700 border border-gray-300/50 dark:from-gray-500/20 dark:to-slate-500/20 dark:text-gray-400 dark:border-gray-500/50">
-                  Inativo
-                </span>
-              )}
-              {usuario.loginSocial && (
-                <span className="px-3 py-1 text-sm font-semibold rounded-full bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-700 border border-cyan-300/50 dark:from-cyan-500/20 dark:to-blue-500/20 dark:text-cyan-400 dark:border-cyan-500/50">
-                  Login Social
-                </span>
-              )}
+                {usuario.ativo ? (
+                  <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-700 border border-green-300/50 dark:from-green-500/20 dark:to-emerald-500/20 dark:text-green-400 dark:border-green-500/50">
+                    Ativo
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-gray-500/10 to-slate-500/10 text-gray-700 border border-gray-300/50 dark:from-gray-500/20 dark:to-slate-500/20 dark:text-gray-400 dark:border-gray-500/50">
+                    Inativo
+                  </span>
+                )}
+                {usuario.loginSocial && (
+                  <span className="px-2.5 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-700 border border-cyan-300/50 dark:from-cyan-500/20 dark:to-blue-500/20 dark:text-cyan-400 dark:border-cyan-500/50">
+                    Login Social
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-          <div className="flex gap-2">
-            {isAdmin && !isEditing && (
-              <>
+
+          {/* Actions */}
+          {isAdmin && !isEditing && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {canChangeRole && (
                 <button
                   onClick={() => setShowRoleModal(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg transition-all shadow-md hover:shadow-lg"
+                  className="px-5 py-3 bg-white dark:bg-[var(--fh-card)] border border-purple-200 dark:border-purple-500/30 text-purple-700 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-500/10 rounded-xl transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2.5 font-medium"
+                  title="Alterar nível de acesso do usuário"
                 >
-                  Alterar Role
+                  <Shield size={20} />
+                  <span>Gerenciar Permissões</span>
                 </button>
-                <button
-                  onClick={() => setShowStatusModal(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-lg transition-all shadow-md hover:shadow-lg"
-                >
-                  Alterar Status
-                </button>
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white rounded-lg transition-all shadow-md hover:shadow-lg"
-                >
-                  Editar Dados
-                </button>
-              </>
-            )}
-            {isEditing && (
-              <>
-                <button
-                  onClick={() => {
-                    setIsEditing(false);
-                    setFormData({
-                      nome: usuario.nome,
-                      email: usuario.email,
-                      telefone: usuario.telefone || '',
-                      cpf: usuario.cpf,
-                      endereco: usuario.endereco || {
-                        cep: '',
-                        logradouro: '',
-                        numero: '',
-                        complemento: '',
-                        bairro: '',
-                        cidade: '',
-                        estado: '',
-                      },
-                    });
-                  }}
-                  className="px-4 py-2 bg-[var(--fh-card)] hover:bg-[var(--fh-gray-100)] text-[var(--fh-text)] border border-[var(--fh-border)] rounded-lg transition-all shadow-sm hover:shadow"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleSaveChanges}
-                  className="px-4 py-2 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white rounded-lg transition-all shadow-md hover:shadow-lg"
-                >
-                  Salvar Alterações
-                </button>
-              </>
-            )}
-          </div>
+              )}
+              <button
+                onClick={() => setShowStatusModal(true)}
+                className={`px-5 py-3 bg-white dark:bg-[var(--fh-card)] border rounded-xl transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2.5 font-medium ${
+                  usuario.ativo 
+                    ? 'border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10'
+                    : 'border-green-200 dark:border-green-500/30 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-500/10'
+                }`}
+                title={usuario.ativo ? 'Desativar acesso do usuário' : 'Reativar acesso do usuário'}
+              >
+                <Power size={20} />
+                <span>{usuario.ativo ? 'Desativar Usuário' : 'Ativar Usuário'}</span>
+              </button>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="px-5 py-3 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 font-medium"
+                title="Editar informações pessoais"
+              >
+                <Edit3 size={20} />
+                <span>Editar Informações</span>
+              </button>
+            </div>
+          )}
+          
+          {isEditing && (
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setIsEditing(false);
+                  setFormData({
+                    nome: usuario.nome,
+                    email: usuario.email,
+                    telefone: usuario.telefone || '',
+                    cpf: usuario.cpf,
+                    endereco: usuario.endereco || {
+                      cep: '',
+                      logradouro: '',
+                      numero: '',
+                      complemento: '',
+                      bairro: '',
+                      cidade: '',
+                      estado: '',
+                    },
+                  });
+                }}
+                className="flex-1 px-5 py-3 bg-white dark:bg-[var(--fh-card)] hover:bg-[var(--fh-gray-50)] dark:hover:bg-[var(--fh-gray-100)] text-[var(--fh-text)] border border-[var(--fh-border)] rounded-xl transition-all shadow-sm hover:shadow font-medium"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSaveChanges}
+                className="flex-1 px-5 py-3 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white rounded-xl transition-all shadow-md hover:shadow-lg font-medium"
+              >
+                Salvar Alterações
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Informações Pessoais */}
@@ -575,11 +602,17 @@ export default function UsuarioDetail() {
                 onChange={(e) => setSelectedRole(e.target.value as Role)}
                 className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] mb-6 transition-all"
               >
-                {Object.entries(roleLabels).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
+                {Object.entries(roleLabels)
+                  .filter(([value]) => {
+                    // Só permitir atribuir roles inferiores ao usuário atual
+                    const roleValue = value as Role;
+                    return currentUser && roleHierarchy[roleValue] < roleHierarchy[currentUser.role];
+                  })
+                  .map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
               </select>
               <div className="flex gap-3 justify-end">
                 <button
