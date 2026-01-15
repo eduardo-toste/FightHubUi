@@ -32,7 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
   // Definir itens de menu baseado no role
   const baseMenuItems = [
     { to: '/home', label: 'Home', icon: LayoutDashboard, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
-    { to: '/alunos', label: 'Alunos', icon: Users, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'RESPONSAVEL'] },
+    { to: '/alunos', label: 'Alunos', icon: Users, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
     { to: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['ADMIN', 'COORDENADOR'] },
   ];
 
