@@ -6,7 +6,7 @@ interface UpdateBirthdateModalProps {
   isOpen: boolean;
   alunoId: string;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (userName: string, isMinor: boolean) => void;
 }
 
 export default function UpdateBirthdateModal({ isOpen, alunoId, onClose, onSuccess }: UpdateBirthdateModalProps) {
@@ -22,13 +22,26 @@ export default function UpdateBirthdateModal({ isOpen, alunoId, onClose, onSucce
       return;
     }
 
+    // Calcular idade
+    const birthDate = new Date(dataNascimento);
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear() -
+      (today.getMonth() < birthDate.getMonth() || 
+       (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate()) ? 1 : 0);
+
     setLoading(true);
     setError(null);
 
     try {
       await alunosApi.atualizarDataNascimento(alunoId, { dataNascimento });
-      onSuccess();
-      onClose();
+      
+      // Passar informação se é menor
+      const isMinor = age < 18;
+      onSuccess('', isMinor);
+      
+      if (!isMinor) {
+        onClose();
+      }
     } catch (err: any) {
       const errorMessage = err?.response?.data?.message || 'Erro ao atualizar data de nascimento';
       setError(errorMessage);
