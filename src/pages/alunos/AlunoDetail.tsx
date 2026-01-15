@@ -359,8 +359,8 @@ const AlunoDetail: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
-        <div className="container mx-auto px-6 py-8">
+      <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
+        <div className="space-y-6">
           {/* Header Skeleton */}
           <div className="mb-8">
             <div className="flex items-center gap-4 mb-6">
@@ -372,10 +372,10 @@ const AlunoDetail: React.FC = () => {
           </div>
 
           {/* Content Skeleton */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               {[1, 2].map(i => (
-                <div key={i} className="bg-white rounded-2xl p-8 shadow-lg">
+                <div key={i} className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
                   <div className="h-6 bg-gray-200 rounded-lg w-32 animate-pulse mb-6" />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {[1, 2, 3, 4].map(j => (
@@ -390,7 +390,7 @@ const AlunoDetail: React.FC = () => {
             </div>
             
             <div className="space-y-6">
-              <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
                 <div className="h-6 bg-gray-200 rounded-lg w-24 animate-pulse mb-6" />
                 <div className="space-y-4">
                   {[1, 2, 3, 4].map(i => (
@@ -401,7 +401,7 @@ const AlunoDetail: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </Layout>
     )
   }
 
@@ -523,7 +523,7 @@ const AlunoDetail: React.FC = () => {
           <div className="flex justify-start">
             <button
               onClick={() => navigate('/alunos')}
-              className="px-6 py-3 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white rounded-lg transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+              className="px-6 py-3 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2"
             >
               <ArrowLeft className="w-5 h-5" />
               Voltar para Lista de Alunos
@@ -536,182 +536,176 @@ const AlunoDetail: React.FC = () => {
 
   if (!aluno) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-24 h-24 mx-auto mb-8 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center">
-            <User className="w-12 h-12 text-gray-400 dark:text-gray-500" />
+      <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="w-24 h-24 mx-auto mb-8 bg-gray-100 dark:bg-gray-700 rounded-2xl flex items-center justify-center">
+              <User className="w-12 h-12 text-gray-400 dark:text-gray-500" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Aluno não encontrado</h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">Não foi possível encontrar os dados deste aluno.</p>
+            <Button onClick={() => navigate('/alunos')} variant="primary">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Voltar para Lista
+            </Button>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Aluno não encontrado</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">Não foi possível encontrar os dados deste aluno.</p>
-          <Button onClick={() => navigate('/alunos')} variant="primary">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar para Lista
-          </Button>
         </div>
-      </div>
+      </Layout>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
-      <div className="container mx-auto px-6 py-8">
+    <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
+      <div className="space-y-6">
         {/* Header */}
-        <div className="mb-8">
+        <div>
           <button
             onClick={() => navigate('/alunos')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6 transition-colors p-2 hover:bg-white/50 rounded-lg"
+            className="text-[var(--fh-muted)] hover:text-[var(--fh-text)] mb-4 flex items-center gap-2 transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Voltar para lista
+            <ArrowLeft size={20} />
+            Voltar para alunos
           </button>
 
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{aluno.nome}</h1>
-              
-              {/* Alert for incomplete profile */}
-              {(!aluno.telefone || !aluno.endereco || !aluno.dataMatricula) && (
-                <div className="mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg shadow-sm">
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0">
-                      <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="ml-3 flex-1">
-                      <p className="text-sm font-semibold text-yellow-800">
-                        ⚠️ Cadastro Incompleto
-                      </p>
-                      <p className="mt-1 text-sm text-yellow-700">
-                        Este aluno ainda não completou todas as informações do cadastro.
-                        {!aluno.telefone && ' • Telefone não informado.'}
-                        {!aluno.endereco && ' • Endereço não informado.'}
-                        {!aluno.dataMatricula && ' • Data de matrícula não informada.'}
-                      </p>
-                      <p className="mt-2 text-xs text-yellow-600 italic">
-                        Entre em contato com o aluno para solicitar a finalização do cadastro.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              <div className="flex items-center gap-4">
-                <span className={`px-4 py-2 rounded-full text-sm font-semibold border-2 ${getGraduacaoColor(aluno.graduacaoAluno?.belt || '')}`}>
-                  <Award className="inline w-4 h-4 mr-2" />
-                  {getGraduacaoDisplay(aluno.graduacaoAluno)}
-                </span>
-                <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                  aluno.matriculaAtiva 
-                    ? 'bg-green-100 text-green-800 border-2 border-green-200' 
-                    : 'bg-red-100 text-red-800 border-2 border-red-200'
-                }`}>
-                  {aluno.matriculaAtiva ? (
-                    <>
-                      <ShieldCheck className="inline w-4 h-4 mr-2" />
-                      Matrícula Ativa
-                    </>
-                  ) : (
-                    <>
-                      <ShieldOff className="inline w-4 h-4 mr-2" />
-                      Matrícula Inativa
-                    </>
-                  )}
-                </span>
-              </div>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
+              <User className="w-6 h-6 text-white" />
             </div>
+            <h1 className="text-3xl font-bold text-[var(--fh-text)]">{aluno.nome}</h1>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Alert for incomplete profile */}
+        {(!aluno.telefone || !aluno.endereco || !aluno.dataMatricula) && (
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-600 text-yellow-800 dark:text-yellow-300 px-4 py-3 rounded-xl">
+            <div className="flex items-center gap-2">
+              <AlertTriangle size={20} />
+              <div>
+                <p className="font-semibold">Cadastro Incompleto</p>
+                <p className="text-sm">
+                  {!aluno.telefone && 'Telefone não informado. '}
+                  {!aluno.endereco && 'Endereço não informado. '}
+                  {!aluno.dataMatricula && 'Data de matrícula não informada.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Badges */}
+        <div className="flex items-center gap-2">
+          <span className={`px-3 py-1 text-sm font-semibold rounded-full border ${getGraduacaoColor(aluno.graduacaoAluno?.belt || '')}`}>
+            <Award className="inline w-4 h-4 mr-2" />
+            {getGraduacaoDisplay(aluno.graduacaoAluno)}
+          </span>
+          <span className={`px-3 py-1 text-sm font-semibold rounded-full ${
+            aluno.matriculaAtiva 
+              ? 'bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-700 border border-green-300/50 dark:from-green-500/20 dark:to-emerald-500/20 dark:text-green-400 dark:border-green-500/50' 
+              : 'bg-gradient-to-r from-gray-500/10 to-slate-500/10 text-gray-700 border border-gray-300/50 dark:from-gray-500/20 dark:to-slate-500/20 dark:text-gray-400 dark:border-gray-500/50'
+          }`}>
+            {aluno.matriculaAtiva ? (
+              <>
+                <ShieldCheck className="inline w-4 h-4 mr-2" />
+                Matrícula Ativa
+              </>
+            ) : (
+              <>
+                <ShieldOff className="inline w-4 h-4 mr-2" />
+                Matrícula Inativa
+              </>
+            )}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6">
             {/* Informações Pessoais */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-              <h2 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-                <User className="w-6 h-6 text-orange-600" />
+            <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
+              <h2 className="text-xl font-bold text-[var(--fh-text)] mb-6 flex items-center gap-3">
+                <User className="w-5 h-5 text-[var(--fh-primary)]" />
                 Informações Pessoais
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[var(--fh-muted)] flex items-center gap-2">
                     <Mail className="w-4 h-4" />
                     Email
                   </label>
-                  <p className="text-lg font-medium text-gray-900 bg-gray-50 p-3 rounded-lg">{aluno.email || 'Não informado'}</p>
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{aluno.email || 'Não informado'}</p>
                 </div>
                 
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[var(--fh-muted)] flex items-center gap-2">
                     <Phone className="w-4 h-4" />
                     Telefone
                   </label>
-                  <p className="text-lg font-medium text-gray-900 bg-gray-50 p-3 rounded-lg">{aluno.telefone || 'Não informado'}</p>
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{aluno.telefone || 'Não informado'}</p>
                 </div>
                 
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[var(--fh-muted)] flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
                     Data de Nascimento
                   </label>
-                  <p className="text-lg font-medium text-gray-900 bg-gray-50 p-3 rounded-lg">{formatDate(aluno.dataNascimento)}</p>
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{formatDate(aluno.dataNascimento)}</p>
                 </div>
                 
-                <div className="space-y-3">
-                  <label className="text-sm font-semibold text-gray-500 flex items-center gap-2">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[var(--fh-muted)] flex items-center gap-2">
                     <BookOpen className="w-4 h-4" />
                     Data de Matrícula
                   </label>
-                  <p className="text-lg font-medium text-gray-900 bg-gray-50 p-3 rounded-lg">{formatDate(aluno.dataMatricula)}</p>
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{formatDate(aluno.dataMatricula)}</p>
                 </div>
                 
               </div>
             </div>
 
             {/* Endereço Detalhado */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-orange-600" />
+            <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
+              <h2 className="text-xl font-bold text-[var(--fh-text)] mb-6 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-[var(--fh-primary)]" />
                 Endereço
               </h2>
               {aluno.endereco ? (
                 <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-500">Logradouro</label>
-                      <p className="text-lg font-medium text-gray-900">{aluno.endereco.logradouro || 'Não informado'}</p>
+                      <label className="text-sm font-medium text-[var(--fh-muted)]">Logradouro</label>
+                      <p className="text-[var(--fh-text)] font-medium">{aluno.endereco.logradouro || 'Não informado'}</p>
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-500">Número</label>
-                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.numero || 'S/N'}</p>
+                    <label className="text-sm font-medium text-[var(--fh-muted)]">Número</label>
+                    <p className="text-[var(--fh-text)] font-medium">{aluno.endereco.numero || 'S/N'}</p>
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-500">Complemento</label>
-                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.complemento || 'Não informado'}</p>
+                    <label className="text-sm font-medium text-[var(--fh-muted)]">Complemento</label>
+                    <p className="text-[var(--fh-text)] font-medium">{aluno.endereco.complemento || 'Não informado'}</p>
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-500">Bairro</label>
-                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.bairro || 'Não informado'}</p>
+                    <label className="text-sm font-medium text-[var(--fh-muted)]">Bairro</label>
+                    <p className="text-[var(--fh-text)] font-medium">{aluno.endereco.bairro || 'Não informado'}</p>
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-500">Cidade</label>
-                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.cidade || 'Não informado'}</p>
+                    <label className="text-sm font-medium text-[var(--fh-muted)]">Cidade</label>
+                    <p className="text-[var(--fh-text)] font-medium">{aluno.endereco.cidade || 'Não informado'}</p>
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-500">CEP</label>
-                    <p className="text-lg font-medium text-gray-900">{aluno.endereco.cep || 'Não informado'}</p>
+                    <label className="text-sm font-medium text-[var(--fh-muted)]">CEP</label>
+                    <p className="text-[var(--fh-text)] font-medium">{aluno.endereco.cep || 'Não informado'}</p>
                   </div>
                 </div>
                 
                 {/* Endereço Completo em Destaque */}
-                <div className="mt-6 p-4 bg-orange-50 rounded-xl border border-orange-100">
-                  <label className="text-sm font-semibold text-orange-800 mb-2 block">Endereço Completo</label>
-                  <p className="text-lg font-medium text-orange-900">
+                <div className="mt-6 p-4 bg-[var(--fh-gray-50)] rounded-xl border border-[var(--fh-border)]">
+                  <label className="text-sm font-semibold text-[var(--fh-text)] mb-2 block">Endereço Completo</label>
+                  <p className="text-[var(--fh-text)] font-medium">
                     {[
                       aluno.endereco.logradouro,
                       aluno.endereco.numero && `Nº ${aluno.endereco.numero}`,
@@ -726,32 +720,32 @@ const AlunoDetail: React.FC = () => {
               </>
               ) : (
                 <div className="text-center py-12">
-                  <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 text-lg font-medium">Endereço não cadastrado</p>
-                  <p className="text-gray-400 text-sm mt-2">O aluno ainda não preencheu as informações de endereço</p>
+                  <MapPin className="w-16 h-16 text-[var(--fh-muted)] mx-auto mb-4" />
+                  <p className="text-[var(--fh-text)] font-medium">Endereço não cadastrado</p>
+                  <p className="text-[var(--fh-muted)] text-sm mt-2">O aluno ainda não preencheu as informações de endereço</p>
                 </div>
               )}
             </div>
 
             {/* Responsáveis */}
             {aluno.responsaveis && aluno.responsaveis.length > 0 && (
-              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-                <h2 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-                  <Shield className="w-6 h-6 text-blue-600" />
+              <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
+                <h2 className="text-xl font-bold text-[var(--fh-text)] mb-6 flex items-center gap-3">
+                  <Shield className="w-5 h-5 text-[var(--fh-primary)]" />
                   Responsáveis
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {aluno.responsaveis.map((responsavel, index) => (
-                    <div key={responsavel.id} className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 hover:shadow-md transition-all duration-200">
-                      <h3 className="font-bold text-blue-900 mb-4 text-lg">Responsável {index + 1}</h3>
-                      <div className="space-y-3">
+                    <div key={responsavel.id} className="p-4 bg-[var(--fh-gray-50)] rounded-xl border border-[var(--fh-border)]">
+                      <h3 className="font-bold text-[var(--fh-text)] mb-3">Responsável {index + 1}</h3>
+                      <div className="space-y-2">
                         <div>
-                          <label className="text-sm font-semibold text-blue-700">Nome</label>
-                          <p className="text-blue-900 font-medium">{responsavel.nome}</p>
+                          <label className="text-sm font-semibold text-[var(--fh-muted)]">Nome</label>
+                          <p className="text-[var(--fh-text)] font-medium">{responsavel.nome}</p>
                         </div>
                         <div>
-                          <label className="text-sm font-semibold text-blue-700">Email</label>
-                          <p className="text-blue-900 font-medium">{responsavel.email}</p>
+                          <label className="text-sm font-semibold text-[var(--fh-muted)]">Email</label>
+                          <p className="text-[var(--fh-text)] font-medium">{responsavel.email}</p>
                         </div>
                       </div>
                     </div>
@@ -763,9 +757,9 @@ const AlunoDetail: React.FC = () => {
 
           {/* Sidebar - Actions */}
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-              <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <Award className="w-5 h-5 text-orange-600" />
+            <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
+              <h2 className="text-lg font-bold text-[var(--fh-text)] mb-6 flex items-center gap-2">
+                <Award className="w-5 h-5 text-[var(--fh-primary)]" />
                 Ações
               </h2>
               
@@ -856,19 +850,19 @@ const AlunoDetail: React.FC = () => {
             </div>
 
             {/* Quick Stats */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-              <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <Clock className="w-5 h-5 text-green-600" />
+            <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
+              <h2 className="text-lg font-bold text-[var(--fh-text)] mb-6 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-[var(--fh-primary)]" />
                 Informações Rápidas
               </h2>
               
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl border border-green-200">
-                  <div className="flex items-center gap-3 text-sm font-semibold text-green-700">
+                <div className="flex items-center justify-between p-4 bg-[var(--fh-gray-50)] rounded-xl border border-[var(--fh-border)]">
+                  <div className="flex items-center gap-3 text-sm font-semibold text-[var(--fh-text)]">
                     <Clock className="w-5 h-5" />
                     Tempo na Academia
                   </div>
-                  <span className="text-sm font-bold text-green-900 bg-green-200 px-3 py-1 rounded-full">
+                  <span className="text-sm font-bold text-[var(--fh-text)] bg-[var(--fh-card)] px-3 py-1 rounded-full border border-[var(--fh-border)]">
                     {aluno.dataMatricula 
                       ? Math.ceil((Date.now() - new Date(aluno.dataMatricula).getTime()) / (1000 * 60 * 60 * 24 * 30)) + ' meses'
                       : 'N/A'
@@ -876,12 +870,12 @@ const AlunoDetail: React.FC = () => {
                   </span>
                 </div>
                 
-                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
-                  <div className="flex items-center gap-3 text-sm font-semibold text-blue-700">
+                <div className="flex items-center justify-between p-4 bg-[var(--fh-gray-50)] rounded-xl border border-[var(--fh-border)]">
+                  <div className="flex items-center gap-3 text-sm font-semibold text-[var(--fh-text)]">
                     <Award className="w-5 h-5" />
                     Graduação Atual
                   </div>
-                  <span className="text-sm font-bold text-blue-900 bg-blue-200 px-3 py-1 rounded-full">
+                  <span className="text-sm font-bold text-[var(--fh-text)] bg-[var(--fh-card)] px-3 py-1 rounded-full border border-[var(--fh-border)]">
                     {aluno.graduacaoAluno?.belt || 'N/A'}
                   </span>
                 </div>
@@ -911,7 +905,7 @@ const AlunoDetail: React.FC = () => {
           />
         )}
       </div>
-    </div>
+    </Layout>
   )
 }
 
