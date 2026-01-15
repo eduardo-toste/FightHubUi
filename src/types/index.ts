@@ -178,6 +178,13 @@ export interface AlunoUpdateDataMatriculaRequest {
   dataMatricula: string
 }
 
+export interface AlunoMenorPendenteResponse {
+  id: string
+  nome: string
+  email: string
+  dataNascimento: string
+}
+
 export interface GraduacaoAlunoResponse {
   id: string
   faixa: string

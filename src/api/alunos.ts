@@ -6,7 +6,8 @@ import type {
   PageResponse,
   AlunoUpdateMatriculaRequest,
   AlunoUpdateDataNascimentoRequest,
-  AlunoUpdateDataMatriculaRequest
+  AlunoUpdateDataMatriculaRequest,
+  AlunoMenorPendenteResponse
 } from '../types'
 
 export const alunosApi = {
@@ -62,5 +63,16 @@ export const alunosApi = {
   // Rebaixar grau
   rebaixarGrau: async (id: string) => {
     await api.patch(`/alunos/${id}/rebaixar/grau`)
+  },
+
+  // Vincular responsável ao aluno
+  vincularResponsavel: async (alunoId: string, responsavelId: string) => {
+    await api.patch(`/responsaveis/${responsavelId}/alunos/${alunoId}`)
+  },
+
+  // Obter menores sem responsável (apenas ADMIN e COORDENADOR)
+  obterMenoresSemResponsavel: async () => {
+    const { data } = await api.get<AlunoMenorPendenteResponse[]>('/alunos/menores-sem-responsavel')
+    return data
   }
 }

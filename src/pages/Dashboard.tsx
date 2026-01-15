@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 import UpdateBirthdateModal from '../components/UpdateBirthdateModal';
 import BirthdateSuccessModal from '../components/BirthdateSuccessModal';
 import BlockedMinorAccess from '../components/BlockedMinorAccess';
+import PendingMinorsNotification from '../components/PendingMinorsNotification';
 import { alunosApi } from '../api/alunos';
 
 export default function DashboardPage() {
@@ -101,6 +102,11 @@ export default function DashboardPage() {
           }}
           onLogout={logout}
         />
+      )}
+
+      {/* Notificações para Admin/Coordenador */}
+      {(user?.role === 'ADMIN' || user?.role === 'COORDENADOR') && (
+        <PendingMinorsNotification />
       )}
       
       <div className="mb-8">
