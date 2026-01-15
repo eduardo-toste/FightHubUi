@@ -351,7 +351,10 @@ const AlunoDetail: React.FC = () => {
 
   const formatDate = (date: string | Date) => {
     if (!date) return 'Não informado'
-    return new Date(date).toLocaleDateString('pt-BR')
+    // Garantir que a data seja tratada como local, não UTC
+    const dateStr = typeof date === 'string' ? date : date.toISOString()
+    const [year, month, day] = dateStr.split('T')[0].split('-')
+    return `${day}/${month}/${year}`
   }
 
   const canEditStudent = user?.role && ['ADMIN', 'COORDENADOR'].includes(user.role)

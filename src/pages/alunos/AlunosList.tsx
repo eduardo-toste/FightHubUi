@@ -83,7 +83,10 @@ export default function AlunosList() {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR')
+    if (!dateString) return '—'
+    // Garantir que a data seja tratada como local, não UTC
+    const [year, month, day] = dateString.split('T')[0].split('-')
+    return `${day}/${month}/${year}`
   }
 
   const columns = [

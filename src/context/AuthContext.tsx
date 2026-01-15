@@ -8,6 +8,7 @@ type User = {
   email: string;
   name?: string;
   role?: string;
+  alunoId?: string; // ID do aluno vinculado (se for role ALUNO)
 };
 
 const AuthContext = createContext<any>(undefined);
@@ -37,11 +38,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const res = await api.get('/usuarios/me');
       const userData = res.data;
+      
+      // Se for ALUNO, buscar o ID do aluno vinculado
+      let alunoId;
+      if (userData.role === 'ALUNO') {
+        try {
+          const alunoRes = await api.get(`/alunos/por-usuario/${userData.id}`);
+          alunoId = alunoRes.data.id;
+        } catch (err) {
+          console.error('Erro ao buscar ID do aluno:', err);
+        }
+      }
+      
       setUser({
         id: userData.id,
         email: userData.email,
         name: userData.nome,
         role: userData.role,
+        alunoId,
       });
     } catch (err) {
       // Se falhar ao buscar perfil, limpa tokens

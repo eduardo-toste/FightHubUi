@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getDashboard } from '../features/dashboard/useDashboard';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
+import UpdateBirthdateModal from '../components/UpdateBirthdateModal';
+import { alunosApi } from '../api/alunos';
 import { 
   Users, 
   GraduationCap, 
@@ -16,10 +18,88 @@ import {
 
 export default function DashboardPage() {
   const { logout, user } = useAuth();
+  const [showBirthdateModal, setShowBirthdateModal] = useState(false);
+  const [alunoId, setAlunoId] = useState<string | null>(null);
+  
+  // Não buscar dashboard para alunos (eles não têm acesso)
   const { data, isLoading, isError, refetch } = useQuery(
     ['dashboard'],
     getDashboard,
+    {
+      enabled: user?.role !== 'ALUNO',
+    }
   );
+
+  // Verificar se é aluno com data de nascimento padrão (31/12/9999)
+  useEffect(() => {
+    const checkBirthdate = async () => {
+      if (user?.role !== 'ALUNO' || !user?.alunoId) return;
+
+      try {
+        const aluno = await alunosApi.buscarPorId(user.alunoId);
+        
+        if (aluno.dataNascimento) {
+          const [year, month, day] = aluno.dataNascimento.split('T')[0].split('-');
+          
+          if (year === '9999' && month === '12' && day === '31') {
+            setAlunoId(user.alunoId);
+            setShowBirthdateModal(true);
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao verificar data de nascimento:', error);
+      }
+    };
+
+    checkBirthdate();
+  }, [user]);
+
+  const handleBirthdateSuccess = () => {
+    setShowBirthdateModal(false);
+    // Recarregar dados se necessário
+    if (user?.role !== 'ALUNO') {
+      refetch();
+    }
+  };
+
+  // Se for aluno, mostrar dashboard simplificado
+  if (user?.role === 'ALUNO') {
+    return (
+      <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
+        {showBirthdateModal && alunoId && (
+          <UpdateBirthdateModal
+            isOpen={showBirthdateModal}
+            alunoId={alunoId}
+            onClose={() => {}}
+            onSuccess={handleBirthdateSuccess}
+          />
+        )}
+        
+        <div className="mb-8">
+          <h1 className="text-4xl font-black text-[var(--fh-text)] mb-2">
+            Bem-vindo, {user?.name?.split(' ')[0] || 'Aluno'}! 👋
+          </h1>
+          <p className="text-[var(--fh-muted)] text-lg">
+            Confira suas aulas e atividades pelo menu lateral.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-[var(--fh-card)] rounded-2xl p-6 border border-[var(--fh-border)] shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-50 rounded-xl">
+                <Calendar className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-[var(--fh-muted)] text-sm">Minhas Aulas</p>
+                <p className="text-2xl font-bold text-[var(--fh-text)]">Em breve</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   if (isLoading)
     return (
@@ -222,6 +302,16 @@ export default function DashboardPage() {
           </button>
         </div>
       </div>
+
+      {/* Modal de Atualização de Data de Nascimento */}
+      {showBirthdateModal && alunoId && (
+        <UpdateBirthdateModal
+          isOpen={showBirthdateModal}
+          alunoId={alunoId}
+          onClose={() => {}} // Não permitir fechar sem atualizar
+          onSuccess={handleBirthdateSuccess}
+        />
+      )}
     </Layout>
   );
 }
