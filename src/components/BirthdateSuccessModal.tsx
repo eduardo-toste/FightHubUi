@@ -52,7 +52,7 @@ export default function BirthdateSuccessModal({ userName, onClose, onLogout }: B
           </div>
 
           <div className="flex items-start gap-3 p-3 bg-[var(--fh-gray-50)] rounded-lg border-l-2 border-amber-500">
-            <div className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold flex-shrink-0">
+            <div className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">
               ⏳
             </div>
             <div>
@@ -62,7 +62,7 @@ export default function BirthdateSuccessModal({ userName, onClose, onLogout }: B
           </div>
 
           <div className="flex items-start gap-3 p-3 bg-[var(--fh-gray-50)] rounded-lg">
-            <div className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold flex-shrink-0">
+            <div className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold">
               3
             </div>
             <div>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import InactivityWarningModal from './InactivityWarningModal';
+import { useInactivityTimeout } from '../hooks/useInactivityTimeout';
 import { Bell, Search } from 'lucide-react';
 
 const Topbar: React.FC<{ userName?: string; userRole?: string; onLogout?: () => void }> = ({
@@ -64,6 +66,11 @@ const Layout: React.FC<{
   userRole?: string;
   onLogout?: () => void;
 }> = ({ children, userName, userRole, onLogout }) => {
+  const { isWarningVisible, dismissWarning } = useInactivityTimeout({
+    warningMinutes: 12, // Aviso 3 minutos antes (token expira em 15)
+    logoutMinutes: 15,  // Logout em 15 minutos (sincronizado com JWT)
+  });
+
   return (
     <div className="flex bg-[var(--fh-bg)] min-h-screen">
       <Sidebar userName={userName} userRole={userRole} onLogout={onLogout} />
@@ -71,6 +78,11 @@ const Layout: React.FC<{
         <Topbar userName={userName} userRole={userRole} onLogout={onLogout} />
         <main className="flex-1 p-6 lg:p-8">{children}</main>
       </div>
+      <InactivityWarningModal 
+        isVisible={isWarningVisible} 
+        onDismiss={dismissWarning}
+        minutesRemaining={3}
+      />
     </div>
   );
 };

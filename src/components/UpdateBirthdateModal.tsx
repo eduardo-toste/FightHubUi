@@ -85,7 +85,7 @@ export default function UpdateBirthdateModal({ isOpen, alunoId, onClose, onSucce
             )}
 
             <div>
-              <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2 flex items-center gap-2">
+              <label className="flex text-sm font-semibold text-[var(--fh-text)] mb-2 items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 Data de Nascimento *
               </label>
