@@ -95,7 +95,6 @@ export default function DashboardPage() {
       userRole={user?.role} 
       userPhoto={userPhoto}
       onLogout={logout}
-      onPhotoChange={(newUrl) => setUserPhoto(newUrl)}
     >
       {user?.role === 'ALUNO' && showBirthdateModal && alunoId && (
         <UpdateBirthdateModal

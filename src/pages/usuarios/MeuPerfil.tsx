@@ -213,7 +213,6 @@ export default function MeuPerfil() {
       userRole={user?.role} 
       userPhoto={userPhoto}
       onLogout={logout}
-      onPhotoChange={(newUrl) => setUserPhoto(newUrl)}
     >
       <div className="space-y-6">
         {/* Header */}
@@ -296,13 +295,15 @@ export default function MeuPerfil() {
                 {usuario.nome.charAt(0).toUpperCase()}
               </div>
             )}
-            <button
-              onClick={() => setShowPhotoModal(true)}
-              className="absolute bottom-0 right-0 bg-[var(--fh-primary)] hover:bg-[var(--fh-primary-dark)] text-white p-2 rounded-full shadow-lg transition-colors"
-              title="Alterar foto de perfil"
-            >
-              <Camera className="w-4 h-4" />
-            </button>
+            {isEditing && (
+              <button
+                onClick={() => setShowPhotoModal(true)}
+                className="absolute bottom-0 right-0 bg-[var(--fh-primary)] hover:bg-[var(--fh-primary-dark)] text-white p-2 rounded-full shadow-lg transition-colors"
+                title="Alterar foto de perfil"
+              >
+                <Camera className="w-4 h-4" />
+              </button>
+            )}
           </div>
           <div>
             <h2 className="text-2xl font-bold text-[var(--fh-text)]">{usuario.nome}</h2>

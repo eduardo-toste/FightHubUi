@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import InactivityWarningModal from './InactivityWarningModal';
-import ChangeProfilePhotoModal from './ChangeProfilePhotoModal';
 import { useInactivityTimeout } from '../hooks/useInactivityTimeout';
 import { Bell, Search } from 'lucide-react';
 
@@ -11,16 +10,13 @@ const Topbar: React.FC<{
   userRole?: string; 
   userPhoto?: string;
   onLogout?: () => void;
-  onPhotoChange?: (newPhotoUrl: string) => void;
 }> = ({
   userName,
   userRole,
   userPhoto,
   onLogout,
-  onPhotoChange,
 }) => {
   const navigate = useNavigate();
-  const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   return (
     <header className="sticky top-0 z-30 bg-[var(--fh-card)] border-b border-[var(--fh-border)] shadow-sm">
@@ -55,18 +51,10 @@ const Topbar: React.FC<{
                 src={userPhoto}
                 alt={userName}
                 className="w-10 h-10 rounded-full object-cover shadow-lg"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowPhotoModal(true);
-                }}
               />
             ) : (
               <div
-                className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-accent)] flex items-center justify-center text-white font-bold text-sm shadow-lg cursor-pointer hover:opacity-90"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowPhotoModal(true);
-                }}
+                className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-accent)] flex items-center justify-center text-white font-bold text-sm shadow-lg"
               >
                 {userName?.charAt(0).toUpperCase() || 'U'}
               </div>
@@ -84,12 +72,6 @@ const Topbar: React.FC<{
           </div>
         </div>
       </div>
-      <ChangeProfilePhotoModal
-        isOpen={showPhotoModal}
-        onClose={() => setShowPhotoModal(false)}
-        currentPhotoUrl={userPhoto}
-        onPhotoChanged={onPhotoChange}
-      />
     </header>
   );
 };
@@ -100,8 +82,7 @@ const Layout: React.FC<{
   userRole?: string;
   userPhoto?: string;
   onLogout?: () => void;
-  onPhotoChange?: (newPhotoUrl: string) => void;
-}> = ({ children, userName, userRole, userPhoto, onLogout, onPhotoChange }) => {
+}> = ({ children, userName, userRole, userPhoto, onLogout }) => {
   const { isWarningVisible, dismissWarning } = useInactivityTimeout({
     warningMinutes: 12, // Aviso 3 minutos antes (token expira em 15)
     logoutMinutes: 15,  // Logout em 15 minutos (sincronizado com JWT)
@@ -116,7 +97,6 @@ const Layout: React.FC<{
           userRole={userRole} 
           userPhoto={userPhoto}
           onLogout={onLogout}
-          onPhotoChange={onPhotoChange}
         />
         <main className="flex-1 p-6 lg:p-8">{children}</main>
       </div>
