@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useMeuPerfil } from '../../features/usuarios/useUsuarios';
 import { usuariosService } from '../../features/usuarios/usuariosService';
+import { usuariosApi } from '../../api/usuarios';
 import { UsuarioUpdateParcialRequest } from '../../types';
-import { Eye, EyeOff, UserCircle, Sun, Moon, Monitor } from 'lucide-react';
+import { Eye, EyeOff, UserCircle, Sun, Moon, Monitor, Camera } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 import Layout from '../../components/Layout';
+import ChangeProfilePhotoModal from '../../components/ChangeProfilePhotoModal';
 import { useTheme } from '../../context/ThemeContext';
 
 // Componente de Preferências de Tema
@@ -70,10 +72,12 @@ export default function MeuPerfil() {
   const { usuario, loading, error, atualizarPerfil, recarregar } = useMeuPerfil();
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState(false);
+  const [userPhoto, setUserPhoto] = useState<string | undefined>(undefined);
 
   const [formData, setFormData] = useState({
     nome: '',
@@ -112,6 +116,8 @@ export default function MeuPerfil() {
           estado: '',
         },
       });
+      const fotoUrl = usuariosApi.getPhotoUrl(usuario.foto);
+      setUserPhoto(fotoUrl);
     }
   }, [usuario]);
 
@@ -176,9 +182,14 @@ export default function MeuPerfil() {
     }
   };
 
+  const handlePhotoChanged = (newPhotoUrl: string) => {
+    setUserPhoto(newPhotoUrl);
+    recarregar(); // Recarregar dados do usuario para sincronizar
+  };
+
   if (loading && !usuario) {
     return (
-      <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
+      <Layout userName={user?.name} userRole={user?.role} userPhoto={userPhoto} onLogout={logout}>
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--fh-primary)]"></div>
         </div>
@@ -188,7 +199,7 @@ export default function MeuPerfil() {
 
   if (error || !usuario) {
     return (
-      <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
+      <Layout userName={user?.name} userRole={user?.role} userPhoto={userPhoto} onLogout={logout}>
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200/50 dark:border-red-600/50 text-red-800 dark:text-red-300 px-4 py-3 rounded-xl">
           {error || 'Erro ao carregar perfil'}
         </div>
@@ -197,7 +208,13 @@ export default function MeuPerfil() {
   }
 
   return (
-    <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
+    <Layout 
+      userName={user?.name} 
+      userRole={user?.role} 
+      userPhoto={userPhoto}
+      onLogout={logout}
+      onPhotoChange={(newUrl) => setUserPhoto(newUrl)}
+    >
       <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-start">
@@ -267,8 +284,25 @@ export default function MeuPerfil() {
       {/* Foto e Info Básica */}
       <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-6">
         <div className="flex items-center gap-6">
-          <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center text-white font-bold text-3xl shadow-lg">
-            {usuario.nome.charAt(0).toUpperCase()}
+          <div className="relative group">
+            {userPhoto ? (
+              <img
+                src={userPhoto}
+                alt={usuario.nome}
+                className="w-24 h-24 rounded-full object-cover shadow-lg"
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center text-white font-bold text-3xl shadow-lg">
+                {usuario.nome.charAt(0).toUpperCase()}
+              </div>
+            )}
+            <button
+              onClick={() => setShowPhotoModal(true)}
+              className="absolute bottom-0 right-0 bg-[var(--fh-primary)] hover:bg-[var(--fh-primary-dark)] text-white p-2 rounded-full shadow-lg transition-colors"
+              title="Alterar foto de perfil"
+            >
+              <Camera className="w-4 h-4" />
+            </button>
           </div>
           <div>
             <h2 className="text-2xl font-bold text-[var(--fh-text)]">{usuario.nome}</h2>
@@ -548,6 +582,13 @@ export default function MeuPerfil() {
           </div>
         </div>
       )}
+
+      <ChangeProfilePhotoModal
+        isOpen={showPhotoModal}
+        onClose={() => setShowPhotoModal(false)}
+        currentPhotoUrl={userPhoto}
+        onPhotoChanged={handlePhotoChanged}
+      />
     </Layout>
   );
 }

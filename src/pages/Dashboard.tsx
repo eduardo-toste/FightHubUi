@@ -6,6 +6,7 @@ import BirthdateSuccessModal from '../components/BirthdateSuccessModal';
 import BlockedMinorAccess from '../components/BlockedMinorAccess';
 import PendingMinorsNotification from '../components/PendingMinorsNotification';
 import { alunosApi } from '../api/alunos';
+import { usuariosApi } from '../api/usuarios';
 
 export default function DashboardPage() {
   const { logout, user } = useAuth();
@@ -15,6 +16,7 @@ export default function DashboardPage() {
   const [alunoNome, setAlunoNome] = useState<string>('');
   const [isMinorWithoutResponsible, setIsMinorWithoutResponsible] = useState(false);
   const [isMinorLoading, setIsMinorLoading] = useState(true);
+  const [userPhoto, setUserPhoto] = useState<string | undefined>(undefined);
 
   // Verificar se é aluno com data de nascimento padrão (31/12/9999)
   // E verificar se é menor sem responsável vinculado
@@ -26,6 +28,11 @@ export default function DashboardPage() {
       }
 
       try {
+        // Buscar perfil do usuário para pegar foto
+        const perfil = await usuariosApi.obterPerfil();
+        const fotoUrl = usuariosApi.getPhotoUrl(perfil.foto);
+        setUserPhoto(fotoUrl);
+
         const aluno = await alunosApi.buscarPorId(user.alunoId);
         
         if (aluno.dataNascimento) {
@@ -83,7 +90,13 @@ export default function DashboardPage() {
 
   // Página inicial simples
   return (
-    <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
+    <Layout 
+      userName={user?.name} 
+      userRole={user?.role} 
+      userPhoto={userPhoto}
+      onLogout={logout}
+      onPhotoChange={(newUrl) => setUserPhoto(newUrl)}
+    >
       {user?.role === 'ALUNO' && showBirthdateModal && alunoId && (
         <UpdateBirthdateModal
           isOpen={showBirthdateModal}
