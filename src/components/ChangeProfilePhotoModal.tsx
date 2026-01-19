@@ -101,7 +101,7 @@ export default function ChangeProfilePhotoModal({
           <button
             onClick={handleClose}
             disabled={isLoading}
-            className="text-[var(--fh-muted)] hover:text-[var(--fh-text)] transition-colors disabled:opacity-50"
+            className="p-1 text-[var(--fh-muted)] hover:text-[var(--fh-text)] hover:bg-[var(--fh-gray-800)] dark:hover:text-[var(--fh-text)] dark:hover:bg-[var(--fh-gray-100)] rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X className="w-5 h-5" />
           </button>
@@ -179,14 +179,14 @@ export default function ChangeProfilePhotoModal({
                   if (fileInputRef.current) fileInputRef.current.value = '';
                 }}
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 border border-[var(--fh-border)] text-[var(--fh-text)] font-medium rounded-lg hover:bg-[var(--fh-gray-50)] dark:hover:bg-[var(--fh-gray-900)] transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-[var(--fh-gray-700)] dark:bg-[var(--fh-gray-100)] text-white dark:text-[var(--fh-text)] font-medium rounded-lg hover:bg-[var(--fh-gray-600)] dark:hover:bg-[var(--fh-gray-200)] transition-colors disabled:opacity-50"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleUpload}
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 bg-[var(--fh-primary)] hover:opacity-90 text-white font-medium rounded-lg transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white font-medium rounded-lg transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                 {isLoading ? 'Enviando...' : 'Confirmar'}
@@ -199,7 +199,7 @@ export default function ChangeProfilePhotoModal({
               <button
                 onClick={handleClose}
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 border border-[var(--fh-border)] text-[var(--fh-text)] font-medium rounded-lg hover:bg-[var(--fh-gray-50)] dark:hover:bg-[var(--fh-gray-900)] transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-[var(--fh-gray-700)] dark:bg-[var(--fh-gray-100)] text-white dark:text-[var(--fh-text)] font-medium rounded-lg hover:bg-[var(--fh-gray-600)] dark:hover:bg-[var(--fh-gray-200)] transition-colors disabled:opacity-50"
               >
                 Fechar
               </button>
