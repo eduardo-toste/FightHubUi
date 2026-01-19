@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import InactivityWarningModal from './InactivityWarningModal';
 import { useInactivityTimeout } from '../hooks/useInactivityTimeout';
+import { usuariosApi } from '../api/usuarios';
+import useAuth from '../hooks/useAuth';
 import { Bell, Search } from 'lucide-react';
 
 const Topbar: React.FC<{ 
@@ -82,7 +84,33 @@ const Layout: React.FC<{
   userRole?: string;
   userPhoto?: string;
   onLogout?: () => void;
-}> = ({ children, userName, userRole, userPhoto, onLogout }) => {
+}> = ({ children, userName, userRole, userPhoto: propUserPhoto, onLogout }) => {
+  const { user } = useAuth();
+  const [userPhoto, setUserPhoto] = useState<string | undefined>(propUserPhoto);
+  
+  useEffect(() => {
+    const loadUserPhoto = async () => {
+      // Se já tem foto nas props, não precisa carregar
+      if (propUserPhoto) {
+        setUserPhoto(propUserPhoto);
+        return;
+      }
+      
+      // Só carrega se estiver logado
+      if (!user) return;
+      
+      try {
+        const perfil = await usuariosApi.obterPerfil();
+        const fotoUrl = usuariosApi.getPhotoUrl(perfil.foto);
+        setUserPhoto(fotoUrl);
+      } catch (err) {
+        // Silenciosamente falha se não conseguir carregar
+        console.error('Erro ao carregar foto:', err);
+      }
+    };
+    
+    loadUserPhoto();
+  }, [user, propUserPhoto]);
   const { isWarningVisible, dismissWarning } = useInactivityTimeout({
     warningMinutes: 12, // Aviso 3 minutos antes (token expira em 15)
     logoutMinutes: 15,  // Logout em 15 minutos (sincronizado com JWT)
