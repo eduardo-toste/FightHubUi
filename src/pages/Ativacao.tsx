@@ -6,7 +6,6 @@ import * as z from 'zod'
 import { ativacaoApi, type AtivacaoData, type EnderecoData } from '../api/ativacao'
 import { Eye, EyeOff, Phone, MapPin, CheckCircle, AlertCircle, Home, User } from 'lucide-react'
 import { Button } from '../components/Button'
-import { ThemeToggle } from '../components/ThemeToggle'
 
 const enderecoSchema = z.object({
   cep: z.string().min(8, 'CEP inválido').max(9),
@@ -47,13 +46,16 @@ export default function AtivacaoPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isFocused, setIsFocused] = useState<string | null>(null)
+  const [currentStep, setCurrentStep] = useState(1)
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    watch
+    watch,
+    trigger
   } = useForm<AtivacaoForm>({
     resolver: zodResolver(ativacaoSchema)
   })
@@ -73,15 +75,12 @@ export default function AtivacaoPage() {
     if (cepLimpo.length !== 8) return
 
     try {
-      const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`)
-      const data = await response.json()
+      const data = await ativacaoApi.buscarEnderecoPorCep(cepLimpo)
       
-      if (!data.erro) {
-        setValue('logradouro', data.logradouro || '')
-        setValue('bairro', data.bairro || '')
-        setValue('cidade', data.localidade || '')
-        setValue('estado', data.uf || '')
-      }
+      setValue('logradouro', data.logradouro || '')
+      setValue('bairro', data.bairro || '')
+      setValue('cidade', data.localidade || '')
+      setValue('estado', data.uf || '')
     } catch (err) {
       console.error('Erro ao buscar CEP:', err)
     }
@@ -108,6 +107,24 @@ export default function AtivacaoPage() {
   const handleTelefoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const valorFormatado = formatarTelefone(e.target.value)
     setValue('telefone', valorFormatado)
+  }
+
+  const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const cepLimpo = e.target.value.replace(/\D/g, '')
+    const cepFormatado = cepLimpo.slice(0, 5) + (cepLimpo.length > 5 ? '-' + cepLimpo.slice(5, 8) : '')
+    setValue('cep', cepFormatado)
+  }
+
+  const nextStep = async () => {
+    // Validar campos da etapa 1
+    const senhaValida = await trigger(['senha', 'confirmarSenha', 'telefone'])
+    if (senhaValida) {
+      setCurrentStep(2)
+    }
+  }
+
+  const prevStep = () => {
+    setCurrentStep(1)
   }
 
   useEffect(() => {
@@ -158,9 +175,9 @@ export default function AtivacaoPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-6">
         <div className="max-w-md w-full">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-green-200 dark:border-green-800 overflow-hidden">
+          <div className="bg-[var(--fh-card)] rounded-3xl shadow-2xl border border-green-200 dark:border-green-800 overflow-hidden">
             <div className="bg-gradient-to-r from-green-400 to-green-600 dark:from-green-600 dark:to-green-800 p-8 text-center">
-              <div className="w-24 h-24 mx-auto mb-4 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center shadow-lg">
+              <div className="w-24 h-24 mx-auto mb-4 bg-[var(--fh-gray-50)] dark:bg-[var(--fh-gray-800)] rounded-full flex items-center justify-center shadow-lg">
                 <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" />
               </div>
               <h1 className="text-3xl font-bold text-white mb-2">Conta Ativada!</h1>
@@ -168,10 +185,10 @@ export default function AtivacaoPage() {
             </div>
 
             <div className="p-8 text-center">
-              <p className="text-gray-700 dark:text-gray-300 mb-6">
+              <p className="text-[var(--fh-text)] mb-6">
                 Sua conta está ativa e pronta para uso. Você será redirecionado para a página de login em instantes.
               </p>
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+              <div className="flex items-center justify-center gap-2 text-sm text-[var(--fh-muted)]">
                 <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full animate-pulse"></div>
                 <span>Redirecionando...</span>
               </div>
@@ -185,58 +202,106 @@ export default function AtivacaoPage() {
   // Tela principal de ativação
   return (
     <div className="min-h-screen tatame-bg flex items-center justify-center p-4 md:p-6 relative overflow-hidden">
-      {/* Background decorativo */}
+      {/* Linhas do tatame (área de combate) */}
       <div className="absolute inset-0 tatame-lines pointer-events-none" />
       
+      {/* Elementos decorativos - círculos do tatame */}
       <div className="absolute inset-0 pointer-events-none">
+        {/* Círculo central do tatame */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border-2 border-[var(--fh-primary)]/12 rounded-full" />
+        {/* Círculos menores */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-[var(--fh-accent)]/10 rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] border border-[var(--fh-primary)]/8 rounded-full" />
       </div>
 
-      <div className="relative w-full max-w-2xl z-10">
-        {/* Theme Toggle - canto superior direito */}
-        <div className="absolute top-0 right-0 z-20">
-          <ThemeToggle />
-        </div>
-        
-        {/* Header */}
-        <div className="mb-8 text-center">
+      {/* Gradientes sutis */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-[var(--fh-primary)]/3 to-transparent" />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[var(--fh-accent)]/3 to-transparent" />
+      </div>
+
+      <div className="relative w-full max-w-4xl z-10">
+        {/* Logo e Header com animação */}
+        <div className="mb-10 text-center animate-fade-in">
           <div className="inline-block relative mb-5">
-            <h1 className="relative text-4xl md:text-5xl font-black leading-[1.1] tracking-tight">
-              <span className="bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] bg-clip-text text-transparent">
+            {/* Efeito de brilho atrás do logo */}
+            <div className="absolute inset-0 bg-[var(--fh-primary)]/15 blur-2xl rounded-full animate-pulse-slow" />
+            <h1 className="relative text-5xl md:text-6xl font-black leading-[1.1] tracking-tight">
+              <span className="bg-gradient-to-r from-[var(--fh-primary)] via-[var(--fh-primary-dark)] to-[var(--fh-primary)] bg-clip-text text-transparent animate-gradient inline-block">
                 FIGHT
               </span>
-              <span className="text-[var(--fh-text)] mx-2">•</span>
-              <span className="bg-gradient-to-r from-[var(--fh-accent)] to-[var(--fh-accent-light)] bg-clip-text text-transparent">
+              <span className="text-[var(--fh-text)] mx-2 inline-block">•</span>
+              <span className="bg-gradient-to-r from-[var(--fh-accent)] via-[var(--fh-accent-light)] to-[var(--fh-accent)] bg-clip-text text-transparent inline-block">
                 HUB
               </span>
             </h1>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Ativação de Conta</h2>
-          <p className="text-gray-600 dark:text-gray-400">Complete seu cadastro para começar</p>
+          <div className="relative">
+            <p className="text-base font-bold text-[var(--fh-body)] tracking-wide uppercase mb-2 leading-normal">
+              Jiu-Jitsu Academy
+            </p>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-16 bg-gradient-to-r from-transparent to-[var(--fh-primary)]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[var(--fh-primary)]" />
+              <div className="h-px w-16 bg-gradient-to-l from-transparent to-[var(--fh-primary)]" />
+            </div>
+            <p className="text-sm text-[var(--fh-muted)] font-medium leading-relaxed px-2">
+              Complete seu cadastro para começar
+            </p>
+          </div>
         </div>
 
-        {/* Card do formulário */}
-        <div className="tatame-card p-8">
+        {/* Card de Ativação - Estilo Tatame */}
+        <div className="tatame-card relative">
+          {/* Borda superior destacada (remetendo à linha do tatame) */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--fh-primary)] via-[var(--fh-accent)] to-[var(--fh-primary)]" />
+          
+          {/* Linhas decorativas laterais */}
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[var(--fh-primary)]/20 via-transparent to-[var(--fh-primary)]/20" />
+          <div className="absolute right-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[var(--fh-accent)]/20 via-transparent to-[var(--fh-accent)]/20" />
+          
+          <div className="relative p-8 md:p-10 bg-[var(--fh-card)]/95 backdrop-blur-md">
+            <header className="mb-8 text-center">
+              <h2 className="text-2xl font-bold text-[var(--fh-text)] mb-3 leading-[1.3] uppercase tracking-wide">
+                Ativar Conta
+              </h2>
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="h-px w-12 bg-[var(--fh-primary)] flex-shrink-0" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[var(--fh-primary)] flex-shrink-0" />
+                <div className="h-px w-12 bg-[var(--fh-accent)] flex-shrink-0" />
+              </div>
+              <p className="text-sm text-[var(--fh-muted)] leading-relaxed font-medium px-2">
+                Complete seu cadastro para começar
+              </p>
+
+              {/* Indicador de Progresso */}
+              <div className="mt-6 flex items-center justify-center gap-3">
+                <div className={`h-2 w-16 rounded-full transition-colors duration-300 ${currentStep >= 1 ? 'bg-[var(--fh-primary)]' : 'bg-[var(--fh-border)]'}`} />
+                <span className={`text-sm font-semibold transition-colors duration-300 ${currentStep >= 1 ? 'text-[var(--fh-primary)]' : 'text-[var(--fh-muted)]'}`}>1</span>
+                <div className={`h-1 w-12 rounded-full transition-colors duration-300 ${currentStep >= 2 ? 'bg-[var(--fh-primary)]' : 'bg-[var(--fh-border)]'}`} />
+                <span className={`text-sm font-semibold transition-colors duration-300 ${currentStep >= 2 ? 'text-[var(--fh-primary)]' : 'text-[var(--fh-muted)]'}`}>2</span>
+                <div className={`h-2 w-16 rounded-full transition-colors duration-300 ${currentStep >= 2 ? 'bg-[var(--fh-primary)]' : 'bg-[var(--fh-border)]'}`} />
+              </div>
+            </header>
           
           {/* Erro de token */}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-r-lg">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="text-sm font-semibold text-red-800">Erro ao ativar conta</h3>
-                  <p className="text-sm text-red-700 mt-1">{error}</p>
-                </div>
+            <div 
+              role="alert" 
+              className="mb-6 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 flex items-center gap-2 leading-relaxed"
+            >
+              <div className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-xs font-bold leading-none">!</span>
               </div>
+              <span className="text-sm font-medium">{error}</span>
             </div>
           )}
 
           {!token ? (
-            <div className="text-center py-8">
+            <div className="text-center py-12">
               <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Link Inválido</h3>
-              <p className="text-gray-600 mb-6">
+              <h3 className="text-xl font-bold text-[var(--fh-text)] mb-2">Link Inválido</h3>
+              <p className="text-[var(--fh-muted)] mb-6">
                 O link de ativação não foi encontrado ou está incorreto.
               </p>
               <Button onClick={() => navigate('/login')} variant="primary">
@@ -245,22 +310,35 @@ export default function AtivacaoPage() {
             </div>
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Senha */}
+              {/* ETAPA 1: Credenciais */}
+              {currentStep === 1 && (
+                <div className="animate-fade-in space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">
                   Senha *
                 </label>
-                <div className="relative">
+                <div className="relative group">
+                  <div 
+                    className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--fh-primary)]/20 to-[var(--fh-accent)]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 ${isFocused === 'senha' ? 'opacity-100' : ''}`}
+                  />
                   <input
                     {...register('senha')}
                     type={showPassword ? 'text' : 'password'}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)] transition-all"
+                    className={`relative w-full px-4 py-3.5 rounded-xl border-2 bg-[var(--fh-card)] text-[var(--fh-body)] transition-all duration-300 ${
+                      errors.senha 
+                        ? 'border-red-400 focus:border-red-500' 
+                        : isFocused === 'senha'
+                        ? 'border-[var(--fh-primary)] shadow-lg shadow-[var(--fh-primary)]/20'
+                        : 'border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50'
+                    } focus:outline-none focus:ring-0`}
                     placeholder="Digite sua senha"
+                    onFocus={() => setIsFocused('senha')}
+                    onBlur={() => setIsFocused(null)}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--fh-muted)] hover:text-[var(--fh-primary)]"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -272,20 +350,31 @@ export default function AtivacaoPage() {
 
               {/* Confirmar Senha */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">
                   Confirmar Senha *
                 </label>
-                <div className="relative">
+                <div className="relative group">
+                  <div 
+                    className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--fh-primary)]/20 to-[var(--fh-accent)]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 ${isFocused === 'confirmarSenha' ? 'opacity-100' : ''}`}
+                  />
                   <input
                     {...register('confirmarSenha')}
                     type={showConfirmPassword ? 'text' : 'password'}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)] transition-all"
+                    className={`relative w-full px-4 py-3.5 rounded-xl border-2 bg-[var(--fh-card)] text-[var(--fh-body)] transition-all duration-300 ${
+                      errors.confirmarSenha 
+                        ? 'border-red-400 focus:border-red-500' 
+                        : isFocused === 'confirmarSenha'
+                        ? 'border-[var(--fh-primary)] shadow-lg shadow-[var(--fh-primary)]/20'
+                        : 'border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50'
+                    } focus:outline-none focus:ring-0`}
                     placeholder="Confirme sua senha"
+                    onFocus={() => setIsFocused('confirmarSenha')}
+                    onBlur={() => setIsFocused(null)}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--fh-muted)] hover:text-[var(--fh-primary)]"
                   >
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -297,127 +386,249 @@ export default function AtivacaoPage() {
 
               {/* Telefone */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">
                   <Phone className="w-4 h-4 inline mr-1" />
                   Telefone *
                 </label>
-                <input
-                  {...register('telefone')}
-                  type="tel"
-                  onChange={handleTelefoneChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)] transition-all"
-                  placeholder="(00) 00000-0000"
-                  maxLength={15}
-                />
+                <div className="relative group">
+                  <div 
+                    className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--fh-primary)]/20 to-[var(--fh-accent)]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 ${isFocused === 'telefone' ? 'opacity-100' : ''}`}
+                  />
+                  <input
+                    {...register('telefone')}
+                    type="tel"
+                    onChange={handleTelefoneChange}
+                    className={`relative w-full px-4 py-3.5 rounded-xl border-2 bg-[var(--fh-card)] text-[var(--fh-body)] transition-all duration-300 ${
+                      errors.telefone 
+                        ? 'border-red-400 focus:border-red-500' 
+                        : isFocused === 'telefone'
+                        ? 'border-[var(--fh-primary)] shadow-lg shadow-[var(--fh-primary)]/20'
+                        : 'border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50'
+                    } focus:outline-none focus:ring-0`}
+                    placeholder="(00) 00000-0000"
+                    maxLength={15}
+                    onFocus={() => setIsFocused('telefone')}
+                    onBlur={() => setIsFocused(null)}
+                  />
+                </div>
                 {errors.telefone && (
                   <p className="mt-1 text-sm text-red-600">{errors.telefone.message}</p>
                 )}
               </div>
 
               {/* Endereço */}
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  Endereço *
-                </h3>
+              {/* Botão Próximo - Etapa 1 */}
+              <button
+                type="button"
+                onClick={nextStep}
+                className="w-full relative group mt-8"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] rounded-lg blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300" />
+                <div className="relative bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white font-bold py-3.5 px-6 rounded-lg shadow-xl hover:shadow-[var(--fh-primary)]/40 transform hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 leading-normal uppercase tracking-wide text-sm">
+                  <CheckCircle className="w-5 h-5" />
+                  <span>Próximo</span>
+                </div>
+              </button>
               </div>
+              )}
 
-              {/* Campos de Endereço */}
-              <div className="space-y-4 bg-gray-50 p-6 rounded-xl border border-gray-200">
-                <div className="space-y-4 bg-gray-50 p-6 rounded-xl border border-gray-200">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* CEP */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">CEP</label>
+              {/* ETAPA 2: Endereço */}
+              {currentStep === 2 && (
+                <div className="animate-fade-in space-y-6">
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* CEP */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">CEP *</label>
+                    <div className="relative group">
+                      <div 
+                        className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--fh-primary)]/20 to-[var(--fh-accent)]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 ${isFocused === 'cep' ? 'opacity-100' : ''}`}
+                      />
                       <input
                         {...register('cep')}
                         type="text"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]"
+                        onChange={handleCepChange}
+                        className={`relative w-full px-4 py-3.5 rounded-xl border-2 bg-[var(--fh-card)] text-[var(--fh-body)] transition-all duration-300 ${
+                          errors.cep 
+                            ? 'border-red-400 focus:border-red-500' 
+                            : isFocused === 'cep'
+                            ? 'border-[var(--fh-primary)] shadow-lg shadow-[var(--fh-primary)]/20'
+                            : 'border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50'
+                        } focus:outline-none focus:ring-0`}
                         placeholder="00000-000"
                         maxLength={9}
+                        onFocus={() => setIsFocused('cep')}
+                        onBlur={() => setIsFocused(null)}
                       />
-                      {errors.cep && <p className="mt-1 text-sm text-red-600">{errors.cep.message}</p>}
                     </div>
+                    {errors.cep && <p className="mt-1 text-sm text-red-600">{errors.cep.message}</p>}
+                  </div>
 
-                    {/* Número */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Número</label>
+                  {/* Número */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">Número *</label>
+                    <div className="relative group">
+                      <div 
+                        className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--fh-primary)]/20 to-[var(--fh-accent)]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 ${isFocused === 'numero' ? 'opacity-100' : ''}`}
+                      />
                       <input
                         {...register('numero')}
                         type="text"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]"
+                        className={`relative w-full px-4 py-3.5 rounded-xl border-2 bg-[var(--fh-card)] text-[var(--fh-body)] transition-all duration-300 ${
+                          errors.numero 
+                            ? 'border-red-400 focus:border-red-500' 
+                            : isFocused === 'numero'
+                            ? 'border-[var(--fh-primary)] shadow-lg shadow-[var(--fh-primary)]/20'
+                            : 'border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50'
+                        } focus:outline-none focus:ring-0`}
                         placeholder="123"
+                        onFocus={() => setIsFocused('numero')}
+                        onBlur={() => setIsFocused(null)}
                       />
-                      {errors.numero && <p className="mt-1 text-sm text-red-600">{errors.numero.message}</p>}
                     </div>
+                    {errors.numero && <p className="mt-1 text-sm text-red-600">{errors.numero.message}</p>}
                   </div>
+                </div>
 
-                  {/* Logradouro */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Logradouro</label>
+                {/* Logradouro */}
+                <div className="mt-4">
+                  <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">Logradouro *</label>
+                  <div className="relative group">
+                    <div 
+                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--fh-primary)]/20 to-[var(--fh-accent)]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 ${isFocused === 'logradouro' ? 'opacity-100' : ''}`}
+                    />
                     <input
                       {...register('logradouro')}
                       type="text"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]"
+                      className={`relative w-full px-4 py-3.5 rounded-xl border-2 bg-[var(--fh-card)] text-[var(--fh-body)] transition-all duration-300 ${
+                        errors.logradouro 
+                          ? 'border-red-400 focus:border-red-500' 
+                          : isFocused === 'logradouro'
+                          ? 'border-[var(--fh-primary)] shadow-lg shadow-[var(--fh-primary)]/20'
+                          : 'border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50'
+                      } focus:outline-none focus:ring-0`}
                       placeholder="Rua, Avenida, etc."
+                      onFocus={() => setIsFocused('logradouro')}
+                      onBlur={() => setIsFocused(null)}
                     />
-                    {errors.logradouro && <p className="mt-1 text-sm text-red-600">{errors.logradouro.message}</p>}
+                  </div>
+                  {errors.logradouro && <p className="mt-1 text-sm text-red-600">{errors.logradouro.message}</p>}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  {/* Bairro */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">Bairro *</label>
+                    <div className="relative group">
+                      <div 
+                        className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--fh-primary)]/20 to-[var(--fh-accent)]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 ${isFocused === 'bairro' ? 'opacity-100' : ''}`}
+                      />
+                      <input
+                        {...register('bairro')}
+                        type="text"
+                        className={`relative w-full px-4 py-3.5 rounded-xl border-2 bg-[var(--fh-card)] text-[var(--fh-body)] transition-all duration-300 ${
+                          errors.bairro 
+                            ? 'border-red-400 focus:border-red-500' 
+                            : isFocused === 'bairro'
+                            ? 'border-[var(--fh-primary)] shadow-lg shadow-[var(--fh-primary)]/20'
+                            : 'border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50'
+                        } focus:outline-none focus:ring-0`}
+                        placeholder="Bairro"
+                        onFocus={() => setIsFocused('bairro')}
+                        onBlur={() => setIsFocused(null)}
+                      />
+                    </div>
+                    {errors.bairro && <p className="mt-1 text-sm text-red-600">{errors.bairro.message}</p>}
                   </div>
 
                   {/* Complemento */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Complemento</label>
-                    <input
-                      {...register('complemento')}
-                      type="text"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]"
-                      placeholder="Apto, Bloco, etc."
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Bairro */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Bairro</label>
-                      <input
-                        {...register('bairro')}
-                        type="text"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]"
-                        placeholder="Centro, Jardim, etc."
+                    <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">Complemento</label>
+                    <div className="relative group">
+                      <div 
+                        className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--fh-primary)]/20 to-[var(--fh-accent)]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 ${isFocused === 'complemento' ? 'opacity-100' : ''}`}
                       />
-                      {errors.bairro && <p className="mt-1 text-sm text-red-600">{errors.bairro.message}</p>}
+                      <input
+                        {...register('complemento')}
+                        type="text"
+                        className={`relative w-full px-4 py-3.5 rounded-xl border-2 bg-[var(--fh-card)] text-[var(--fh-body)] transition-all duration-300 ${
+                          errors.complemento 
+                            ? 'border-red-400 focus:border-red-500' 
+                            : isFocused === 'complemento'
+                            ? 'border-[var(--fh-primary)] shadow-lg shadow-[var(--fh-primary)]/20'
+                            : 'border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50'
+                        } focus:outline-none focus:ring-0`}
+                        placeholder="Apto, Sala, etc. (opcional)"
+                        onFocus={() => setIsFocused('complemento')}
+                        onBlur={() => setIsFocused(null)}
+                      />
                     </div>
+                  </div>
+                </div>
 
-                    {/* Cidade */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Cidade</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  {/* Cidade */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">Cidade *</label>
+                    <div className="relative group">
+                      <div 
+                        className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--fh-primary)]/20 to-[var(--fh-accent)]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 ${isFocused === 'cidade' ? 'opacity-100' : ''}`}
+                      />
                       <input
                         {...register('cidade')}
                         type="text"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]"
-                        placeholder="São Paulo, Rio de Janeiro, etc."
+                        className={`relative w-full px-4 py-3.5 rounded-xl border-2 bg-[var(--fh-card)] text-[var(--fh-body)] transition-all duration-300 ${
+                          errors.cidade 
+                            ? 'border-red-400 focus:border-red-500' 
+                            : isFocused === 'cidade'
+                            ? 'border-[var(--fh-primary)] shadow-lg shadow-[var(--fh-primary)]/20'
+                            : 'border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50'
+                        } focus:outline-none focus:ring-0`}
+                        placeholder="Cidade"
+                        onFocus={() => setIsFocused('cidade')}
+                        onBlur={() => setIsFocused(null)}
                       />
-                      {errors.cidade && <p className="mt-1 text-sm text-red-600">{errors.cidade.message}</p>}
                     </div>
+                    {errors.cidade && <p className="mt-1 text-sm text-red-600">{errors.cidade.message}</p>}
                   </div>
 
                   {/* Estado */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Estado (UF)</label>
-                    <input
-                      {...register('estado')}
-                      type="text"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]"
-                      placeholder="SP"
-                      maxLength={2}
-                    />
+                    <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">Estado *</label>
+                    <div className="relative group">
+                      <div 
+                        className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--fh-primary)]/20 to-[var(--fh-accent)]/20 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300 ${isFocused === 'estado' ? 'opacity-100' : ''}`}
+                      />
+                      <input
+                        {...register('estado')}
+                        type="text"
+                        maxLength={2}
+                        className={`relative w-full px-4 py-3.5 rounded-xl border-2 bg-[var(--fh-card)] text-[var(--fh-body)] transition-all duration-300 uppercase ${
+                          errors.estado 
+                            ? 'border-red-400 focus:border-red-500' 
+                            : isFocused === 'estado'
+                            ? 'border-[var(--fh-primary)] shadow-lg shadow-[var(--fh-primary)]/20'
+                            : 'border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50'
+                        } focus:outline-none focus:ring-0`}
+                        placeholder="SP"
+                        onFocus={() => setIsFocused('estado')}
+                        onBlur={() => setIsFocused(null)}
+                      />
+                    </div>
                     {errors.estado && <p className="mt-1 text-sm text-red-600">{errors.estado.message}</p>}
                   </div>
                 </div>
-              </div>
 
-              {/* Botões */}
+              {/* Botões Etapa 2 */}
               <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={prevStep}
+                  className="flex-1"
+                >
+                  Voltar
+                </Button>
                 <Button
                   type="submit"
                   variant="primary"
@@ -436,24 +647,18 @@ export default function AtivacaoPage() {
                     </>
                   )}
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate('/login')}
-                  disabled={isSubmitting}
-                  className="flex-1"
-                >
-                  Cancelar
-                </Button>
               </div>
+              </div>
+              )}
 
               {/* Info */}
-              <div className="text-center text-sm text-gray-500 pt-4">
+              <div className="text-center text-sm text-[var(--fh-muted)] pt-4">
                 <p>* Campos obrigatórios</p>
                 <p className="mt-1">Apenas o complemento é opcional</p>
               </div>
             </form>
           )}
+          </div>
         </div>
       </div>
     </div>

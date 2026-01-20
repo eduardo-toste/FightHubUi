@@ -10,6 +10,14 @@ export interface EnderecoData {
   estado: string
 }
 
+export interface EnderecoPorCepResponse {
+  cep: string
+  logradouro: string
+  bairro: string
+  localidade: string
+  uf: string
+}
+
 export interface AtivacaoData {
   token: string
   senha: string
@@ -20,5 +28,9 @@ export interface AtivacaoData {
 export const ativacaoApi = {
   ativarConta: async (data: AtivacaoData): Promise<void> => {
     await api.post('/ativar', data)
+  },
+  buscarEnderecoPorCep: async (cep: string): Promise<EnderecoPorCepResponse> => {
+    const response = await api.get(`/enderecos/cep/${cep}`)
+    return response.data
   }
 }
