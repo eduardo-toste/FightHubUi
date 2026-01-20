@@ -122,6 +122,7 @@ export default function AlunoCreate() {
     setError(null)
 
     try {
+      // Se for menor, responsáveis são obrigatórios no payload
       const request: CriarAlunoRequest = {
         nome: data.nome,
         email: data.email,
@@ -130,6 +131,7 @@ export default function AlunoCreate() {
         idsResponsaveis: data.idsResponsaveis && data.idsResponsaveis.length > 0 ? data.idsResponsaveis : undefined,
       }
 
+      // Criar o aluno com responsáveis (backend vincula automaticamente)
       await alunosApi.criar(request)
       navigate('/alunos')
     } catch (err: any) {
