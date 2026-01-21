@@ -8,6 +8,13 @@ import Table from '../../components/Table';
 import Pagination from '../../components/Pagination';
 import { UserCog, Search, Filter, X } from 'lucide-react';
 
+const formatCPF = (cpf: string | undefined) => {
+  if (!cpf) return '—'
+  const clean = cpf.replace(/\D/g, '')
+  if (clean.length !== 11) return cpf
+  return clean.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+}
+
 const roleLabels: Record<Role, string> = {
   ADMIN: 'Administrador',
   COORDENADOR: 'Coordenador',
@@ -106,7 +113,7 @@ export default function UsuariosList() {
     {
       key: 'cpf',
       label: 'CPF',
-      render: (usuario: UsuarioResponse) => usuario.cpf
+      render: (usuario: UsuarioResponse) => formatCPF(usuario.cpf)
     },
     {
       key: 'telefone',
