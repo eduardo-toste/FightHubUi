@@ -4,7 +4,15 @@ import { useUsuarioDetalhado } from '../../features/usuarios/useUsuarios';
 import { Role, UsuarioUpdateParcialRequest } from '../../types';
 import useAuth from '../../hooks/useAuth';
 import Layout from '../../components/Layout';
-import { ArrowLeft, UserCog, AlertTriangle, Mail, User, Shield, Power, Edit3 } from 'lucide-react';
+import Button from '../../components/Button';
+import { ArrowLeft, UserCog, AlertTriangle, Mail, User, Award, Power, Edit3, Phone, MapPin } from 'lucide-react';
+
+const formatCPF = (cpf: string | undefined) => {
+  if (!cpf) return 'Não informado'
+  const clean = cpf.replace(/\D/g, '')
+  if (clean.length !== 11) return cpf
+  return clean.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+}
 
 const roleLabels: Record<Role, string> = {
   ADMIN: 'Administrador',
@@ -345,99 +353,39 @@ export default function UsuarioDetail() {
               </div>
             </div>
           </div>
-
-          {/* Actions */}
-          {isAdmin && !isEditing && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {canChangeRole && (
-                <button
-                  onClick={() => setShowRoleModal(true)}
-                  className="px-5 py-3 bg-white dark:bg-[var(--fh-card)] border border-purple-200 dark:border-purple-500/30 text-purple-700 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-500/10 rounded-xl transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2.5 font-medium"
-                  title="Alterar nível de acesso do usuário"
-                >
-                  <Shield size={20} />
-                  <span>Gerenciar Permissões</span>
-                </button>
-              )}
-              <button
-                onClick={() => setShowStatusModal(true)}
-                className={`px-5 py-3 bg-white dark:bg-[var(--fh-card)] border rounded-xl transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2.5 font-medium ${
-                  usuario.ativo 
-                    ? 'border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10'
-                    : 'border-green-200 dark:border-green-500/30 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-500/10'
-                }`}
-                title={usuario.ativo ? 'Desativar acesso do usuário' : 'Reativar acesso do usuário'}
-              >
-                <Power size={20} />
-                <span>{usuario.ativo ? 'Desativar Usuário' : 'Ativar Usuário'}</span>
-              </button>
-              <button
-                onClick={() => setIsEditing(true)}
-                className="px-5 py-3 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 font-medium"
-                title="Editar informações pessoais"
-              >
-                <Edit3 size={20} />
-                <span>Editar Informações</span>
-              </button>
-            </div>
-          )}
-          
-          {isEditing && (
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setIsEditing(false);
-                  setFormData({
-                    nome: usuario.nome,
-                    email: usuario.email,
-                    telefone: usuario.telefone || '',
-                    cpf: usuario.cpf,
-                    endereco: usuario.endereco || {
-                      cep: '',
-                      logradouro: '',
-                      numero: '',
-                      complemento: '',
-                      bairro: '',
-                      cidade: '',
-                      estado: '',
-                    },
-                  });
-                }}
-                className="flex-1 px-5 py-3 bg-white dark:bg-[var(--fh-card)] hover:bg-[var(--fh-gray-50)] dark:hover:bg-[var(--fh-gray-100)] text-[var(--fh-text)] border border-[var(--fh-border)] rounded-xl transition-all shadow-sm hover:shadow font-medium"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleSaveChanges}
-                className="flex-1 px-5 py-3 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] hover:opacity-90 text-white rounded-xl transition-all shadow-md hover:shadow-lg font-medium"
-              >
-                Salvar Alterações
-              </button>
-            </div>
-          )}
         </div>
 
-        {/* Informações Pessoais */}
-        <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-6">
-          <h2 className="text-xl font-bold text-[var(--fh-text)] mb-4">Informações Pessoais</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">
-                Nome Completo
-              </label>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Informações Pessoais */}
+            <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
+              <h2 className="text-xl font-bold text-[var(--fh-text)] mb-6 flex items-center gap-3">
+                <User className="w-5 h-5 text-[var(--fh-primary)]" />
+                Informações Pessoais
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[var(--fh-muted)] flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    Nome Completo
+                  </label>
               {isEditing ? (
                 <input
                   type="text"
                   value={formData.nome}
                   onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                  className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                  className="w-full px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                 />
               ) : (
-                <p className="text-[var(--fh-text)]">{usuario.nome}</p>
+                <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{usuario.nome}</p>
               )}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--fh-muted)] flex items-center gap-2">
+                <Mail className="w-4 h-4" />
                 Email
               </label>
               {isEditing ? (
@@ -445,14 +393,15 @@ export default function UsuarioDetail() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                  className="w-full px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                 />
               ) : (
-                <p className="text-[var(--fh-text)]">{usuario.email}</p>
+                <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{usuario.email}</p>
               )}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--fh-muted)]">
                 CPF
               </label>
               {isEditing ? (
@@ -460,14 +409,16 @@ export default function UsuarioDetail() {
                   type="text"
                   value={formData.cpf}
                   onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
-                  className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                  className="w-full px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                 />
               ) : (
-                <p className="text-[var(--fh-text)]">{usuario.cpf}</p>
+                <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{formatCPF(usuario.cpf)}</p>
               )}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--fh-muted)] flex items-center gap-2">
+                <Phone className="w-4 h-4" />
                 Telefone
               </label>
               {isEditing ? (
@@ -475,116 +426,211 @@ export default function UsuarioDetail() {
                   type="text"
                   value={formData.telefone}
                   onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
-                  className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                  className="w-full px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                 />
               ) : (
-                <p className="text-[var(--fh-text)]">{usuario.telefone || '—'}</p>
+                <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{usuario.telefone || '—'}</p>
               )}
             </div>
           </div>
-        </div>
+            </div>
 
-        {/* Endereço */}
-        <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-6">
-          <h2 className="text-xl font-bold text-[var(--fh-text)] mb-4">Endereço</h2>
+            {/* Endereço */}
+            <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
+              <h2 className="text-xl font-bold text-[var(--fh-text)] mb-6 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-[var(--fh-primary)]" />
+                Endereço
+              </h2>
           {(usuario.endereco || isEditing) ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">CEP</label>
+            <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="space-y-2">
+                <label className="text-sm font-medium text-[var(--fh-muted)]">CEP</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={formData.endereco.cep}
                     onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, cep: e.target.value } })}
-                    className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                    className="w-full px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                     placeholder="00000-000"
                   />
                 ) : (
-                  <p className="text-[var(--fh-text)]">{usuario.endereco?.cep || '—'}</p>
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{usuario.endereco?.cep || '—'}</p>
                 )}
               </div>
-              <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">Logradouro</label>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[var(--fh-muted)]">Logradouro</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={formData.endereco.logradouro}
                     onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, logradouro: e.target.value } })}
-                    className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                    className="w-full px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                   />
                 ) : (
-                  <p className="text-[var(--fh-text)]">{usuario.endereco?.logradouro || '—'}</p>
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{usuario.endereco?.logradouro || '—'}</p>
                 )}
               </div>
-              <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">Número</label>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[var(--fh-muted)]">Número</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={formData.endereco.numero}
                     onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, numero: e.target.value } })}
-                    className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                    className="w-full px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                   />
                 ) : (
-                  <p className="text-[var(--fh-text)]">{usuario.endereco?.numero || '—'}</p>
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{usuario.endereco?.numero || '—'}</p>
                 )}
               </div>
-              <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">Complemento</label>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[var(--fh-muted)]">Complemento</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={formData.endereco.complemento}
                     onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, complemento: e.target.value } })}
-                    className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                    className="w-full px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                   />
                 ) : (
-                  <p className="text-[var(--fh-text)]">{usuario.endereco?.complemento || '—'}</p>
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{usuario.endereco?.complemento || '—'}</p>
                 )}
               </div>
-              <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">Bairro</label>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[var(--fh-muted)]">Bairro</label>
                 {isEditing ? (
                   <input
                     type="text"
                     value={formData.endereco.bairro}
                     onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, bairro: e.target.value } })}
-                    className="w-full px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                    className="w-full px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                   />
                 ) : (
-                  <p className="text-[var(--fh-text)]">{usuario.endereco?.bairro || '—'}</p>
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{usuario.endereco?.bairro || '—'}</p>
                 )}
               </div>
-              <div>
-                <label className="block text-sm font-medium text-[var(--fh-muted)] mb-1">Cidade/Estado</label>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[var(--fh-muted)]">Cidade/Estado</label>
                 {isEditing ? (
                   <div className="flex gap-2">
                     <input
                       type="text"
                       value={formData.endereco.cidade}
                       onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, cidade: e.target.value } })}
-                      className="flex-1 px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                      className="flex-1 px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                       placeholder="Cidade"
                     />
                     <input
                       type="text"
                       value={formData.endereco.estado}
                       onChange={(e) => setFormData({ ...formData, endereco: { ...formData.endereco, estado: e.target.value.toUpperCase() } })}
-                      className="w-20 px-4 py-2 border border-[var(--fh-border)] rounded-lg focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
+                      className="w-20 px-4 py-2.5 border border-[var(--fh-border)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] bg-[var(--fh-gray-50)] text-[var(--fh-text)] transition-all"
                       placeholder="UF"
                       maxLength={2}
                     />
                   </div>
                 ) : (
-                  <p className="text-[var(--fh-text)]">
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">
                     {usuario.endereco?.cidade || '—'} {usuario.endereco?.estado ? `- ${usuario.endereco.estado}` : ''}
                   </p>
                 )}
               </div>
             </div>
+            </>
           ) : (
-            <p className="text-[var(--fh-muted)] text-center py-8">Endereço não cadastrado</p>
+            <div className="text-center py-12">
+              <MapPin className="w-16 h-16 text-[var(--fh-muted)] mx-auto mb-4" />
+              <p className="text-[var(--fh-text)] font-medium">Endereço não cadastrado</p>
+              <p className="text-[var(--fh-muted)] text-sm mt-2">O usuário ainda não preencheu as informações de endereço</p>
+            </div>
           )}
+            </div>
+          </div>
+
+          {/* Sidebar - Actions */}
+          <div className="space-y-6">
+            <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
+              <h2 className="text-lg font-bold text-[var(--fh-text)] mb-6 flex items-center gap-2">
+                <Award className="w-5 h-5 text-[var(--fh-primary)]" />
+                Ações
+              </h2>
+              
+              <div className="space-y-4">
+                {isAdmin && !isEditing && (
+                  <>
+                    <Button
+                      onClick={() => setShowRoleModal(true)}
+                      variant="outline"
+                      className="w-full justify-start text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/30"
+                    >
+                      <User className="w-4 h-4 mr-3" />
+                      Gerenciar Permissões
+                    </Button>
+
+                    <Button
+                      onClick={() => setShowStatusModal(true)}
+                      variant={usuario.ativo ? 'ghost' : 'outline'}
+                      className={`w-full justify-start ${usuario.ativo 
+                        ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10' 
+                        : 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30'}`}
+                    >
+                      <Power className="w-4 h-4 mr-3" />
+                      {usuario.ativo ? 'Desativar Usuário' : 'Ativar Usuário'}
+                    </Button>
+
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <Button
+                        onClick={() => setIsEditing(true)}
+                        variant="outline"
+                        className="w-full justify-start text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 border-blue-200 dark:border-blue-500/30"
+                      >
+                        <Edit3 className="w-4 h-4 mr-3" />
+                        Editar Informações
+                      </Button>
+                    </div>
+                  </>
+                )}
+
+                {isEditing && (
+                  <>
+                    <Button
+                      onClick={handleSave}
+                      disabled={loading}
+                      variant="outline"
+                      className="w-full justify-start text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 disabled:opacity-50"
+                    >
+                      Salvar Alterações
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setIsEditing(false);
+                        setFormData({
+                          nome: usuario.nome,
+                          email: usuario.email,
+                          telefone: usuario.telefone || '',
+                          cpf: usuario.cpf,
+                          endereco: usuario.endereco || {
+                            cep: '',
+                            logradouro: '',
+                            numero: '',
+                            complemento: '',
+                            bairro: '',
+                            cidade: '',
+                            estado: '',
+                          },
+                        });
+                      }}
+                      variant="ghost"
+                      className="w-full justify-start text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50"
+                    >
+                      Cancelar
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Modal de Alteração de Role */}
