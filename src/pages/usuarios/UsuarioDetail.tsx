@@ -595,7 +595,7 @@ export default function UsuarioDetail() {
                 {isEditing && (
                   <>
                     <Button
-                      onClick={handleSave}
+                      onClick={handleSaveChanges}
                       disabled={loading}
                       variant="outline"
                       className="w-full justify-start text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 disabled:opacity-50"
