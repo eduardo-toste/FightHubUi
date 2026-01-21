@@ -7,6 +7,9 @@ import AulasPage from '../pages/Aulas';
 import AlunosList from '../pages/alunos/AlunosList';
 import AlunoCreate from '../pages/alunos/AlunoCreate';
 import AlunoDetail from '../pages/alunos/AlunoDetail';
+import ProfessoresList from '../pages/professores/ProfessoresList';
+import ProfessorCreate from '../pages/professores/ProfessorCreate';
+import ProfessorDetail from '../pages/professores/ProfessorDetail';
 import UsuariosList from '../pages/usuarios/UsuariosList';
 import UsuarioDetail from '../pages/usuarios/UsuarioDetail';
 import MeuPerfil from '../pages/usuarios/MeuPerfil';
@@ -79,6 +82,30 @@ export default function Router() {
         element={
           <PrivateRoute>
             <AlunoDetail />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/professores"
+        element={
+          <PrivateRoute>
+            <ProfessoresList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/professores/novo"
+        element={
+          <PrivateRoute>
+            <ProfessorCreate />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/professores/:id"
+        element={
+          <PrivateRoute>
+            <ProfessorDetail />
           </PrivateRoute>
         }
       />

@@ -1,0 +1,197 @@
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Users, Plus, Search, X } from 'lucide-react'
+import { professoresApi } from '../../api/professores'
+import Table from '../../components/Table'
+import Pagination from '../../components/Pagination'
+import Layout from '../../components/Layout'
+import { useAuth } from '../../context/AuthContext'
+import { useToast } from '../../context/ToastContext'
+import type { PageResponse } from '../../types'
+import type { ProfessorResponse } from '../../api/professores'
+
+export default function ProfessoresList() {
+  const navigate = useNavigate()
+  const { user, logout } = useAuth()
+  const { showError } = useToast()
+  const [professores, setProfessores] = useState<PageResponse<ProfessorResponse> | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(0)
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const loadProfessores = async (page: number) => {
+    setLoading(true)
+    try {
+      const data = await professoresApi.listar(page, 10)
+      setProfessores(data)
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || 
+                          error?.response?.data?.error || 
+                          error?.message || 
+                          'Erro ao carregar professores'
+      showError(errorMessage)
+      setProfessores(null)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    loadProfessores(currentPage)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage])
+
+  const handleRowClick = (professor: ProfessorResponse) => {
+    navigate(`/professores/${professor.id}`)
+  }
+
+  // Filtrar professores localmente
+  const filteredProfessores = React.useMemo(() => {
+    if (!professores?.content) return []
+    
+    return professores.content.filter((professor) => {
+      const matchesSearch = searchTerm === '' || 
+        professor.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        professor.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        professor.cpf?.includes(searchTerm)
+
+      return matchesSearch
+    })
+  }, [professores, searchTerm])
+
+  const handleClearFilters = () => {
+    setSearchTerm('')
+  }
+
+  const hasActiveFilters = searchTerm !== ''
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  const columns = [
+    {
+      key: 'nome',
+      label: 'Nome',
+      render: (item: ProfessorResponse) => (
+        <div>
+          <div className="font-medium text-[var(--fh-text)]">{item.nome}</div>
+          {!item.telefone && (
+            <div className="flex items-center gap-1 mt-1">
+              <svg className="h-4 w-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+                <title>Cadastro incompleto</title>
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <span className="text-xs text-yellow-600">Incompleto</span>
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'email',
+      label: 'Email',
+      render: (item: ProfessorResponse) => (
+        <span className="text-sm text-[var(--fh-text)]">{item.email}</span>
+      ),
+    },
+    {
+      key: 'cpf',
+      label: 'CPF',
+      render: (item: ProfessorResponse) => (
+        <span className="text-sm text-[var(--fh-muted)]">{item.cpf || '—'}</span>
+      ),
+    },
+    {
+      key: 'telefone',
+      label: 'Telefone',
+      render: (item: ProfessorResponse) => (
+        <span className="text-sm">{item.telefone || '—'}</span>
+      ),
+    },
+  ]
+
+  return (
+    <Layout userName={user?.name} userRole={user?.role} onLogout={logout}>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-[var(--fh-text)]">
+                Professores
+              </h1>
+              <p className="text-[var(--fh-muted)] mt-1">
+                Gerenciamento de professores da academia
+              </p>
+            </div>
+          </div>
+
+          {(user?.role === 'ADMIN' || user?.role === 'COORDENADOR') && (
+            <button
+              onClick={() => navigate('/professores/novo')}
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white rounded-xl font-semibold hover:shadow-lg hover:opacity-90 transition-all shadow-md"
+            >
+              <Plus size={20} />
+              Novo Professor
+            </button>
+          )}
+        </div>
+
+        {/* Filters */}
+        <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-4 space-y-4">
+          <div className="flex items-center gap-4">
+            <div className="flex-1 relative">
+              <Search 
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--fh-muted)]" 
+                size={20} 
+              />
+              <input
+                type="text"
+                placeholder="Buscar por nome, email ou CPF..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[var(--fh-border)] bg-[var(--fh-gray-50)] text-[var(--fh-body)] placeholder:text-[var(--fh-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--fh-primary)]/20 focus:border-[var(--fh-primary)] transition-all"
+              />
+            </div>
+            {hasActiveFilters && (
+              <button 
+                onClick={handleClearFilters}
+                className="flex items-center gap-2 px-4 py-2.5 text-[var(--fh-muted)] hover:text-[var(--fh-text)] hover:bg-[var(--fh-gray-50)] rounded-xl transition-colors"
+              >
+                <X size={20} />
+                Limpar
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Table */}
+        <Table
+          columns={columns}
+          data={filteredProfessores}
+          loading={loading}
+          emptyMessage={
+            hasActiveFilters 
+              ? "Nenhum professor encontrado com os filtros aplicados" 
+              : "Nenhum professor cadastrado"
+          }
+          onRowClick={handleRowClick}
+        />
+
+        {/* Pagination */}
+        {professores && professores.totalPages > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={professores.totalPages}
+            totalElements={professores.totalElements}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </div>
+    </Layout>
+  )
+}
