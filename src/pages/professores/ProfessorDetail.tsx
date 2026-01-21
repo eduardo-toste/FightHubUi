@@ -7,6 +7,13 @@ import { professoresApi } from '../../api/professores'
 import Layout from '../../components/Layout'
 import type { ProfessorDetalhadoResponse } from '../../api/professores'
 
+const formatCPF = (cpf: string | undefined) => {
+  if (!cpf) return 'Não informado'
+  const clean = cpf.replace(/\D/g, '')
+  if (clean.length !== 11) return cpf
+  return clean.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+}
+
 const ProfessorDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
@@ -311,7 +318,7 @@ const ProfessorDetail: React.FC = () => {
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-[var(--fh-muted)]">CPF</label>
-                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{professor.cpf || 'Não informado'}</p>
+                  <p className="text-[var(--fh-text)] font-medium bg-[var(--fh-gray-50)] p-3 rounded-lg">{formatCPF(professor.cpf)}</p>
                 </div>
               </div>
             </div>
