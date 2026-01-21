@@ -11,6 +11,15 @@ import Layout from '../../components/Layout'
 import { useAuth } from '../../context/AuthContext'
 import type { CriarProfessorRequest } from '../../api/professores'
 
+const maskCPF = (value: string) => {
+  return value
+    .replace(/\D/g, '')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+    .substring(0, 14)
+}
+
 const schema = z.object({
   nome: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
   email: z.string().email('Email inválido'),
@@ -29,9 +38,18 @@ export default function ProfessorCreate() {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
+
+  const cpfValue = watch('cpf')
+
+  const handleCPFChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const maskedValue = maskCPF(e.target.value)
+    setValue('cpf', maskedValue)
+  }
 
   const onSubmit = async (data: FormData) => {
     setError(null)
@@ -119,8 +137,10 @@ export default function ProfessorCreate() {
                   <TextField
                     id="cpf"
                     label="CPF"
-                    placeholder="Ex: 123.456.789-00"
+                    placeholder="000.000.000-00"
+                    maxLength={14}
                     {...register('cpf')}
+                    onChange={handleCPFChange}
                     error={errors.cpf?.message}
                   />
                 </div>

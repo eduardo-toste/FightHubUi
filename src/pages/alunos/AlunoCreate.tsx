@@ -20,6 +20,15 @@ const calculateAge = (birthDate: string): number => {
      (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate()) ? 1 : 0)
 }
 
+const maskCPF = (value: string) => {
+  return value
+    .replace(/\D/g, '')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+    .substring(0, 14)
+}
+
 const schema = z.object({
   nome: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
   email: z.string().email('Email inválido'),
@@ -74,6 +83,11 @@ export default function AlunoCreate() {
   })
 
   const dataNascimento = watch('dataNascimento')
+
+  const handleCPFChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const maskedValue = maskCPF(e.target.value)
+    setValue('cpf', maskedValue)
+  }
 
   // Carregar responsáveis uma única vez ao montar
   useEffect(() => {
@@ -208,7 +222,9 @@ export default function AlunoCreate() {
                   id="cpf"
                   label="CPF"
                   placeholder="000.000.000-00"
+                  maxLength={14}
                   {...register('cpf')}
+                  onChange={handleCPFChange}
                   error={errors.cpf?.message}
                 />
               </div>
