@@ -8,7 +8,7 @@ type PrimaryButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 export default function PrimaryButton({ loading = false, children, className = '', ...rest }: PrimaryButtonProps) {
   return (
     <button
-      className={`fh-btn-primary w-full inline-flex items-center justify-center ${className}`}
+      className={`fh-btn-primary inline-flex items-center justify-center ${className}`}
       disabled={rest.disabled || loading}
       {...rest}
     >

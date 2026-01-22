@@ -148,21 +148,20 @@ export default function ProfessorCreate() {
             </div>
 
             {/* Submit Buttons */}
-            <div className="flex gap-3 pt-6 border-t border-[var(--fh-border)]">
+            <div className="flex gap-3 pt-6 border-t border-[var(--fh-border)] justify-end">
               <button
                 type="button"
                 onClick={() => navigate('/professores')}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-[var(--fh-border)] text-[var(--fh-text)] hover:bg-[var(--fh-gray-50)] transition-colors font-medium"
+                className="px-5 py-2 rounded-lg border border-[var(--fh-border)] text-[var(--fh-text)] hover:bg-[var(--fh-gray-100)] dark:hover:bg-[var(--fh-gray-700)] transition-all font-semibold text-sm shadow-sm hover:shadow-md"
               >
                 Cancelar
               </button>
               <PrimaryButton
                 type="submit"
                 disabled={loading}
-                className="flex-1 flex items-center justify-center gap-2"
+                className="px-7 py-2 text-sm font-semibold shadow-md hover:shadow-lg transition-all"
               >
-                <Save size={18} />
-                {loading ? 'Criando...' : 'Criar Professor'}
+                {loading ? 'Salvando...' : 'Salvar Professor'}
               </PrimaryButton>
             </div>
           </form>

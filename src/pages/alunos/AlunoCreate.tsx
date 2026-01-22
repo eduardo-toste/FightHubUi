@@ -342,11 +342,11 @@ export default function AlunoCreate() {
             )}
 
             {/* Form Actions */}
-            <div className="flex gap-4 pt-6 border-t border-[var(--fh-border)]">
+            <div className="flex gap-3 pt-6 border-t border-[var(--fh-border)] justify-end">
               <button
                 type="button"
                 onClick={() => navigate('/alunos')}
-                className="flex-1 px-6 py-3 border border-[var(--fh-border)] rounded-xl font-semibold text-[var(--fh-text)] hover:bg-[var(--fh-gray-50)] transition-all"
+                className="px-5 py-2 border border-[var(--fh-border)] rounded-lg font-semibold text-[var(--fh-text)] hover:bg-[var(--fh-gray-100)] dark:hover:bg-[var(--fh-gray-700)] transition-all text-sm shadow-sm hover:shadow-md"
                 disabled={loading}
               >
                 Cancelar
@@ -354,9 +354,8 @@ export default function AlunoCreate() {
               <PrimaryButton
                 type="submit"
                 loading={loading}
-                className="flex-1 flex items-center justify-center gap-2 py-3"
+                className="px-7 py-2 text-sm font-semibold shadow-md hover:shadow-lg transition-all"
               >
-                <Save size={20} />
                 {loading ? 'Salvando...' : 'Salvar Aluno'}
               </PrimaryButton>
             </div>
