@@ -73,18 +73,18 @@ const EditAlunoModal: React.FC<EditAlunoModalProps> = ({ aluno, isOpen, onClose,
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 w-full max-w-lg mx-4 shadow-2xl border border-gray-200 dark:border-gray-700">
+      <div className="bg-[var(--fh-card)] rounded-2xl p-8 w-full max-w-lg mx-4 shadow-2xl border border-[var(--fh-border)]">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Editar Datas</h2>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Atualize as datas do aluno</p>
+            <h2 className="text-2xl font-bold text-[var(--fh-text)]">Editar Datas</h2>
+            <p className="text-[var(--fh-muted)] mt-1">Atualize as datas do aluno</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">
                 <Calendar className="inline w-4 h-4 mr-2" />
                 Data de Nascimento
               </label>
@@ -92,12 +92,12 @@ const EditAlunoModal: React.FC<EditAlunoModalProps> = ({ aluno, isOpen, onClose,
                 type="date"
                 value={formData.dataNascimento}
                 onChange={(e) => setFormData(prev => ({ ...prev, dataNascimento: e.target.value }))}
-                className="w-full p-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                className="w-full p-4 border border-[var(--fh-border)] bg-[var(--fh-card)] text-[var(--fh-text)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)] focus:border-transparent transition-all duration-200"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-semibold text-[var(--fh-text)] mb-2">
                 <BookOpen className="inline w-4 h-4 mr-2" />
                 Data de Matrícula
               </label>
@@ -105,7 +105,7 @@ const EditAlunoModal: React.FC<EditAlunoModalProps> = ({ aluno, isOpen, onClose,
                 type="date"
                 value={formData.dataMatricula}
                 onChange={(e) => setFormData(prev => ({ ...prev, dataMatricula: e.target.value }))}
-                className="w-full p-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                className="w-full p-4 border border-[var(--fh-border)] bg-[var(--fh-card)] text-[var(--fh-text)] rounded-xl focus:ring-2 focus:ring-[var(--fh-primary)] focus:border-transparent transition-all duration-200"
               />
             </div>
           </div>
@@ -794,8 +794,8 @@ const AlunoDetail: React.FC = () => {
 
                 {canPromoteStudent && (
                   <>
-                    <div className="pt-4 border-t border-gray-200">
-                      <h3 className="text-sm font-semibold text-gray-700 mb-3">Graduação</h3>
+                    <div className="pt-4 border-t border-[var(--fh-border)]">
+                      <h3 className="text-sm font-semibold text-[var(--fh-text)] mb-3">Graduação</h3>
                       
                       <div className="space-y-2">
                         <Button
@@ -818,8 +818,8 @@ const AlunoDetail: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-gray-200">
-                      <h3 className="text-sm font-semibold text-gray-700 mb-3">Grau</h3>
+                    <div className="pt-4 border-t border-[var(--fh-border)]">
+                      <h3 className="text-sm font-semibold text-[var(--fh-text)] mb-3">Grau</h3>
                       
                       <div className="space-y-2">
                         <Button

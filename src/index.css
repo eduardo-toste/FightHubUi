@@ -517,7 +517,7 @@ body {
   }
 
   .fh-btn-secondary {
-    @apply fh-btn bg-white border border-[var(--fh-border)] text-[var(--fh-body)] hover:shadow-soft;
+    @apply fh-btn bg-white border border-[var(--fh-border)] text-[var(--fh-body)] hover:bg-[var(--fh-gray-50)] transition-all duration-200;
   }
 
   .fh-btn-ghost {
