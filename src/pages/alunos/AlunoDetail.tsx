@@ -73,24 +73,18 @@ const EditAlunoModal: React.FC<EditAlunoModalProps> = ({ aluno, isOpen, onClose,
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl p-8 w-full max-w-lg mx-4 shadow-2xl">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 w-full max-w-lg mx-4 shadow-2xl border border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Editar Datas</h2>
-            <p className="text-gray-600 mt-1">Atualize as datas do aluno</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Editar Datas</h2>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Atualize as datas do aluno</p>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <Edit3 className="w-5 h-5" />
-          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 <Calendar className="inline w-4 h-4 mr-2" />
                 Data de Nascimento
               </label>
@@ -98,12 +92,12 @@ const EditAlunoModal: React.FC<EditAlunoModalProps> = ({ aluno, isOpen, onClose,
                 type="date"
                 value={formData.dataNascimento}
                 onChange={(e) => setFormData(prev => ({ ...prev, dataNascimento: e.target.value }))}
-                className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                className="w-full p-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 <BookOpen className="inline w-4 h-4 mr-2" />
                 Data de Matrícula
               </label>
@@ -111,7 +105,7 @@ const EditAlunoModal: React.FC<EditAlunoModalProps> = ({ aluno, isOpen, onClose,
                 type="date"
                 value={formData.dataMatricula}
                 onChange={(e) => setFormData(prev => ({ ...prev, dataMatricula: e.target.value }))}
-                className="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
+                className="w-full p-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
               />
             </div>
           </div>
