@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import { CheckCircle, LogOut } from 'lucide-react';
 
 interface BirthdateSuccessModalProps {
@@ -15,7 +16,7 @@ export default function BirthdateSuccessModal({ userName, onClose, onLogout }: B
     }
   };
 
-  return (
+  return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-[var(--fh-card)] rounded-xl p-8 w-full max-w-md mx-4 shadow-2xl border border-[var(--fh-border)]">
         {/* Header */}

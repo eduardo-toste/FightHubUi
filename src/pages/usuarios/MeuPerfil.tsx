@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { useMeuPerfil } from '../../features/usuarios/useUsuarios';
 import { usuariosService } from '../../features/usuarios/usuariosService';
 import { usuariosApi } from '../../api/usuarios';
@@ -488,7 +489,7 @@ export default function MeuPerfil() {
       </div>
 
       {/* Modal de Alteração de Senha */}
-      {showPasswordModal && (
+      {showPasswordModal && ReactDOM.createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-[var(--fh-card)] rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl border border-[var(--fh-border)]">
             <h3 className="text-xl font-bold text-[var(--fh-text)] mb-4">Alterar Senha</h3>
@@ -582,7 +583,7 @@ export default function MeuPerfil() {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
 
       <ChangeProfilePhotoModal
         isOpen={showPhotoModal}

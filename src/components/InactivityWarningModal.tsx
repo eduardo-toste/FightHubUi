@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import { Clock, AlertTriangle } from 'lucide-react';
 
 interface InactivityWarningModalProps {
@@ -13,7 +14,7 @@ export default function InactivityWarningModal({
 }: InactivityWarningModalProps) {
   if (!isVisible) return null;
 
-  return (
+  return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-[var(--fh-card)] rounded-xl shadow-2xl p-6 max-w-md w-full mx-4 border border-amber-200 dark:border-amber-600">
         <div className="flex gap-3 mb-4">
@@ -47,6 +48,7 @@ export default function InactivityWarningModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

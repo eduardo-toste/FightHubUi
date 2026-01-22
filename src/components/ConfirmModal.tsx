@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { AlertTriangle, X } from 'lucide-react'
 
 export interface ConfirmModalProps {
@@ -49,7 +50,7 @@ export default function ConfirmModal({
 
   const styles = variantStyles[variant]
 
-  return (
+  return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
       <div className="bg-[var(--fh-card)] rounded-xl shadow-2xl max-w-md w-full border border-[var(--fh-border)] animate-in fade-in zoom-in duration-200">
         {/* Header */}
@@ -97,7 +98,8 @@ export default function ConfirmModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 

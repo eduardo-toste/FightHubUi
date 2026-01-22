@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { Camera, X, Loader2, AlertCircle } from 'lucide-react';
 import { usuariosApi } from '../api/usuarios';
 
@@ -92,7 +93,7 @@ export default function ChangeProfilePhotoModal({
 
   if (!isOpen) return null;
 
-  return (
+  return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-[var(--fh-card)] rounded-xl shadow-2xl p-6 max-w-md w-full mx-4">
         {/* Header */}
@@ -217,5 +218,5 @@ export default function ChangeProfilePhotoModal({
         </div>
       </div>
     </div>
-  );
+  , document.body);
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUsuarioDetalhado } from '../../features/usuarios/useUsuarios';
 import { Role, UsuarioUpdateParcialRequest } from '../../types';
@@ -90,7 +91,15 @@ export default function UsuarioDetail() {
         email: usuario.email,
         telefone: usuario.telefone || '',
         cpf: usuario.cpf,
-        endereco: usuario.endereco || {
+        endereco: usuario.endereco ? {
+          cep: usuario.endereco.cep || '',
+          logradouro: usuario.endereco.logradouro || '',
+          numero: usuario.endereco.numero || '',
+          complemento: usuario.endereco.complemento || '',
+          bairro: usuario.endereco.bairro || '',
+          cidade: usuario.endereco.cidade || '',
+          estado: usuario.endereco.estado || '',
+        } : {
           cep: '',
           logradouro: '',
           numero: '',
@@ -121,7 +130,20 @@ export default function UsuarioDetail() {
       email: formData.email !== usuario?.email ? formData.email : undefined,
       telefone: formData.telefone !== usuario?.telefone ? formData.telefone : undefined,
       cpf: formData.cpf !== usuario?.cpf ? formData.cpf : undefined,
-      endereco: JSON.stringify(formData.endereco) !== JSON.stringify(usuario?.endereco) ? formData.endereco : undefined,
+      endereco:
+        JSON.stringify(formData.endereco) !== JSON.stringify(usuario?.endereco)
+          ? ({
+              // preserve existing endereco id when present to satisfy EnderecoResponse shape
+              ...(usuario?.endereco?.id ? { id: usuario.endereco.id } : {}),
+              cep: formData.endereco.cep,
+              logradouro: formData.endereco.logradouro,
+              numero: formData.endereco.numero,
+              complemento: formData.endereco.complemento,
+              bairro: formData.endereco.bairro,
+              cidade: formData.endereco.cidade,
+              estado: formData.endereco.estado,
+            } as unknown as any)
+          : undefined,
     };
 
     // Remove campos undefined
@@ -310,8 +332,8 @@ export default function UsuarioDetail() {
   const isAdmin = currentUser?.role === 'ADMIN';
   
   // Verificar se o usuário atual pode alterar a role do usuário visualizado
-  const canChangeRole = currentUser && usuario && 
-    roleHierarchy[currentUser.role] > roleHierarchy[usuario.role];
+  const canChangeRole = currentUser && usuario && currentUser.role && usuario.role &&
+    roleHierarchy[currentUser.role as Role] > roleHierarchy[usuario.role as Role];
 
   return (
     <Layout userName={currentUser?.name} userRole={currentUser?.role} onLogout={logout}>
@@ -610,7 +632,15 @@ export default function UsuarioDetail() {
                           email: usuario.email,
                           telefone: usuario.telefone || '',
                           cpf: usuario.cpf,
-                          endereco: usuario.endereco || {
+                          endereco: usuario.endereco ? {
+                            cep: usuario.endereco.cep || '',
+                            logradouro: usuario.endereco.logradouro || '',
+                            numero: usuario.endereco.numero || '',
+                            complemento: usuario.endereco.complemento || '',
+                            bairro: usuario.endereco.bairro || '',
+                            cidade: usuario.endereco.cidade || '',
+                            estado: usuario.endereco.estado || '',
+                          } : {
                             cep: '',
                             logradouro: '',
                             numero: '',
@@ -634,7 +664,7 @@ export default function UsuarioDetail() {
         </div>
 
         {/* Modal de Alteração de Role */}
-        {showRoleModal && (
+        {showRoleModal && ReactDOM.createPortal(
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-[var(--fh-card)] rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl border border-[var(--fh-border)]">
               <h3 className="text-xl font-bold text-[var(--fh-text)] mb-4">
@@ -652,7 +682,7 @@ export default function UsuarioDetail() {
                   .filter(([value]) => {
                     // Só permitir atribuir roles inferiores ao usuário atual
                     const roleValue = value as Role;
-                    return currentUser && roleHierarchy[roleValue] < roleHierarchy[currentUser.role];
+                    return currentUser && currentUser.role && roleHierarchy[roleValue] < roleHierarchy[currentUser.role as Role];
                   })
                   .map(([value, label]) => (
                     <option key={value} value={value}>
@@ -680,10 +710,10 @@ export default function UsuarioDetail() {
               </div>
             </div>
           </div>
-        )}
+        , document.body)}
 
         {/* Modal de Alteração de Status */}
-        {showStatusModal && (
+        {showStatusModal && ReactDOM.createPortal(
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-[var(--fh-card)] rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl border border-[var(--fh-border)]">
               <h3 className="text-xl font-bold text-[var(--fh-text)] mb-4">
@@ -719,7 +749,7 @@ export default function UsuarioDetail() {
               </div>
             </div>
           </div>
-        )}
+        , document.body)}
       </div>
     </Layout>
   );

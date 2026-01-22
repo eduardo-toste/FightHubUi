@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { Calendar, AlertTriangle, X } from 'lucide-react';
 import { alunosApi } from '../api/alunos';
 
@@ -52,7 +53,7 @@ export default function UpdateBirthdateModal({ isOpen, alunoId, onClose, onSucce
 
   if (!isOpen) return null;
 
-  return (
+  return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-[var(--fh-card)] rounded-xl p-8 w-full max-w-md mx-4 shadow-2xl border border-[var(--fh-border)]">
         {/* Header */}
@@ -119,6 +120,7 @@ export default function UpdateBirthdateModal({ isOpen, alunoId, onClose, onSucce
           💡 Esta informação é necessária para o correto funcionamento da plataforma
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

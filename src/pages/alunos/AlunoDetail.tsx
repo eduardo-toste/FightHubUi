@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import ReactDOM from 'react-dom'
 import { useParams, useNavigate } from 'react-router-dom'
 import { 
   ArrowLeft, 
@@ -71,7 +72,7 @@ const EditAlunoModal: React.FC<EditAlunoModalProps> = ({ aluno, isOpen, onClose,
 
   if (!isOpen) return null
 
-  return (
+  return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-[var(--fh-card)] rounded-2xl p-8 w-full max-w-lg mx-4 shadow-2xl border border-[var(--fh-border)]">
         <div className="flex items-center justify-between mb-8">
@@ -131,7 +132,8 @@ const EditAlunoModal: React.FC<EditAlunoModalProps> = ({ aluno, isOpen, onClose,
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 

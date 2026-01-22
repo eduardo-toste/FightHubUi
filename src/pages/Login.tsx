@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import ReactDOM from 'react-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -299,7 +300,7 @@ export default function LoginPage() {
       </div>
 
       {/* Modal de Informações */}
-      {showInfoModal && (
+      {showInfoModal && ReactDOM.createPortal(
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
           onClick={() => setShowInfoModal(false)}
@@ -398,7 +399,7 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
 
       {/* Modal de Recuperação de Senha */}
       <RecuperarSenhaModal 
