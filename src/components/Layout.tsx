@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import InactivityWarningModal from './InactivityWarningModal';
+import NotificationsPanel from './NotificationsPanel';
 import { useInactivityTimeout } from '../hooks/useInactivityTimeout';
 import { usuariosApi } from '../api/usuarios';
 import useAuth from '../hooks/useAuth';
-import { Bell, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 const Topbar: React.FC<{ 
   userName?: string; 
@@ -38,10 +39,7 @@ const Topbar: React.FC<{
         {/* Right Section */}
         <div className="flex items-center gap-4">
           {/* Notifications */}
-          <button className="relative w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[var(--fh-border)] text-[var(--fh-muted)] hover:text-[var(--fh-text)] transition-colors">
-            <Bell size={20} />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-[var(--fh-card)]" />
-          </button>
+          <NotificationsPanel />
 
           {/* User Avatar */}
           <div 
