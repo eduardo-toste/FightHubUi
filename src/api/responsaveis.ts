@@ -9,6 +9,40 @@ export interface ResponsavelResponse {
   dataNascimento: string;
 }
 
+export interface EnderecoResponse {
+  logradouro: string;
+  numero: string;
+  complemento?: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  cep: string;
+}
+
+export interface AlunoResponsavelResponse {
+  id: string;
+  nome: string;
+  email: string;
+  cpf: string;
+}
+
+export interface ResponsavelDetalhadoResponse {
+  id: string;
+  nome: string;
+  email: string;
+  telefone?: string;
+  cpf: string;
+  foto?: string;
+  endereco?: EnderecoResponse;
+  alunos?: AlunoResponsavelResponse[];
+}
+
+export interface CriarResponsavelRequest {
+  nome: string;
+  email: string;
+  cpf: string;
+}
+
 export const responsaveisApi = {
   // Listar todos os responsáveis com paginação
   listar: async (page: number = 0, size: number = 10) => {
@@ -22,6 +56,11 @@ export const responsaveisApi = {
   buscarPorId: async (id: string) => {
     const res = await api.get(`/responsaveis/${id}`);
     return res.data;
+  },
+
+  // Criar novo responsável
+  criar: async (responsavel: CriarResponsavelRequest) => {
+    await api.post('/responsaveis', responsavel);
   },
 
   // Vincular aluno ao responsável

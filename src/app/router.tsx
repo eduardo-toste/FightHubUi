@@ -10,6 +10,9 @@ import AlunoDetail from '../pages/alunos/AlunoDetail';
 import ProfessoresList from '../pages/professores/ProfessoresList';
 import ProfessorCreate from '../pages/professores/ProfessorCreate';
 import ProfessorDetail from '../pages/professores/ProfessorDetail';
+import ResponsaveisList from '../pages/responsaveis/ResponsaveisList';
+import ResponsavelCreate from '../pages/responsaveis/ResponsavelCreate';
+import ResponsavelDetail from '../pages/responsaveis/ResponsavelDetail';
 import UsuariosList from '../pages/usuarios/UsuariosList';
 import UsuarioDetail from '../pages/usuarios/UsuarioDetail';
 import MeuPerfil from '../pages/usuarios/MeuPerfil';
@@ -106,6 +109,30 @@ export default function Router() {
         element={
           <PrivateRoute>
             <ProfessorDetail />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/responsaveis"
+        element={
+          <PrivateRoute>
+            <ResponsaveisList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/responsaveis/novo"
+        element={
+          <PrivateRoute>
+            <ResponsavelCreate />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/responsaveis/:id"
+        element={
+          <PrivateRoute>
+            <ResponsavelDetail />
           </PrivateRoute>
         }
       />

@@ -34,6 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
     { to: '/home', label: 'Home', icon: LayoutDashboard, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
     { to: '/alunos', label: 'Alunos', icon: Users, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
     { to: '/professores', label: 'Professores', icon: Users, roles: ['ADMIN', 'COORDENADOR'] },
+    { to: '/responsaveis', label: 'Responsáveis', icon: Users, roles: ['ADMIN', 'COORDENADOR'] },
     { to: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['ADMIN', 'COORDENADOR'] },
   ];
 
