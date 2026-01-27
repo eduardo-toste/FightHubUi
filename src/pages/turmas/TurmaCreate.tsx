@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Users, ArrowLeft, AlertCircle } from 'lucide-react'
+import { Users2, ArrowLeft, AlertCircle } from 'lucide-react'
 import { turmasApi, TurmaRequest } from '../../api/turmas'
 import { professoresApi, ProfessorResponse } from '../../api/professores'
 import TextField from '../../components/TextField'
@@ -92,7 +92,7 @@ export default function TurmaCreate() {
           </button>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
-              <Users className="text-white" size={24} />
+              <Users2 className="text-white" size={24} />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-[var(--fh-text)]">Nova Turma</h1>
