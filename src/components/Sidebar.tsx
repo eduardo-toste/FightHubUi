@@ -8,7 +8,11 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  UserCog
+  UserCog,
+  GraduationCap,
+  Users2,
+  School,
+  UserCheck
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -32,10 +36,10 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
   // Definir itens de menu baseado no role
   const baseMenuItems = [
     { to: '/home', label: 'Home', icon: LayoutDashboard, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
-    { to: '/alunos', label: 'Alunos', icon: Users, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
-    { to: '/turmas', label: 'Turmas', icon: Users, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
-    { to: '/professores', label: 'Professores', icon: Users, roles: ['ADMIN', 'COORDENADOR'] },
-    { to: '/responsaveis', label: 'Responsáveis', icon: Users, roles: ['ADMIN', 'COORDENADOR'] },
+    { to: '/alunos', label: 'Alunos', icon: GraduationCap, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
+    { to: '/turmas', label: 'Turmas', icon: Users2, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
+    { to: '/professores', label: 'Professores', icon: School, roles: ['ADMIN', 'COORDENADOR'] },
+    { to: '/responsaveis', label: 'Responsáveis', icon: UserCheck, roles: ['ADMIN', 'COORDENADOR'] },
     { to: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['ADMIN', 'COORDENADOR'] },
   ];
 
