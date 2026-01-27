@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { UserPlus, ArrowLeft } from 'lucide-react'
+import { UserCheck, ArrowLeft } from 'lucide-react'
 import { responsaveisApi } from '../../api/responsaveis'
 import TextField from '../../components/TextField'
 import PrimaryButton from '../../components/PrimaryButton'
@@ -85,7 +85,7 @@ export default function ResponsavelCreate() {
           </button>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
-              <UserPlus className="text-white" size={24} />
+              <UserCheck className="text-white" size={24} />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-[var(--fh-text)]">Novo Responsável</h1>
