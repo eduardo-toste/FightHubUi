@@ -6,16 +6,17 @@ import NotificationsPanel from './NotificationsPanel';
 import { useInactivityTimeout } from '../hooks/useInactivityTimeout';
 import { usuariosApi } from '../api/usuarios';
 import { alunosApi } from '../api/alunos';
+import { aulasApi } from '../api/aulas';
 import { professoresApi } from '../api/professores';
 import { responsaveisApi } from '../api/responsaveis';
 import { turmasApi } from '../api/turmas';
 import useAuth from '../hooks/useAuth';
-import { Search, GraduationCap, School, UserCheck, Users2, Loader2 } from 'lucide-react';
+import { Search, GraduationCap, School, UserCheck, Users2, BookOpen, Loader2 } from 'lucide-react';
 
 interface SearchResult {
   id: string;
   nome: string;
-  tipo: 'aluno' | 'professor' | 'responsavel' | 'turma';
+  tipo: 'aluno' | 'professor' | 'responsavel' | 'turma' | 'aula';
   detalhes?: string;
 }
 
@@ -105,6 +106,26 @@ const Topbar: React.FC<{
         );
       }
 
+      // Aulas (ADMIN, COORDENADOR, PROFESSOR)
+      if (user?.role && ['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user.role)) {
+        promises.push(
+          aulasApi.listar(0, 5)
+            .then(data => {
+              const aulas = (data.content || data).filter((a: any) =>
+                a.titulo?.toLowerCase().includes(term.toLowerCase()) ||
+                a.descricao?.toLowerCase().includes(term.toLowerCase())
+              );
+              return aulas.slice(0, 3).map((a: any) => ({
+                id: a.id,
+                nome: a.titulo,
+                tipo: 'aula' as const,
+                detalhes: a.data ? new Date(a.data).toLocaleDateString('pt-BR') : ''
+              }));
+            })
+            .catch(() => [])
+        );
+      }
+
       // Professores (ADMIN, COORDENADOR)
       if (user?.role && ['ADMIN', 'COORDENADOR'].includes(user.role)) {
         promises.push(
@@ -162,7 +183,8 @@ const Topbar: React.FC<{
       aluno: `/alunos/${result.id}`,
       professor: `/professores/${result.id}`,
       responsavel: `/responsaveis/${result.id}`,
-      turma: `/turmas/${result.id}`
+      turma: `/turmas/${result.id}`,
+      aula: `/aulas/${result.id}`
     };
     navigate(routes[result.tipo]);
     setSearchTerm('');
@@ -174,7 +196,8 @@ const Topbar: React.FC<{
       aluno: <GraduationCap className="w-4 h-4" />,
       professor: <School className="w-4 h-4" />,
       responsavel: <UserCheck className="w-4 h-4" />,
-      turma: <Users2 className="w-4 h-4" />
+      turma: <Users2 className="w-4 h-4" />,
+      aula: <BookOpen className="w-4 h-4" />
     };
     return icons[tipo as keyof typeof icons];
   };
@@ -184,7 +207,8 @@ const Topbar: React.FC<{
       aluno: 'Aluno',
       professor: 'Professor',
       responsavel: 'Responsável',
-      turma: 'Turma'
+      turma: 'Turma',
+      aula: 'Aula'
     };
     return labels[tipo as keyof typeof labels];
   };
@@ -211,7 +235,7 @@ const Topbar: React.FC<{
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--fh-muted)]" />
             <input
               type="text"
-              placeholder="Buscar alunos, turmas, professores..."
+              placeholder="Buscar alunos, aulas, turmas, professores..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onFocus={() => searchResults.length > 0 && setShowResults(true)}

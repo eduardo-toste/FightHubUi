@@ -3,10 +3,12 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/Login';
 import AtivacaoPage from '../pages/Ativacao';
 import DashboardPage from '../pages/Dashboard';
-import AulasPage from '../pages/Aulas';
 import AlunosList from '../pages/alunos/AlunosList';
 import AlunoCreate from '../pages/alunos/AlunoCreate';
 import AlunoDetail from '../pages/alunos/AlunoDetail';
+import AulasList from '../pages/aulas/AulasList';
+import AulaCreate from '../pages/aulas/AulaCreate';
+import AulaDetail from '../pages/aulas/AulaDetail';
 import ProfessoresList from '../pages/professores/ProfessoresList';
 import ProfessorCreate from '../pages/professores/ProfessorCreate';
 import ProfessorDetail from '../pages/professores/ProfessorDetail';
@@ -63,7 +65,23 @@ export default function Router() {
         path="/aulas"
         element={
           <PrivateRoute>
-            <AulasPage />
+            <AulasList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/aulas/novo"
+        element={
+          <PrivateRoute>
+            <AulaCreate />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/aulas/:id"
+        element={
+          <PrivateRoute>
+            <AulaDetail />
           </PrivateRoute>
         }
       />

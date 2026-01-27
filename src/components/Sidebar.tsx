@@ -12,7 +12,8 @@ import {
   GraduationCap,
   Users2,
   School,
-  UserCheck
+  UserCheck,
+  BookOpen
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -38,6 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
     { to: '/home', label: 'Home', icon: LayoutDashboard, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
     { to: '/alunos', label: 'Alunos', icon: GraduationCap, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
     { to: '/turmas', label: 'Turmas', icon: Users2, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
+    { to: '/aulas', label: 'Aulas', icon: BookOpen, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
     { to: '/professores', label: 'Professores', icon: School, roles: ['ADMIN', 'COORDENADOR'] },
     { to: '/responsaveis', label: 'Responsáveis', icon: UserCheck, roles: ['ADMIN', 'COORDENADOR'] },
     { to: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['ADMIN', 'COORDENADOR'] },
