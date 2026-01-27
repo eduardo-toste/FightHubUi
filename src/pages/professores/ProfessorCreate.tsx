@@ -86,7 +86,7 @@ export default function ProfessorCreate() {
           </button>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
-              <UserPlus className="text-white" size={24} />
+              <School className="text-white" size={24} />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-[var(--fh-text)]">Novo Professor</h1>

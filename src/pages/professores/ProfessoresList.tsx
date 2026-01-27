@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Users, Plus, Search, X } from 'lucide-react'
+import { School, Plus, Search } from 'lucide-react'
 import { professoresApi } from '../../api/professores'
 import Table from '../../components/Table'
 import Pagination from '../../components/Pagination'
@@ -122,7 +122,7 @@ export default function ProfessoresList() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
-              <Users className="w-6 h-6 text-white" />
+              <School className="w-6 h-6 text-white" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-[var(--fh-text)]">
