@@ -13,6 +13,9 @@ import ProfessorDetail from '../pages/professores/ProfessorDetail';
 import ResponsaveisList from '../pages/responsaveis/ResponsaveisList';
 import ResponsavelCreate from '../pages/responsaveis/ResponsavelCreate';
 import ResponsavelDetail from '../pages/responsaveis/ResponsavelDetail';
+import TurmasList from '../pages/turmas/TurmasList';
+import TurmaCreate from '../pages/turmas/TurmaCreate';
+import TurmaDetail from '../pages/turmas/TurmaDetail';
 import UsuariosList from '../pages/usuarios/UsuariosList';
 import UsuarioDetail from '../pages/usuarios/UsuarioDetail';
 import MeuPerfil from '../pages/usuarios/MeuPerfil';
@@ -133,6 +136,30 @@ export default function Router() {
         element={
           <PrivateRoute>
             <ResponsavelDetail />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/turmas"
+        element={
+          <PrivateRoute>
+            <TurmasList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/turmas/novo"
+        element={
+          <PrivateRoute>
+            <TurmaCreate />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/turmas/:id"
+        element={
+          <PrivateRoute>
+            <TurmaDetail />
           </PrivateRoute>
         }
       />
