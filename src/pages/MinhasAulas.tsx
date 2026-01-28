@@ -45,6 +45,24 @@ const MinhasAulas: React.FC = () => {
     loadData()
   }, [activeTab])
 
+  useEffect(() => {
+    // Carregar minhas inscrições sempre para verificar status
+    loadMinhasInscricoesParaVerificacao()
+  }, [])
+
+  const loadMinhasInscricoesParaVerificacao = async () => {
+    try {
+      const inscricoesData = await inscricoesApi.minhasInscricoes(0, 100)
+      const inscricoes = inscricoesData.content || inscricoesData
+      const inscricoesAtivas = inscricoes.filter((i: InscricaoResponse) => 
+        i.status === 'INSCRITO'
+      )
+      setMinhasInscricoes(inscricoesAtivas)
+    } catch (error) {
+      console.error('Erro ao carregar inscrições:', error)
+    }
+  }
+
   const loadData = async () => {
     try {
       setLoading(true)
@@ -101,7 +119,12 @@ const MinhasAulas: React.FC = () => {
     }
   }
 
-  const handleInscrever = (aula: AulaResponse) => {
+  const handleInscrever = async (aula: AulaResponse) => {
+    // Verificar se já está inscrito
+    if (isInscrito(aula.id)) {
+      return
+    }
+
     setConfirmModal({
       isOpen: true,
       title: 'Confirmar Inscrição',
@@ -110,9 +133,17 @@ const MinhasAulas: React.FC = () => {
       onConfirm: async () => {
         try {
           setActionLoading(aula.id)
-          await inscricoesApi.inscrever(aula.id)
+          const inscricao = await inscricoesApi.inscrever(aula.id)
+          
+          // Atualizar estado local imediatamente após confirmação
+          if (inscricao && inscricao.aulaId) {
+            setMinhasInscricoes(prev => [...prev, inscricao])
+          } else {
+            // Recarregar inscrições se não recebeu resposta esperada
+            await loadMinhasInscricoesParaVerificacao()
+          }
+          
           showSuccess('Inscrição realizada com sucesso!')
-          await loadData()
         } catch (error: any) {
           const errorMessage = error?.response?.data?.message || 'Erro ao realizar inscrição'
           showError(errorMessage)
@@ -133,8 +164,12 @@ const MinhasAulas: React.FC = () => {
         try {
           setActionLoading(aula.id)
           await inscricoesApi.cancelar(aula.id)
+          
+          // Remover inscrição do estado local imediatamente
+          setMinhasInscricoes(prev => prev.filter(i => i.aulaId !== aula.id))
+          setAulasInscritas(prev => prev.filter(a => a.id !== aula.id))
+          
           showSuccess('Inscrição cancelada com sucesso!')
-          await loadData()
         } catch (error: any) {
           const errorMessage = error?.response?.data?.message || 'Erro ao cancelar inscrição'
           showError(errorMessage)

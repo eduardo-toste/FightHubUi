@@ -10,8 +10,9 @@ export interface InscricaoResponse {
 
 const inscricoesApi = {
   // Inscrever aluno autenticado em uma aula
-  inscrever: async (aulaId: string): Promise<void> => {
-    await apiClient.post(`/aulas/${aulaId}/inscricoes`)
+  inscrever: async (aulaId: string): Promise<InscricaoResponse> => {
+    const response = await apiClient.post(`/aulas/${aulaId}/inscricoes`)
+    return response.data
   },
 
   // Cancelar inscrição do aluno autenticado
