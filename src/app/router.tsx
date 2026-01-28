@@ -9,6 +9,7 @@ import AlunoDetail from '../pages/alunos/AlunoDetail';
 import AulasList from '../pages/aulas/AulasList';
 import AulaCreate from '../pages/aulas/AulaCreate';
 import AulaDetail from '../pages/aulas/AulaDetail';
+import MinhasAulas from '../pages/MinhasAulas';
 import ProfessoresList from '../pages/professores/ProfessoresList';
 import ProfessorCreate from '../pages/professores/ProfessorCreate';
 import ProfessorDetail from '../pages/professores/ProfessorDetail';
@@ -82,6 +83,14 @@ export default function Router() {
         element={
           <PrivateRoute>
             <AulaDetail />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/minhas-aulas"
+        element={
+          <PrivateRoute>
+            <MinhasAulas />
           </PrivateRoute>
         }
       />
