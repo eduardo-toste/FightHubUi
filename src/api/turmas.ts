@@ -5,6 +5,7 @@ export interface TurmaResponse {
   nome: string;
   horario: string;
   professorId?: string;
+  professorNome?: string;
   ativo: boolean;
   quantidadeAlunos?: number;
 }

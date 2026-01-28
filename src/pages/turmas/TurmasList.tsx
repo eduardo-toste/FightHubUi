@@ -102,8 +102,8 @@ export default function TurmasList() {
       key: 'professor',
       label: 'Professor',
       render: (turma: TurmaResponse) => (
-        turma.professorId ? (
-          <span className="text-[var(--fh-text)]">Atribuído</span>
+        turma.professorNome ? (
+          <span className="text-[var(--fh-text)]">{turma.professorNome}</span>
         ) : (
           <span className="text-[var(--fh-muted)]">Sem professor</span>
         )

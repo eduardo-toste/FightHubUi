@@ -750,7 +750,7 @@ const TurmaDetail: React.FC = () => {
               {turma.professor || turma.professorId ? (
                 <div className="p-4 bg-[var(--fh-gray-50)] rounded-xl border border-[var(--fh-border)]">
                   <p className="font-medium text-[var(--fh-text)]">
-                    {turma.professor?.nome || 'Professor vinculado'}
+                    {turma.professor?.nome || (turma as any).professorNome || 'Professor vinculado'}
                   </p>
                   {turma.professor?.email && (
                     <p className="text-sm text-[var(--fh-muted)] mt-1">{turma.professor.email}</p>
