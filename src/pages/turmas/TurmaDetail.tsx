@@ -417,10 +417,25 @@ const TurmaDetail: React.FC = () => {
   const loadTurma = async () => {
     try {
       setLoading(true)
-      const turmaData = await turmasApi.buscarPorId(id!)
-      // Note: Backend should return professor and alunos details
-      // For now, we'll work with what we have
-      setTurma(turmaData as TurmaDetalhada)
+      const [turmaData, alunosData] = await Promise.all([
+        turmasApi.buscarPorId(id!),
+        alunosApi.listar(0, 1000)
+      ])
+
+      const todosAlunos = alunosData.content || alunosData
+      // Filtrar alunos que possuem esta turma na lista de turmaIds
+      const alunosVinculados = todosAlunos.filter((aluno: any) => 
+        aluno.turmaIds && aluno.turmaIds.includes(id)
+      )
+
+      setTurma({
+        ...turmaData,
+        alunos: alunosVinculados.map((a: any) => ({
+          id: a.id,
+          nome: a.nome,
+          email: a.email
+        }))
+      } as TurmaDetalhada)
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 'Erro ao carregar dados da turma'
       showError(errorMessage)
