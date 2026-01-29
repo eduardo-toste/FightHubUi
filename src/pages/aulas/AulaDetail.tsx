@@ -303,6 +303,8 @@ const AulaDetail: React.FC = () => {
   const [inscricoes, setInscricoes] = useState<InscricaoResponse[]>([])
   const [alunosMap, setAlunosMap] = useState<Record<string, string>>({})
   const [presencas, setPresencas] = useState<PresencaResponse[]>([])
+  const [turmaNome, setTurmaNome] = useState<string | null>(null)
+  const [turmaHorario, setTurmaHorario] = useState<string | null>(null)
   const [loadingInscricoes, setLoadingInscricoes] = useState(false)
   const [presencaLoading, setPresencaLoading] = useState<string | null>(null)
   const [confirmModal, setConfirmModal] = useState<{
@@ -325,6 +327,20 @@ const AulaDetail: React.FC = () => {
       setLoading(true)
       const aulaData = await aulasApi.buscarPorId(id!)
       setAula(aulaData)
+      // Buscar dados da turma vinculada (nome e horário) para exibir
+      if (aulaData?.turmaId) {
+        try {
+          const turma = await turmasApi.buscarPorId(aulaData.turmaId)
+          setTurmaNome(turma?.nome || null)
+          setTurmaHorario(turma?.horario || null)
+        } catch (err) {
+          setTurmaNome(null)
+          setTurmaHorario(null)
+        }
+      } else {
+        setTurmaNome(null)
+        setTurmaHorario(null)
+      }
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 'Erro ao carregar dados da aula'
       showError(errorMessage)
@@ -734,9 +750,11 @@ const AulaDetail: React.FC = () => {
               {aula.turmaId ? (
                 <div className="p-4 bg-[var(--fh-gray-50)] rounded-xl border border-[var(--fh-border)]">
                   <p className="font-medium text-[var(--fh-text)]">
-                    Turma vinculada
+                    {turmaNome || 'Turma vinculada'}
                   </p>
-                  <p className="text-sm text-[var(--fh-muted)] mt-1">ID: {aula.turmaId}</p>
+                  <p className="text-sm text-[var(--fh-muted)] mt-1">
+                    {turmaHorario ? `Horário: ${turmaHorario}` : `ID: ${aula.turmaId}`}
+                  </p>
                 </div>
               ) : (
                 <div className="text-center py-8 text-[var(--fh-muted)]">
