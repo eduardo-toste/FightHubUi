@@ -21,6 +21,7 @@ import {
 import { useToast } from '../../context/ToastContext'
 import useAuth from '../../hooks/useAuth'
 import { aulasApi, AulaResponse } from '../../api/aulas'
+import { alunosApi } from '../../api/alunos'
 import { turmasApi, TurmaResponse } from '../../api/turmas'
 import inscricoesApi, { InscricaoResponse } from '../../api/inscricoes'
 import presencasApi, { PresencaResponse } from '../../api/presencas'
@@ -300,6 +301,7 @@ const AulaDetail: React.FC = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isVincularTurmaModalOpen, setIsVincularTurmaModalOpen] = useState(false)
   const [inscricoes, setInscricoes] = useState<InscricaoResponse[]>([])
+  const [alunosMap, setAlunosMap] = useState<Record<string, string>>({})
   const [presencas, setPresencas] = useState<PresencaResponse[]>([])
   const [loadingInscricoes, setLoadingInscricoes] = useState(false)
   const [presencaLoading, setPresencaLoading] = useState<string | null>(null)
@@ -346,6 +348,24 @@ const AulaDetail: React.FC = () => {
       const presencasList = presencasData.content || presencasData
       
       setInscricoes(inscricoesAtivas)
+      // Buscar nomes dos alunos inscritos (mapear alunoId => nome)
+      try {
+        const uniqueAlunoIds = Array.from(new Set(inscricoesAtivas.map((i: InscricaoResponse) => i.alunoId)))
+        const entries = await Promise.all(uniqueAlunoIds.map(async (alunoId) => {
+          try {
+            const aluno = await alunosApi.buscarPorId(alunoId)
+            return [alunoId, aluno.nome]
+          } catch (err) {
+            return [alunoId, 'Aluno']
+          }
+        }))
+        const map: Record<string, string> = {}
+        entries.forEach(([id, nome]) => { map[id as string] = nome as string })
+        setAlunosMap(map)
+      } catch (err) {
+        // não bloquear render se falhar
+        console.error('Erro ao buscar nomes dos alunos:', err)
+      }
       setPresencas(presencasList)
     } catch (error: any) {
       console.error('Erro ao carregar inscrições:', error)
@@ -751,8 +771,8 @@ const AulaDetail: React.FC = () => {
                     .map((inscricao) => {
                       const presenca = presencas.find((p) => p.inscricaoId === inscricao.id)
                       const isLoading = presencaLoading === inscricao.id
-                      const alunoNome = presenca?.alunoNome || 'Aluno'
-                      const alunoInicial = alunoNome.charAt(0).toUpperCase()
+                      const alunoNome = presenca?.alunoNome || alunosMap[inscricao.alunoId] || 'Aluno'
+                      const alunoInicial = (alunoNome || 'A').charAt(0).toUpperCase()
 
                       return (
                         <div
