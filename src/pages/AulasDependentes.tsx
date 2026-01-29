@@ -155,15 +155,25 @@ const AulasDependentes: React.FC = () => {
         try {
           setActionLoading(aula.id)
           const inscricao = await inscricoesApi.inscrever(aula.id, dependenteId)
-          
+
           // Atualizar estado local imediatamente após confirmação
           if (inscricao && inscricao.aulaId) {
-            setInscricoesDependentes(prev => [...prev, inscricao])
+            setInscricoesDependentes(prev => {
+              // evitar duplicatas
+              if (prev.some(i => i.id === inscricao.id)) return prev
+              return [...prev, inscricao]
+            })
+
+            // Garantir que o card da aula inscrita apareça
+            setAulasInscritas(prev => {
+              if (prev.some(a => a.id === aula.id)) return prev
+              return [...prev, aula]
+            })
           } else {
-            // Recarregar inscrições se não recebeu resposta esperada
+            // Recarregar inscrições e aulas caso a resposta não seja a esperada
             await loadInscricoesDependentes()
           }
-          
+
           showSuccess(`${dependente.nome} foi inscrito com sucesso!`)
         } catch (error: any) {
           const errorMessage = error?.response?.data?.message || 'Erro ao realizar inscrição'
