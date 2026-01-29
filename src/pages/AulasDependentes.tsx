@@ -169,6 +169,8 @@ const AulasDependentes: React.FC = () => {
               if (prev.some(a => a.id === aula.id)) return prev
               return [...prev, aula]
             })
+            // Notificar outras views que as inscrições foram atualizadas
+            window.dispatchEvent(new CustomEvent('inscricoesUpdated', { detail: { aulaId: aula.id } }))
           } else {
             // Recarregar inscrições e aulas caso a resposta não seja a esperada
             await loadInscricoesDependentes()
@@ -207,6 +209,8 @@ const AulasDependentes: React.FC = () => {
           setAulasInscritas(prev => prev.filter(a => 
             novasInscricoes.some(i => i.aulaId === a.id)
           ))
+          // Notificar outras views que as inscrições foram atualizadas
+          window.dispatchEvent(new CustomEvent('inscricoesUpdated', { detail: { aulaId: aula.id } }))
           
           showSuccess('Inscrição cancelada com sucesso!')
         } catch (error: any) {

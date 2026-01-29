@@ -341,9 +341,11 @@ const AulaDetail: React.FC = () => {
       ])
       
       const inscricoesList = inscricoesData.content || inscricoesData
+      // Filtrar apenas inscrições ativas
+      const inscricoesAtivas = (inscricoesList || []).filter((i: InscricaoResponse) => i.status === 'INSCRITO')
       const presencasList = presencasData.content || presencasData
       
-      setInscricoes(inscricoesList)
+      setInscricoes(inscricoesAtivas)
       setPresencas(presencasList)
     } catch (error: any) {
       console.error('Erro ao carregar inscrições:', error)
@@ -351,6 +353,19 @@ const AulaDetail: React.FC = () => {
       setLoadingInscricoes(false)
     }
   }
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      const aulaId = e?.detail?.aulaId
+      if (!aulaId || aulaId === id) {
+        // Recarregar inscrições quando houver atualização relevante
+        loadInscricoes()
+      }
+    }
+
+    window.addEventListener('inscricoesUpdated', handler as EventListener)
+    return () => window.removeEventListener('inscricoesUpdated', handler as EventListener)
+  }, [id])
 
   const handleTogglePresenca = async (inscricaoId: string, presente: boolean) => {
     if (!aula) return
