@@ -78,4 +78,17 @@ export const responsaveisApi = {
     );
     return res.data;
   },
+
+  // Obter meus dependentes (responsável autenticado)
+  obterMeusDependentes: async (): Promise<AlunoResponsavelResponse[]> => {
+    const res = await api.get('/responsaveis/me');
+    const responsavel = res.data as ResponsavelDetalhadoResponse;
+    return responsavel.alunos || [];
+  },
+
+  // Obter inscrições dos dependentes
+  obterInscricoesDependentes: async () => {
+    const res = await api.get('/responsaveis/me/inscricoes');
+    return res.data;
+  },
 };

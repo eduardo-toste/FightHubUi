@@ -10,14 +10,16 @@ export interface InscricaoResponse {
 
 const inscricoesApi = {
   // Inscrever aluno autenticado em uma aula
-  inscrever: async (aulaId: string): Promise<InscricaoResponse> => {
-    const response = await apiClient.post(`/aulas/${aulaId}/inscricoes`)
+  inscrever: async (aulaId: string, alunoId?: string): Promise<InscricaoResponse> => {
+    const params = alunoId ? { alunoId } : {}
+    const response = await apiClient.post(`/aulas/${aulaId}/inscricoes`, null, { params })
     return response.data
   },
 
   // Cancelar inscrição do aluno autenticado
-  cancelar: async (aulaId: string): Promise<void> => {
-    await apiClient.delete(`/aulas/${aulaId}/inscricoes`)
+  cancelar: async (aulaId: string, alunoId?: string): Promise<void> => {
+    const params = alunoId ? { alunoId } : {}
+    await apiClient.delete(`/aulas/${aulaId}/inscricoes`, { params })
   },
 
   // Buscar inscrições por aula (ADMIN, COORDENADOR, PROFESSOR)

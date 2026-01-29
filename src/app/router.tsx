@@ -9,7 +9,8 @@ import AlunoDetail from '../pages/alunos/AlunoDetail';
 import AulasList from '../pages/aulas/AulasList';
 import AulaCreate from '../pages/aulas/AulaCreate';
 import AulaDetail from '../pages/aulas/AulaDetail';
-import MinhasAulas from '../pages/MinhasAulas';
+import MinhasAulas from '../pages/MinhasAulas'
+import AulasDependentes from '../pages/AulasDependentes';
 import ProfessoresList from '../pages/professores/ProfessoresList';
 import ProfessorCreate from '../pages/professores/ProfessorCreate';
 import ProfessorDetail from '../pages/professores/ProfessorDetail';
@@ -91,6 +92,14 @@ export default function Router() {
         element={
           <PrivateRoute>
             <MinhasAulas />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/aulas-dependentes"
+        element={
+          <PrivateRoute>
+            <AulasDependentes />
           </PrivateRoute>
         }
       />
