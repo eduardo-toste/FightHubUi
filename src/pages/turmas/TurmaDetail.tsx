@@ -815,45 +815,47 @@ const TurmaDetail: React.FC = () => {
             </div>
           </div>
           
-          {/* Actions Sidebar */}
-          <div className="space-y-6">
-            <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
-              <h3 className="text-lg font-bold text-[var(--fh-text)] mb-6">Ações</h3>
-              
-              <div className="space-y-3">
-                {canEdit && (
-                  <>
-                    <Button
-                      onClick={() => setIsEditModalOpen(true)}
-                      variant="primary"
-                      className="w-full justify-center"
-                    >
-                      <Edit3 className="w-4 h-4 mr-2" />
-                      Editar Informações
-                    </Button>
-
-                    <Button
-                      onClick={handleToggleStatus}
-                      variant={turma.ativo ? 'secondary' : 'primary'}
-                      className="w-full justify-center"
-                    >
-                      {turma.ativo ? 'Inativar Turma' : 'Ativar Turma'}
-                    </Button>
-
-                    <div className="pt-3 border-t border-[var(--fh-border)]">
+          {/* Actions Sidebar - Apenas para Admin/Coordenador */}
+          {canEdit && (
+            <div className="space-y-6">
+              <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)]">
+                <h3 className="text-lg font-bold text-[var(--fh-text)] mb-6">Ações</h3>
+                
+                <div className="space-y-3">
+                  {canEdit && (
+                    <>
                       <Button
-                        onClick={handleExcluirTurma}
-                        variant="secondary"
-                        className="w-full justify-center text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border-red-200 dark:border-red-600"
+                        onClick={() => setIsEditModalOpen(true)}
+                        variant="primary"
+                        className="w-full justify-center"
                       >
-                        Excluir Turma
+                        <Edit3 className="w-4 h-4 mr-2" />
+                        Editar Informações
                       </Button>
-                    </div>
-                  </>
-                )}
+
+                      <Button
+                        onClick={handleToggleStatus}
+                        variant={turma.ativo ? 'secondary' : 'primary'}
+                        className="w-full justify-center"
+                      >
+                        {turma.ativo ? 'Inativar Turma' : 'Ativar Turma'}
+                      </Button>
+
+                      <div className="pt-3 border-t border-[var(--fh-border)]">
+                        <Button
+                          onClick={handleExcluirTurma}
+                          variant="secondary"
+                          className="w-full justify-center text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border-red-200 dark:border-red-600"
+                        >
+                          Excluir Turma
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
