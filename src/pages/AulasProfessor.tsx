@@ -146,96 +146,47 @@ const AulasProfessor: React.FC = () => {
 
   const AulaCard: React.FC<{ aula: AulaResponse }> = ({ aula }) => {
     return (
-      <div 
-        onClick={() => handleAulaClick(aula.id)}
-        className="group bg-[var(--fh-card)] rounded-2xl shadow-sm border border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50 hover:shadow-xl overflow-hidden transition-all cursor-pointer flex flex-col h-full"
-      >
-        {/* Header com gradiente */}
-        <div className="h-3 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)]" />
-        
-        <div className="p-5 flex flex-col flex-1 space-y-4">
-          {/* Ícone e Título */}
-          <div className="flex items-start gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)]/15 to-[var(--fh-primary-dark)]/10 flex items-center justify-center flex-shrink-0">
-              <BookOpen className="w-6 h-6 text-[var(--fh-primary)]" />
+      <div className="bg-[var(--fh-card)] rounded-xl p-6 shadow-sm border border-[var(--fh-border)] hover:border-[var(--fh-primary)]/50 transition-all">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
+              <BookOpen className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-base font-bold text-[var(--fh-text)] line-clamp-2 group-hover:text-[var(--fh-primary)] transition-colors">
-              {aula.titulo}
-            </h3>
-          </div>
-
-          {/* Badges */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {getStatusBadge(aula.status)}
-            {aula.ativo ? (
-              <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                Ativa
-              </span>
-            ) : (
-              <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400">
-                Inativa
-              </span>
-            )}
-          </div>
-
-          {/* Descrição */}
-          {aula.descricao && (
-            <p className="text-xs text-[var(--fh-muted)] line-clamp-2">
-              {aula.descricao}
-            </p>
-          )}
-
-          {/* Divisor */}
-          <div className="border-t border-[var(--fh-border)]" />
-
-          {/* Informações */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-[var(--fh-primary)]" />
-              <div>
-                <p className="text-xs text-[var(--fh-muted)]">Data e Hora</p>
-                <p className="text-sm font-semibold text-[var(--fh-text)]">
-                  {formatDateShort(aula.data)}
-                </p>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center gap-2">
-                <Users2 className="w-4 h-4 text-[var(--fh-primary)]" />
-                <div>
-                  <p className="text-xs text-[var(--fh-muted)]">Limite</p>
-                  <p className="text-sm font-semibold text-[var(--fh-text)]">
-                    {aula.limiteAlunos} alunos
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Users2 className="w-4 h-4 text-[var(--fh-primary)]" />
-                <div>
-                  <p className="text-xs text-[var(--fh-muted)]">Inscritos</p>
-                  <p className="text-sm font-semibold text-[var(--fh-text)]">
-                    {inscritos[aula.id] ?? 0} alunos
-                  </p>
-                </div>
-              </div>
+            <div>
+              <h3 className="text-lg font-bold text-[var(--fh-text)]">{aula.titulo}</h3>
+              {getStatusBadge(aula.status)}
             </div>
           </div>
+        </div>
 
-          {/* Botão (sempre no final) */}
-          <div className="pt-3 mt-auto">
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                handleAulaClick(aula.id)
-              }}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[var(--fh-primary)] to-[var(--fh-primary-dark)] text-white rounded-lg font-semibold text-sm hover:shadow-md transition-all group-hover:opacity-90"
-            >
-              <Eye className="w-4 h-4" />
-              Gerenciar
-            </button>
+        <p className="text-[var(--fh-muted)] mb-4 line-clamp-2">
+          {aula.descricao || 'Sem descrição'}
+        </p>
+
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center gap-2 text-sm text-[var(--fh-muted)]">
+            <Calendar className="w-4 h-4" />
+            <span>{formatDate(aula.data)}</span>
           </div>
+          <div className="flex items-center gap-2 text-sm text-[var(--fh-muted)]">
+            <Users2 className="w-4 h-4" />
+            <span>Limite: {aula.limiteAlunos} alunos</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-[var(--fh-muted)]">
+            <Users2 className="w-4 h-4" />
+            <span>Inscritos: {inscritos[aula.id] ?? 0} alunos</span>
+          </div>
+        </div>
+
+        <div className="pt-4 border-t border-[var(--fh-border)]">
+          <Button
+            onClick={() => handleAulaClick(aula.id)}
+            variant="primary"
+            className="w-full justify-center"
+          >
+            <Eye className="w-4 h-4 mr-2" />
+            Gerenciar
+          </Button>
         </div>
       </div>
     )
@@ -335,7 +286,7 @@ const AulasProfessor: React.FC = () => {
           </div>
         ) : filteredAulas.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {filteredAulas.map((aula) => (
                 <AulaCard key={aula.id} aula={aula} />
               ))}
