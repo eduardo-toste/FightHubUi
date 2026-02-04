@@ -15,6 +15,7 @@ import {
 import { useToast } from '../context/ToastContext'
 import useAuth from '../hooks/useAuth'
 import { aulasApi, AulaResponse } from '../api/aulas'
+import inscricoesApi from '../api/inscricoes'
 import { Button } from '../components/Button'
 import Layout from '../components/Layout'
 
@@ -30,6 +31,7 @@ const AulasProfessor: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [showFilters, setShowFilters] = useState(false)
+  const [inscritos, setInscritos] = useState<Record<string, number>>({})
   const pageSize = 12
 
   useEffect(() => {
@@ -48,6 +50,24 @@ const AulasProfessor: React.FC = () => {
         setTotalPages(data.totalPages)
       } else if (Array.isArray(aulasList)) {
         setTotalPages(1)
+      }
+
+      // Carregar contagem de inscritos para cada aula
+      if (Array.isArray(aulasList)) {
+        const contadores: Record<string, number> = {}
+        await Promise.all(
+          aulasList.map(async (aula) => {
+            try {
+              const inscricoesData = await inscricoesApi.buscarPorAula(aula.id, 0, 100)
+              const inscricoesList = inscricoesData.content || inscricoesData
+              const ativos = (inscricoesList || []).filter((i: any) => i.status === 'INSCRITO').length
+              contadores[aula.id] = ativos
+            } catch (err) {
+              contadores[aula.id] = 0
+            }
+          })
+        )
+        setInscritos(contadores)
       }
     } catch (error: any) {
       console.error('Erro ao carregar aulas do professor:', error)
@@ -180,13 +200,25 @@ const AulasProfessor: React.FC = () => {
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
-              <Users2 className="w-4 h-4 text-[var(--fh-primary)]" />
-              <div>
-                <p className="text-xs text-[var(--fh-muted)]">Limite de Alunos</p>
-                <p className="text-sm font-semibold text-[var(--fh-text)]">
-                  {aula.limiteAlunos} alunos
-                </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center gap-2">
+                <Users2 className="w-4 h-4 text-[var(--fh-primary)]" />
+                <div>
+                  <p className="text-xs text-[var(--fh-muted)]">Limite</p>
+                  <p className="text-sm font-semibold text-[var(--fh-text)]">
+                    {aula.limiteAlunos} alunos
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Users2 className="w-4 h-4 text-[var(--fh-primary)]" />
+                <div>
+                  <p className="text-xs text-[var(--fh-muted)]">Inscritos</p>
+                  <p className="text-sm font-semibold text-[var(--fh-text)]">
+                    {inscritos[aula.id] ?? 0} alunos
+                  </p>
+                </div>
               </div>
             </div>
           </div>

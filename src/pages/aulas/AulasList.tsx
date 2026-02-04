@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BookOpen, Plus, Search, Filter, X } from 'lucide-react'
 import { aulasApi, AulaResponse } from '../../api/aulas'
+import inscricoesApi from '../../api/inscricoes'
 import Table from '../../components/Table'
 import Pagination from '../../components/Pagination'
 import Layout from '../../components/Layout'
@@ -18,12 +19,31 @@ export default function AulasList() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [showFilters, setShowFilters] = useState(false)
+  const [inscritos, setInscritos] = useState<Record<string, number>>({})
 
   const loadAulas = async (page: number) => {
     try {
       setLoading(true)
       const data = await aulasApi.listar(page, 10)
       setAulas(data)
+
+      // Carregar contagem de inscritos para cada aula
+      if (data.content && Array.isArray(data.content)) {
+        const contadores: Record<string, number> = {}
+        await Promise.all(
+          data.content.map(async (aula: AulaResponse) => {
+            try {
+              const inscricoesData = await inscricoesApi.buscarPorAula(aula.id, 0, 100)
+              const inscricoesList = inscricoesData.content || inscricoesData
+              const ativos = (inscricoesList || []).filter((i: any) => i.status === 'INSCRITO').length
+              contadores[aula.id] = ativos
+            } catch (err) {
+              contadores[aula.id] = 0
+            }
+          })
+        )
+        setInscritos(contadores)
+      }
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 
                           error?.response?.data?.error || 
@@ -123,6 +143,13 @@ export default function AulasList() {
       label: 'Limite',
       render: (aula: AulaResponse) => (
         <span className="font-semibold">{aula.limiteAlunos} alunos</span>
+      )
+    },
+    {
+      key: 'inscritos',
+      label: 'Inscritos',
+      render: (aula: AulaResponse) => (
+        <span className="font-semibold text-[var(--fh-primary)]">{inscritos[aula.id] ?? 0} alunos</span>
       )
     },
     {
