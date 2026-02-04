@@ -647,7 +647,14 @@ const AulaDetail: React.FC = () => {
         {/* Header */}
         <div>
           <button
-            onClick={() => navigate('/aulas')}
+            onClick={() => {
+              // Redirecionar para a página correta baseado no role
+              if (user?.role === 'PROFESSOR') {
+                navigate('/aulas-professor')
+              } else {
+                navigate('/aulas')
+              }
+            }}
             className="text-[var(--fh-muted)] hover:text-[var(--fh-text)] mb-4 flex items-center gap-2 transition-colors"
           >
             <ArrowLeft size={20} />

@@ -11,6 +11,7 @@ import AulaCreate from '../pages/aulas/AulaCreate';
 import AulaDetail from '../pages/aulas/AulaDetail';
 import MinhasAulas from '../pages/MinhasAulas'
 import AulasDependentes from '../pages/AulasDependentes';
+import AulasProfessor from '../pages/AulasProfessor';
 import ProfessoresList from '../pages/professores/ProfessoresList';
 import ProfessorCreate from '../pages/professores/ProfessorCreate';
 import ProfessorDetail from '../pages/professores/ProfessorDetail';
@@ -100,6 +101,14 @@ export default function Router() {
         element={
           <PrivateRoute>
             <AulasDependentes />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/aulas-professor"
+        element={
+          <PrivateRoute>
+            <AulasProfessor />
           </PrivateRoute>
         }
       />

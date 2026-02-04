@@ -38,10 +38,11 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
   const baseMenuItems = [
     { to: '/home', label: 'Home', icon: LayoutDashboard, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR', 'ALUNO', 'RESPONSAVEL'] },
     { to: '/minhas-aulas', label: 'Minhas Aulas', icon: BookOpen, roles: ['ALUNO'] },
+    { to: '/aulas-professor', label: 'Minhas Aulas', icon: BookOpen, roles: ['PROFESSOR'] },
     { to: '/aulas-dependentes', label: 'Aulas dos Dependentes', icon: BookOpen, roles: ['RESPONSAVEL'] },
     { to: '/alunos', label: 'Alunos', icon: GraduationCap, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
     { to: '/turmas', label: 'Turmas', icon: Users2, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
-    { to: '/aulas', label: 'Aulas', icon: BookOpen, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
+    { to: '/aulas', label: 'Aulas', icon: BookOpen, roles: ['ADMIN', 'COORDENADOR'] },
     { to: '/professores', label: 'Professores', icon: School, roles: ['ADMIN', 'COORDENADOR'] },
     { to: '/responsaveis', label: 'Responsáveis', icon: UserCheck, roles: ['ADMIN', 'COORDENADOR'] },
     { to: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['ADMIN', 'COORDENADOR'] },
