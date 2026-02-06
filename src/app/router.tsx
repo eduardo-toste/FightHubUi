@@ -24,6 +24,9 @@ import TurmaDetail from '../pages/turmas/TurmaDetail';
 import UsuariosList from '../pages/usuarios/UsuariosList';
 import UsuarioDetail from '../pages/usuarios/UsuarioDetail';
 import MeuPerfil from '../pages/usuarios/MeuPerfil';
+import Estatisticas from '../pages/Estatisticas';
+import EstatisticasAlunos from '../pages/EstatisticasAlunos';
+import EstatisticasPorAluno from '../pages/EstatisticasPorAluno';
 import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
@@ -229,6 +232,30 @@ export default function Router() {
         element={
           <PrivateRoute>
             <MeuPerfil />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/estatisticas"
+        element={
+          <PrivateRoute>
+            <Estatisticas />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/estatisticas-alunos"
+        element={
+          <PrivateRoute>
+            <EstatisticasAlunos />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/estatisticas-alunos/:alunoId"
+        element={
+          <PrivateRoute>
+            <EstatisticasPorAluno />
           </PrivateRoute>
         }
       />

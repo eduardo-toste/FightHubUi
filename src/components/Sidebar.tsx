@@ -13,7 +13,8 @@ import {
   Users2,
   School,
   UserCheck,
-  BookOpen
+  BookOpen,
+  BarChart3
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -46,12 +47,15 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
     { to: '/professores', label: 'Professores', icon: School, roles: ['ADMIN', 'COORDENADOR'] },
     { to: '/responsaveis', label: 'Responsáveis', icon: UserCheck, roles: ['ADMIN', 'COORDENADOR'] },
     { to: '/usuarios', label: 'Usuários', icon: UserCog, roles: ['ADMIN', 'COORDENADOR'] },
+    { to: '/estatisticas', label: 'Estatísticas', icon: BarChart3, roles: ['ADMIN', 'COORDENADOR'] },
+    { to: '/estatisticas-alunos', label: 'Desempenho dos Alunos', icon: BarChart3, roles: ['ADMIN', 'COORDENADOR', 'PROFESSOR'] },
   ];
 
   // Filtrar itens baseado no role do usuário
-  const menuItems = baseMenuItems.filter(item => 
-    !userRole || item.roles.includes(userRole)
-  );
+  // Se não há userRole, não mostrar nenhum menu (segurança)
+  const menuItems = userRole 
+    ? baseMenuItems.filter(item => item.roles.includes(userRole))
+    : [];
 
   const isActive = (path: string) => location.pathname === path;
 
