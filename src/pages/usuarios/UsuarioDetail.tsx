@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useUsuarioDetalhado } from '../../features/usuarios/useUsuarios';
 import { Role, UsuarioUpdateParcialRequest } from '../../types';
 import useAuth from '../../hooks/useAuth';
+import { useAppNotifications } from '../../hooks/useAppNotifications';
 import Layout from '../../components/Layout';
 import Button from '../../components/Button';
 import { ArrowLeft, UserCog, AlertTriangle, Mail, User, Award, Power, Edit3, Phone, MapPin } from 'lucide-react';
@@ -46,6 +47,9 @@ export default function UsuarioDetail() {
   const { user: currentUser, logout } = useAuth();
   const { usuario, loading, error, atualizarRole, atualizarStatus, atualizarUsuario, recarregar } =
     useUsuarioDetalhado(id!);
+
+  // ===== NOTIFICAÇÕES INTEGRADAS =====
+  const { notificarUsuarioAtualizado, notificarUsuarioDeletado, notificarUsuarioErro } = useAppNotifications();
 
   const [isEditing, setIsEditing] = useState(false);
   const [showRoleModal, setShowRoleModal] = useState(false);
@@ -158,7 +162,10 @@ export default function UsuarioDetail() {
 
     const success = await atualizarUsuario(updateData);
     if (success) {
+      notificarUsuarioAtualizado(formData.nome);
       setIsEditing(false);
+    } else {
+      notificarUsuarioErro('Erro ao atualizar usuário');
     }
   };
 
@@ -166,8 +173,11 @@ export default function UsuarioDetail() {
     if (!selectedRole) return;
     const success = await atualizarRole({ role: selectedRole });
     if (success) {
+      notificarUsuarioAtualizado(usuario?.nome || 'Usuário');
       setShowRoleModal(false);
       setSelectedRole(null);
+    } else {
+      notificarUsuarioErro('Erro ao atualizar role');
     }
   };
 
@@ -175,8 +185,12 @@ export default function UsuarioDetail() {
     if (selectedStatus === null) return;
     const success = await atualizarStatus({ usuarioAtivo: selectedStatus });
     if (success) {
+      const msg = selectedStatus ? 'ativado' : 'desativado';
+      notificarUsuarioAtualizado(`${usuario?.nome || 'Usuário'} ${msg}`);
       setShowStatusModal(false);
       setSelectedStatus(null);
+    } else {
+      notificarUsuarioErro('Erro ao atualizar status');
     }
   };
 

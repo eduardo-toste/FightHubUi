@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUsuarios } from '../../features/usuarios/useUsuarios';
+import { useAppNotifications } from '../../hooks/useAppNotifications';
 import { UsuarioResponse, Role } from '../../types';
 import useAuth from '../../hooks/useAuth';
 import Layout from '../../components/Layout';
@@ -35,6 +36,10 @@ export default function UsuariosList() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const { usuarios, loading, error, carregarUsuarios } = useUsuarios();
+  
+  // ===== NOTIFICAÇÕES INTEGRADAS =====
+  const { notificarUsuarioCriado, notificarUsuarioAtualizado, notificarUsuarioDeletado, notificarUsuarioErro } = useAppNotifications();
+  
   const [page, setPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);

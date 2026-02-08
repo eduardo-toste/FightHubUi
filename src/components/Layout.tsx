@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import InactivityWarningModal from './InactivityWarningModal';
 import NotificationsPanel from './NotificationsPanel';
 import { useInactivityTimeout } from '../hooks/useInactivityTimeout';
+import { useNotifications } from '../hooks/useNotifications';
 import { usuariosApi } from '../api/usuarios';
 import { alunosApi } from '../api/alunos';
 import { aulasApi } from '../api/aulas';
@@ -359,6 +360,11 @@ const Layout: React.FC<{
   const { isWarningVisible, dismissWarning } = useInactivityTimeout({
     warningMinutes: 12, // Aviso 3 minutos antes (token expira em 15)
     logoutMinutes: 15,  // Logout em 15 minutos (sincronizado com JWT)
+  });
+
+  // Sistema de notificações 100% frontend - sem backend necessário
+  useNotifications({
+    persistir: true // Salvar notificações no localStorage
   });
 
   return (

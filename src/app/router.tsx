@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from '../pages/Login';
 import AtivacaoPage from '../pages/Ativacao';
 import DashboardPage from '../pages/Dashboard';
+import NotificacoesTest from '../pages/NotificacoesTest';
 import AlunosList from '../pages/alunos/AlunosList';
 import AlunoCreate from '../pages/alunos/AlunoCreate';
 import AlunoDetail from '../pages/alunos/AlunoDetail';
@@ -64,6 +65,14 @@ export default function Router() {
         element={
           <PrivateRoute>
             <DashboardPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/test/notificacoes"
+        element={
+          <PrivateRoute>
+            <NotificacoesTest />
           </PrivateRoute>
         }
       />

@@ -62,13 +62,17 @@ const NotificationsPanel: React.FC = () => {
 
       {isOpen &&
         ReactDOM.createPortal(
-          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />,
+          <div 
+            className="fixed inset-0 z-40" 
+            style={{ pointerEvents: 'none' }}
+          />,
           document.body
         )}
 
       {isOpen && (
         <div
           ref={panelRef}
+          style={{ pointerEvents: 'auto' }}
           className="absolute right-4 top-14 w-[calc(100vw-2rem)] sm:w-96 max-h-[600px] bg-[var(--fh-card)] rounded-xl shadow-2xl border border-[var(--fh-border)] overflow-hidden flex flex-col z-50 max-w-[calc(100vw-2rem)]"
         >
           {/* Header */}
@@ -132,9 +136,11 @@ const NotificationsPanel: React.FC = () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
+                            e.preventDefault();
                             removeNotification(notification.id);
                           }}
-                          className="text-[var(--fh-muted)] hover:text-red-500 transition-colors p-1 flex-shrink-0"
+                          style={{ pointerEvents: 'auto' }}
+                          className="text-[var(--fh-muted)] hover:text-red-500 transition-colors p-1 flex-shrink-0 cursor-pointer"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -150,17 +156,27 @@ const NotificationsPanel: React.FC = () => {
           {notifications.length > 0 && (
             <div className="p-3 sm:p-4 border-t border-[var(--fh-border)] bg-[var(--fh-gray-50)] flex flex-col sm:flex-row gap-2">
               <button
-                onClick={() => markAllAsRead()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  markAllAsRead();
+                }}
                 disabled={unreadCount === 0}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-[var(--fh-text)] border border-[var(--fh-border)] hover:bg-[var(--fh-card)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ pointerEvents: 'auto' }}
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-[var(--fh-text)] border border-[var(--fh-border)] hover:bg-[var(--fh-card)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <CheckCheck size={16} />
                 <span className="hidden sm:inline">Marcar como lidas</span>
                 <span className="sm:hidden">Lidas</span>
               </button>
               <button
-                onClick={() => clearNotifications()}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-red-600 border border-red-200/50 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  clearNotifications();
+                }}
+                style={{ pointerEvents: 'auto' }}
+                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs sm:text-sm font-medium text-red-600 border border-red-200/50 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
               >
                 <Trash2 size={16} />
                 <span className="hidden sm:inline">Limpar tudo</span>

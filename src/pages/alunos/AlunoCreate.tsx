@@ -6,6 +6,7 @@ import * as z from 'zod'
 import { UserPlus, ArrowLeft, Save, AlertCircle, Search, GraduationCap } from 'lucide-react'
 import { alunosApi } from '../../api/alunos'
 import { responsaveisApi } from '../../api/responsaveis'
+import { useAppNotifications } from '../../hooks/useAppNotifications'
 import TextField from '../../components/TextField'
 import PrimaryButton from '../../components/PrimaryButton'
 import Layout from '../../components/Layout'
@@ -62,6 +63,10 @@ interface ResponsavelOption {
 export default function AlunoCreate() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
+  
+  // ===== NOTIFICAÇÕES INTEGRADAS =====
+  const { notificarAlunoCriado, notificarAlunoErro } = useAppNotifications()
+  
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isMinor, setIsMinor] = useState(false)
@@ -146,10 +151,12 @@ export default function AlunoCreate() {
       }
 
       // Criar o aluno com responsáveis (backend vincula automaticamente)
-      await alunosApi.criar(request)
+      const aluno = await alunosApi.criar(request)
+      notificarAlunoCriado(aluno.nome);
       navigate('/alunos')
     } catch (err: any) {
       const msg = err?.response?.data?.message || 'Erro ao criar aluno. Tente novamente.'
+      notificarAlunoErro(msg);
       setError(msg)
     } finally {
       setLoading(false)

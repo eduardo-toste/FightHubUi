@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import { useToast } from '../../context/ToastContext'
 import useAuth from '../../hooks/useAuth'
+import { useAppNotifications } from '../../hooks/useAppNotifications'
 import { alunosApi } from '../../api/alunos'
 import { Button } from '../../components/Button'
 import { ConfirmModal } from '../../components/ConfirmModal'
@@ -143,6 +144,9 @@ const AlunoDetail: React.FC = () => {
   const { showSuccess, showError } = useToast()
   const { user, logout } = useAuth()
   
+  // ===== NOTIFICAÇÕES INTEGRADAS =====
+  const { notificarAlunoAtualizado, notificarAlunoPromovido, notificarAlunoErro } = useAppNotifications()
+  
   const [aluno, setAluno] = useState<AlunoDetalhadoResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
@@ -221,9 +225,11 @@ const AlunoDetail: React.FC = () => {
         try {
           await alunosApi.promoverFaixa(aluno.id)
           await loadAluno()
+          notificarAlunoPromovido(aluno.nome, 'faixa');
           showSuccess('Faixa promovida com sucesso!')
         } catch (error: any) {
           const errorMessage = error?.response?.data?.message || 'Erro ao promover faixa'
+          notificarAlunoErro(errorMessage)
           showError(errorMessage)
           throw error
         }
@@ -265,9 +271,11 @@ const AlunoDetail: React.FC = () => {
         try {
           await alunosApi.promoverGrau(aluno.id)
           await loadAluno()
+          notificarAlunoPromovido(aluno.nome, 'grau');
           showSuccess('Grau promovido com sucesso!')
         } catch (error: any) {
           const errorMessage = error?.response?.data?.message || 'Erro ao promover grau'
+          notificarAlunoErro(errorMessage)
           showError(errorMessage)
           throw error
         }
@@ -317,9 +325,11 @@ const AlunoDetail: React.FC = () => {
 
       // Recarregar dados atualizados do aluno
       await loadAluno()
+      notificarAlunoAtualizado(aluno.nome);
       showSuccess('Dados atualizados com sucesso!')
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || 'Erro ao salvar alterações'
+      notificarAlunoErro(errorMessage)
       showError(errorMessage)
       throw error
     }
