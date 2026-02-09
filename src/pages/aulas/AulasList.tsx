@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BookOpen, Plus, Search, Filter, X } from 'lucide-react'
+import { BookOpen, Plus, Search, Filter, X, Users } from 'lucide-react'
 import { aulasApi, AulaResponse } from '../../api/aulas'
 import inscricoesApi from '../../api/inscricoes'
 import Table from '../../components/Table'
@@ -149,7 +149,12 @@ export default function AulasList() {
       key: 'inscritos',
       label: 'Inscritos',
       render: (aula: AulaResponse) => (
-        <span className="font-semibold text-[var(--fh-primary)]">{inscritos[aula.id] ?? 0} alunos</span>
+        <div className="flex items-center gap-1.5">
+          <Users className="w-4 h-4 text-[var(--fh-primary)]" />
+          <span className="font-semibold text-[var(--fh-text)]">
+            {inscritos[aula.id] ?? 0}
+          </span>
+        </div>
       )
     },
     {
