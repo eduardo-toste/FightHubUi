@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { UserPlus, ArrowLeft, Save, AlertCircle } from 'lucide-react'
 import { professoresApi } from '../../api/professores'
+import { useAppNotifications } from '../../hooks/useAppNotifications'
 import TextField from '../../components/TextField'
 import PrimaryButton from '../../components/PrimaryButton'
 import Layout from '../../components/Layout'
@@ -31,6 +32,10 @@ type FormData = z.infer<typeof schema>
 export default function ProfessorCreate() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
+  
+  // ===== NOTIFICAÇÕES INTEGRADAS =====
+  const { notificarProfessorCriado, notificarProfessorErro } = useAppNotifications()
+  
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -62,10 +67,12 @@ export default function ProfessorCreate() {
         cpf: data.cpf.replace(/\D/g, ''),
       }
 
-      await professoresApi.criar(request)
+      const professor = await professoresApi.criar(request)
+      notificarProfessorCriado(data.nome, data.email)
       navigate('/professores')
     } catch (err: any) {
       const msg = err?.response?.data?.message || 'Erro ao criar professor. Tente novamente.'
+      notificarProfessorErro(msg)
       setError(msg)
     } finally {
       setLoading(false)

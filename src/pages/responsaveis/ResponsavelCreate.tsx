@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { UserCheck, ArrowLeft } from 'lucide-react'
 import { responsaveisApi } from '../../api/responsaveis'
+import { useAppNotifications } from '../../hooks/useAppNotifications'
 import TextField from '../../components/TextField'
 import PrimaryButton from '../../components/PrimaryButton'
 import Layout from '../../components/Layout'
@@ -30,6 +31,10 @@ type FormData = z.infer<typeof schema>
 export default function ResponsavelCreate() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
+  
+  // ===== NOTIFICAÇÕES INTEGRADAS =====
+  const { notificarResponsavelCriado, notificarResponsavelErro } = useAppNotifications()
+  
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -61,10 +66,12 @@ export default function ResponsavelCreate() {
         cpf: data.cpf.replace(/\D/g, ''),
       }
 
-      await responsaveisApi.criar(request)
+      const responsavel = await responsaveisApi.criar(request)
+      notificarResponsavelCriado(data.nome, data.email)
       navigate('/responsaveis')
     } catch (err: any) {
       const msg = err?.response?.data?.message || 'Erro ao criar responsável. Tente novamente.'
+      notificarResponsavelErro(msg)
       setError(msg)
     } finally {
       setLoading(false)

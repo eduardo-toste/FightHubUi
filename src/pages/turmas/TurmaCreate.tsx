@@ -6,6 +6,7 @@ import * as z from 'zod'
 import { Users2, ArrowLeft, AlertCircle } from 'lucide-react'
 import { turmasApi, TurmaRequest } from '../../api/turmas'
 import { professoresApi, ProfessorResponse } from '../../api/professores'
+import { useAppNotifications } from '../../hooks/useAppNotifications'
 import TextField from '../../components/TextField'
 import PrimaryButton from '../../components/PrimaryButton'
 import Layout from '../../components/Layout'
@@ -22,6 +23,10 @@ type FormData = z.infer<typeof schema>
 export default function TurmaCreate() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
+  
+  // ===== NOTIFICAÇÕES INTEGRADAS =====
+  const { notificarTurmaCriada, notificarTurmaErro } = useAppNotifications()
+  
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [professores, setProfessores] = useState<ProfessorResponse[]>([])
@@ -68,10 +73,13 @@ export default function TurmaCreate() {
         professorId: data.professorId && data.professorId !== '' ? data.professorId : undefined,
       }
 
-      await turmasApi.criar(request)
+      const turma = await turmasApi.criar(request)
+      const professorNome = professores.find(p => p.id === data.professorId)?.nome || 'Sem professor'
+      notificarTurmaCriada(data.nome, professorNome)
       navigate('/turmas')
     } catch (err: any) {
       const msg = err?.response?.data?.message || 'Erro ao criar turma. Tente novamente.'
+      notificarTurmaErro(msg)
       setError(msg)
     } finally {
       setLoading(false)

@@ -6,6 +6,7 @@ import * as z from 'zod'
 import { BookOpen, ArrowLeft, AlertCircle } from 'lucide-react'
 import { aulasApi, AulaRequest } from '../../api/aulas'
 import { turmasApi, TurmaResponse } from '../../api/turmas'
+import { useAppNotifications } from '../../hooks/useAppNotifications'
 import TextField from '../../components/TextField'
 import PrimaryButton from '../../components/PrimaryButton'
 import Layout from '../../components/Layout'
@@ -24,6 +25,10 @@ type FormData = z.infer<typeof schema>
 export default function AulaCreate() {
   const navigate = useNavigate()
   const { user, logout } = useAuth()
+  
+  // ===== NOTIFICAÇÕES INTEGRADAS =====
+  const { notificarAulaCriada, notificarAulaErro } = useAppNotifications()
+  
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [turmas, setTurmas] = useState<TurmaResponse[]>([])
@@ -74,10 +79,12 @@ export default function AulaCreate() {
         limiteAlunos: data.limiteAlunos,
       }
 
-      await aulasApi.criar(request)
+      const aula = await aulasApi.criar(request)
+      notificarAulaCriada(data.titulo)
       navigate('/aulas')
     } catch (err: any) {
       const msg = err?.response?.data?.message || 'Erro ao criar aula. Tente novamente.'
+      notificarAulaErro(msg)
       setError(msg)
     } finally {
       setLoading(false)

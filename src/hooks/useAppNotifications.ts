@@ -23,27 +23,32 @@ export const useAppNotifications = () => {
   const { user } = useAuth()
 
   // ============= USUÁRIOS =============
-  const notificarUsuarioCriado = (nome: string, email: string) => {
+  const notificarUsuarioCriado = (nome?: string, email?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification('Novo usuário cadastrado', `${nome} (${email}) foi adicionado ao sistema`, 'success')
+      const detalhe = nome ? `${nome}${email ? ` (${email})` : ''}` : ''
+      const msg = detalhe ? `${detalhe} foi adicionado ao sistema` : 'Novo usuário adicionado ao sistema'
+      addNotification('Novo usuário cadastrado', msg, 'success')
     }
   }
 
-  const notificarUsuarioAtivado = (nome: string) => {
+  const notificarUsuarioAtivado = (nome?: string) => {
     if (user?.role === 'ADMIN' || user?.role === 'COORDENADOR') {
-      addNotification('Conta ativada', `${nome} ativou sua conta com sucesso`, 'success')
+      const msg = nome ? `${nome} ativou sua conta com sucesso` : 'Conta ativada com sucesso'
+      addNotification('Conta ativada', msg, 'success')
     }
   }
 
-  const notificarUsuarioAtualizado = (nome: string) => {
+  const notificarUsuarioAtualizado = (nome?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification('Usuário atualizado', `${nome} teve suas informações atualizadas`, 'success')
+      const msg = nome ? `${nome} teve suas informações atualizadas` : 'Informações atualizadas com sucesso'
+      addNotification('Usuário atualizado', msg, 'success')
     }
   }
 
-  const notificarUsuarioDeletado = (nome: string) => {
+  const notificarUsuarioDeletado = (nome?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification('Usuário deletado', `${nome} foi removido do sistema`, 'warning')
+      const msg = nome ? `${nome} foi removido do sistema` : 'Usuário removido com sucesso'
+      addNotification('Usuário deletado', msg, 'warning')
     }
   }
 
@@ -52,34 +57,36 @@ export const useAppNotifications = () => {
   }
 
   // ============= ALUNOS =============
-  const notificarAlunoCriado = (nome: string) => {
+  const notificarAlunoCriado = (nome?: string) => {
     if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
-      addNotification('Aluno cadastrado', `${nome} foi adicionado com sucesso`, 'success')
+      const msg = nome ? `${nome} foi adicionado com sucesso` : 'Aluno cadastrado com sucesso'
+      addNotification('Aluno cadastrado', msg, 'success')
     }
   }
 
-  const notificarAlunoAtualizado = (nome: string) => {
+  const notificarAlunoAtualizado = (nome?: string) => {
     if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
-      addNotification('Aluno atualizado', `Informações de ${nome} foram atualizadas`, 'success')
+      const msg = nome ? `Informações de ${nome} foram atualizadas` : 'Dados do aluno atualizados com sucesso'
+      addNotification('Aluno atualizado', msg, 'success')
     }
   }
 
-  const notificarAlunoDeletado = (nome: string) => {
+  const notificarAlunoDeletado = (nome?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification('Aluno deletado', `${nome} foi removido do sistema`, 'warning')
+      const msg = nome ? `${nome} foi removido do sistema` : 'Aluno removido com sucesso'
+      addNotification('Aluno deletado', msg, 'warning')
     }
   }
 
-  const notificarAlunoPromovido = (nome: string, tipo: string, novaValor?: string) => {
+  const notificarAlunoPromovido = (nome?: string, tipo?: string, novaValor?: string) => {
     if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
-      const msg = novaValor 
-        ? `${nome} foi promovido de ${tipo} para ${novaValor}`
-        : `${nome} foi promovido de ${tipo}!`;
-      addNotification(
-        'Aluno promovido! 🎉',
-        msg,
-        'success'
-      )
+      let msg = 'Aluno promovido com sucesso!'
+      if (nome) {
+        msg = novaValor 
+          ? `${nome} foi promovido de ${tipo || 'faixa'} para ${novaValor}`
+          : `${nome} foi promovido de ${tipo || 'faixa'}!`;
+      }
+      addNotification('Aluno promovido! 🎉', msg, 'success')
     }
   }
 
@@ -88,21 +95,27 @@ export const useAppNotifications = () => {
   }
 
   // ============= TURMAS =============
-  const notificarTurmaCriada = (nome: string, professor: string) => {
+  const notificarTurmaCriada = (nome?: string, professor?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification('Turma criada', `${nome} foi criada com ${professor} como professor`, 'success')
+      let msg = 'Turma criada com sucesso'
+      if (nome) {
+        msg = professor ? `${nome} foi criada com ${professor}` : `${nome} foi criada com sucesso`
+      }
+      addNotification('Turma criada', msg, 'success')
     }
   }
 
-  const notificarTurmaAtualizada = (nome: string) => {
+  const notificarTurmaAtualizada = (nome?: string) => {
     if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
-      addNotification('Turma atualizada', `${nome} teve suas informações atualizadas`, 'success')
+      const msg = nome ? `${nome} teve suas informações atualizadas` : 'Turma atualizada com sucesso'
+      addNotification('Turma atualizada', msg, 'success')
     }
   }
 
-  const notificarTurmaDeletada = (nome: string) => {
+  const notificarTurmaDeletada = (nome?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification('Turma deletada', `${nome} foi removida do sistema`, 'warning')
+      const msg = nome ? `${nome} foi removida do sistema` : 'Turma removida com sucesso'
+      addNotification('Turma deletada', msg, 'warning')
     }
   }
 
@@ -111,21 +124,34 @@ export const useAppNotifications = () => {
   }
 
   // ============= AULAS =============
-  const notificarAulaAgendada = (titulo: string, data: string) => {
+  const notificarAulaCriada = (titulo?: string) => {
     if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
-      addNotification('Aula agendada', `${titulo} foi agendada para ${data}`, 'success')
+      const msg = titulo ? `${titulo} foi adicionada com sucesso` : 'Aula criada com sucesso'
+      addNotification('Aula criada', msg, 'success')
     }
   }
 
-  const notificarAulaAtualizada = (titulo: string) => {
+  const notificarAulaAgendada = (titulo?: string, data?: string) => {
     if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
-      addNotification('Aula atualizada', `${titulo} teve suas informações atualizadas`, 'success')
+      let msg = 'Aula agendada com sucesso'
+      if (titulo) {
+        msg = data ? `${titulo} foi agendada para ${data}` : `${titulo} foi agendada com sucesso`
+      }
+      addNotification('Aula agendada', msg, 'success')
     }
   }
 
-  const notificarAulaCancelada = (titulo: string) => {
+  const notificarAulaAtualizada = (titulo?: string) => {
     if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
-      addNotification('Aula cancelada', `${titulo} foi cancelada`, 'warning')
+      const msg = titulo ? `${titulo} teve suas informações atualizadas` : 'Aula atualizada com sucesso'
+      addNotification('Aula atualizada', msg, 'success')
+    }
+  }
+
+  const notificarAulaCancelada = (titulo?: string) => {
+    if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
+      const msg = titulo ? `${titulo} foi cancelada` : 'Aula cancelada com sucesso'
+      addNotification('Aula cancelada', msg, 'warning')
     }
   }
 
@@ -134,15 +160,23 @@ export const useAppNotifications = () => {
   }
 
   // ============= INSCRIÇÕES =============
-  const notificarInscricaoNova = (nomeAluno: string, nomeTurma: string) => {
+  const notificarInscricaoNova = (nomeAluno?: string, nomeTurma?: string) => {
     if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
-      addNotification('Nova inscrição', `${nomeAluno} se inscreveu em ${nomeTurma}`, 'success')
+      let msg = 'Nova inscrição realizada com sucesso'
+      if (nomeAluno && nomeTurma) {
+        msg = `${nomeAluno} se inscreveu em ${nomeTurma}`
+      }
+      addNotification('Nova inscrição', msg, 'success')
     }
   }
 
-  const notificarInscricaoCancelada = (nomeAluno: string, nomeTurma: string) => {
+  const notificarInscricaoCancelada = (nomeAluno?: string, nomeTurma?: string) => {
     if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
-      addNotification('Inscrição cancelada', `${nomeAluno} cancelou inscrição em ${nomeTurma}`, 'warning')
+      let msg = 'Inscrição cancelada com sucesso'
+      if (nomeAluno && nomeTurma) {
+        msg = `${nomeAluno} cancelou inscrição em ${nomeTurma}`
+      }
+      addNotification('Inscrição cancelada', msg, 'warning')
     }
   }
 
@@ -151,21 +185,24 @@ export const useAppNotifications = () => {
   }
 
   // ============= PRESENÇAS =============
-  const notificarPresencaRegistrada = (nomeAluno: string, presente: boolean) => {
+  const notificarPresencaRegistrada = (nomeAluno?: string, presente: boolean = true) => {
+    const msg = nomeAluno 
+      ? `${nomeAluno} foi marcado como ${presente ? 'presente' : 'ausente'}` 
+      : `Presença registrada como ${presente ? 'presente' : 'ausente'}`
     addNotification(
       presente ? 'Presente ✓' : 'Ausente ✗',
-      `${nomeAluno} foi marcado como ${presente ? 'presente' : 'ausente'}`,
+      msg,
       presente ? 'success' : 'warning'
     )
   }
 
-  const notificarPresencasEmLote = (quantidade: number, presente: boolean) => {
+  const notificarPresencasEmLote = (quantidade?: number, presente: boolean = true) => {
     if (['ADMIN', 'COORDENADOR', 'PROFESSOR'].includes(user?.role || '')) {
-      addNotification(
-        'Presenças registradas',
-        `${quantidade} aluno(s) foi/foram marcado(s) como ${presente ? 'presente' : 'ausente'}`,
-        'success'
-      )
+      const qtd = quantidade || 0
+      const msg = qtd > 0 
+        ? `${qtd} aluno(s) foi/foram marcado(s) como ${presente ? 'presente' : 'ausente'}`
+        : `Presenças registradas como ${presente ? 'presente' : 'ausente'}`
+      addNotification('Presenças registradas', msg, 'success')
     }
   }
 
@@ -174,19 +211,30 @@ export const useAppNotifications = () => {
   }
 
   // ============= RESPONSÁVEIS =============
-  const notificarResponsavelVinculado = (nomeAluno: string, nomeResponsavel: string) => {
+  const notificarResponsavelCriado = (nome?: string, email?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification(
-        'Responsável vinculado',
-        `${nomeResponsavel} foi vinculado como responsável de ${nomeAluno}`,
-        'success'
-      )
+      const detalhe = nome ? `${nome}${email ? ` (${email})` : ''}` : ''
+      const msg = detalhe ? `${detalhe} foi adicionado ao sistema` : 'Responsável cadastrado com sucesso'
+      addNotification('Responsável cadastrado', msg, 'success')
     }
   }
 
-  const notificarResponsavelDesvinculado = (nomeAluno: string) => {
+  const notificarResponsavelVinculado = (nomeAluno?: string, nomeResponsavel?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification('Responsável removido', `Responsável de ${nomeAluno} foi removido`, 'warning')
+      let msg = 'Responsável vinculado com sucesso'
+      if (nomeResponsavel && nomeAluno) {
+        msg = `${nomeResponsavel} foi vinculado como responsável de ${nomeAluno}`
+      } else if (nomeResponsavel) {
+        msg = `${nomeResponsavel} foi vinculado como responsável`
+      }
+      addNotification('Responsável vinculado', msg, 'success')
+    }
+  }
+
+  const notificarResponsavelDesvinculado = (nomeAluno?: string) => {
+    if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
+      const msg = nomeAluno ? `Responsável de ${nomeAluno} foi removido` : 'Responsável removido com sucesso'
+      addNotification('Responsável removido', msg, 'warning')
     }
   }
 
@@ -195,21 +243,25 @@ export const useAppNotifications = () => {
   }
 
   // ============= PROFESSORES =============
-  const notificarProfessorCriado = (nome: string) => {
+  const notificarProfessorCriado = (nome?: string, email?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification('Professor cadastrado', `${nome} foi adicionado ao sistema`, 'success')
+      const detalhe = nome ? `${nome}${email ? ` (${email})` : ''}` : ''
+      const msg = detalhe ? `${detalhe} foi adicionado ao sistema` : 'Professor cadastrado com sucesso'
+      addNotification('Professor cadastrado', msg, 'success')
     }
   }
 
-  const notificarProfessorAtualizado = (nome: string) => {
+  const notificarProfessorAtualizado = (nome?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification('Professor atualizado', `Informações de ${nome} foram atualizadas`, 'success')
+      const msg = nome ? `Informações de ${nome} foram atualizadas` : 'Professor atualizado com sucesso'
+      addNotification('Professor atualizado', msg, 'success')
     }
   }
 
-  const notificarProfessorDeletado = (nome: string) => {
+  const notificarProfessorDeletado = (nome?: string) => {
     if (['ADMIN', 'COORDENADOR'].includes(user?.role || '')) {
-      addNotification('Professor deletado', `${nome} foi removido do sistema`, 'warning')
+      const msg = nome ? `${nome} foi removido do sistema` : 'Professor removido com sucesso'
+      addNotification('Professor deletado', msg, 'warning')
     }
   }
 
@@ -256,6 +308,7 @@ export const useAppNotifications = () => {
     notificarTurmaErro,
     
     // Aulas
+    notificarAulaCriada,
     notificarAulaAgendada,
     notificarAulaAtualizada,
     notificarAulaCancelada,
@@ -272,6 +325,7 @@ export const useAppNotifications = () => {
     notificarPresencaErro,
     
     // Responsáveis
+    notificarResponsavelCriado,
     notificarResponsavelVinculado,
     notificarResponsavelDesvinculado,
     notificarResponsavelErro,
