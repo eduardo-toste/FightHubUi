@@ -27,7 +27,8 @@ export const alunosApi = {
 
   // Criar novo aluno
   criar: async (aluno: CriarAlunoRequest) => {
-    await api.post('/alunos', aluno)
+    const { data } = await api.post<AlunoResponse>('/alunos', aluno)
+    return data
   },
 
   // Atualizar status de matrícula
