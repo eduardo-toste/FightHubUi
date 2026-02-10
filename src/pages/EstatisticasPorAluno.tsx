@@ -78,28 +78,29 @@ const EstatisticasPorAluno: React.FC = () => {
         faixa: alunoData.graduacaoAluno?.belt
       })
 
-      // IMPORTANTE: Não existem endpoints específicos no backend para:
-      // - GET /alunos/:id/inscricoes (todas as inscrições de um aluno)
-      // - GET /alunos/:id/presencas (todas as presenças de um aluno)
-      // 
-      // Os endpoints disponíveis são:
-      // - GET /aulas/:id/inscricoes (inscrições de uma aula específica)
-      // - GET /aulas/:id/presencas (presenças de uma aula específica)
-      // - GET /aulas/me/presencas (presenças do usuário logado - role ALUNO)
-      //
-      // Para implementar esta funcionalidade, seria necessário criar novos endpoints no backend
-      console.warn('Endpoints necessários para visualizar dados de outro aluno:', {
-        inscricoes: `GET /alunos/${alunoId}/inscricoes`,
-        presencas: `GET /alunos/${alunoId}/presencas`
-      })
+      // Carregar inscrições do aluno
+      const inscricoesData = await inscricoesApi.buscarPorAluno(alunoId, 0, 1000)
+      const inscricoesList = inscricoesData.content || inscricoesData || []
+      setInscricoes(inscricoesList)
 
-      setInscricoes([])
-      setPresencas([])
+      // Carregar presenças do aluno
+      const presencasData = await presencasApi.listarPorAluno(alunoId, 0, 1000)
+      const presencasList = presencasData.content || presencasData || []
+      setPresencas(presencasList)
+
+      // Calcular estatísticas
+      const totalInscricoes = inscricoesList.length
+      const totalPresencas = presencasList.filter((p: any) => p.presente).length
+      const totalFaltas = presencasList.filter((p: any) => !p.presente).length
+      const taxaPresenca = totalPresencas + totalFaltas > 0 
+        ? Math.round((totalPresencas / (totalPresencas + totalFaltas)) * 100)
+        : 0
+
       setStats({
-        totalInscricoes: 0,
-        totalPresencas: 0,
-        totalFaltas: 0,
-        taxaPresenca: 0
+        totalInscricoes,
+        totalPresencas,
+        totalFaltas,
+        taxaPresenca
       })
     } catch (error: any) {
       console.error('Erro ao carregar estatísticas do aluno:', error)
@@ -176,25 +177,6 @@ const EstatisticasPorAluno: React.FC = () => {
         {/* Estatísticas Gerais */}
         <div className="bg-[var(--fh-card)] rounded-xl shadow-sm border border-[var(--fh-border)] p-6 space-y-6">
           <h2 className="text-xl font-bold text-[var(--fh-text)]">Estatísticas Gerais</h2>
-          
-          {/* Aviso sobre dados não disponíveis */}
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-500 mt-0.5 flex-shrink-0" />
-              <div>
-                <h3 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-1">
-                  Dados Não Disponíveis
-                </h3>
-                <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                  Para visualizar as estatísticas completas deste aluno, é necessário criar os seguintes endpoints no backend:
-                </p>
-                <ul className="text-sm text-yellow-800 dark:text-yellow-200 mt-2 space-y-1 list-disc list-inside">
-                  <li><code className="bg-yellow-100 dark:bg-yellow-900/40 px-1 rounded">GET /alunos/{alunoId}/inscricoes</code></li>
-                  <li><code className="bg-yellow-100 dark:bg-yellow-900/40 px-1 rounded">GET /alunos/{alunoId}/presencas</code></li>
-                </ul>
-              </div>
-            </div>
-          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard

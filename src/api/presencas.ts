@@ -35,6 +35,14 @@ const presencasApi = {
     return response.data
   },
 
+  // Listar presenças de um aluno específico (ADMIN, COORDENADOR, PROFESSOR)
+  listarPorAluno: async (alunoId: string, page = 0, size = 20): Promise<any> => {
+    const response = await apiClient.get(`/alunos/${alunoId}/presencas`, {
+      params: { page, size }
+    })
+    return response.data
+  },
+
   // Listar minhas presenças (ALUNO)
   minhasPresencas: async (page = 0, size = 20): Promise<any> => {
     const response = await apiClient.get('/aulas/me/presencas', {

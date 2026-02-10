@@ -30,6 +30,14 @@ const inscricoesApi = {
     return response.data
   },
 
+  // Buscar inscrições de um aluno específico (ADMIN, COORDENADOR, PROFESSOR)
+  buscarPorAluno: async (alunoId: string, page = 0, size = 20): Promise<any> => {
+    const response = await apiClient.get(`/alunos/${alunoId}/inscricoes`, {
+      params: { page, size }
+    })
+    return response.data
+  },
+
   // Buscar minhas inscrições (ALUNO)
   minhasInscricoes: async (page = 0, size = 20): Promise<any> => {
     const response = await apiClient.get('/aulas/inscricoes/minhas', {
