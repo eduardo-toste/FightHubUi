@@ -50,14 +50,16 @@ const EstatisticasAlunos: React.FC = () => {
       const data = await alunosApi.listar(page, 20)
       const alunosList = data.content || data
       setAlunos(
-        alunosList.map((aluno: any) => ({
-          id: aluno.id,
-          nome: aluno.nome,
-          email: aluno.email || '',
-          matriculaAtiva: aluno.matriculaAtiva,
-          dataNascimento: aluno.dataNascimento,
-          dataMatricula: aluno.dataMatricula
-        }))
+        (alunosList || [])
+          .filter((aluno: any) => aluno.matriculaAtiva === true)
+          .map((aluno: any) => ({
+            id: aluno.id,
+            nome: aluno.nome,
+            email: aluno.email || '',
+            matriculaAtiva: aluno.matriculaAtiva,
+            dataNascimento: aluno.dataNascimento,
+            dataMatricula: aluno.dataMatricula
+          }))
       )
       if (data.totalPages !== undefined) {
         setTotalPages(data.totalPages)
@@ -81,8 +83,9 @@ const EstatisticasAlunos: React.FC = () => {
         const alunosList = data.content || data
         const filtered = (alunosList || []).filter(
           (aluno: any) =>
-            aluno.nome.toLowerCase().includes(value.toLowerCase()) ||
-            (aluno.email && aluno.email.toLowerCase().includes(value.toLowerCase()))
+            aluno.matriculaAtiva === true &&
+            (aluno.nome.toLowerCase().includes(value.toLowerCase()) ||
+              (aluno.email && aluno.email.toLowerCase().includes(value.toLowerCase())))
         )
         setAlunos(
           filtered.map((aluno: any) => ({
