@@ -33,6 +33,10 @@ interface InscricaoComAula {
   id: string
   aulaId: string
   aulaTitulo: string
+  aulaDescricao: string
+  aulaData: string
+  turmaNome: string
+  limiteAlunos: number
   status: 'INSCRITO' | 'CANCELADO' | 'DESMARCADO'
   inscritoEm: string
 }
@@ -218,23 +222,27 @@ const EstatisticasPorAluno: React.FC = () => {
           </h2>
 
           {inscricoes.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {inscricoes.map((inscricao) => (
                 <div
                   key={inscricao.id}
-                  className="bg-[var(--fh-gray-50)] rounded-xl border border-[var(--fh-border)] p-4 hover:shadow-md transition-shadow"
+                  className="bg-[var(--fh-card)] border-2 border-[var(--fh-border)] rounded-lg p-2 shadow-lg hover:shadow-xl hover:border-[var(--fh-primary)] transition-all"
                 >
-                  <h3 className="font-semibold text-[var(--fh-text)] mb-2">
+                  <h3 className="font-semibold text-[var(--fh-text)] mb-1 line-clamp-2">
                     {inscricao.aulaTitulo}
                   </h3>
-                  <p className="text-sm text-[var(--fh-muted)]">
-                    Inscrito em:{' '}
-                    {new Date(inscricao.inscritoEm).toLocaleDateString('pt-BR')}
-                  </p>
-                  <div className="mt-3">
-                    <span className="inline-block px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded-full font-semibold">
-                      {inscricao.status}
-                    </span>
+                  
+                  <div className="space-y-0.5 text-sm">
+                    <p className="text-[var(--fh-muted)]">
+                      <span className="font-medium text-[var(--fh-text)]">Turma:</span> {inscricao.turmaNome}
+                    </p>
+                    <p className="text-[var(--fh-muted)]">
+                      <span className="font-medium text-[var(--fh-text)]">Data:</span>{' '}
+                      {new Date(inscricao.aulaData).toLocaleDateString('pt-BR')}
+                    </p>
+                    <p className="text-[var(--fh-muted)]">
+                      <span className="font-medium text-[var(--fh-text)]">Limite:</span> {inscricao.limiteAlunos} alunos
+                    </p>
                   </div>
                 </div>
               ))}
