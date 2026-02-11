@@ -172,16 +172,14 @@ const EstatisticasAlunos: React.FC = () => {
                     <th className="px-6 py-3 text-left text-sm font-semibold text-[var(--fh-text)]">
                       Matrícula
                     </th>
-                    <th className="px-6 py-3 text-right text-sm font-semibold text-[var(--fh-text)]">
-                      Ação
-                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {alunos.map((aluno) => (
                     <tr
                       key={aluno.id}
-                      className="border-b border-[var(--fh-border)] hover:bg-[var(--fh-gray-50)] transition-colors"
+                      onClick={() => navigate(`/estatisticas-alunos/${aluno.id}`)}
+                      className="border-b border-[var(--fh-border)] hover:bg-[var(--fh-gray-50)] transition-colors cursor-pointer"
                     >
                       <td className="px-6 py-4 text-sm font-medium text-[var(--fh-text)]">
                         {aluno.nome}
@@ -206,15 +204,6 @@ const EstatisticasAlunos: React.FC = () => {
                               'pt-BR'
                             )
                           : '-'}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <button
-                          onClick={() => navigate(`/estatisticas-alunos/${aluno.id}`)}
-                          className="inline-flex items-center gap-2 px-4 py-2 text-[var(--fh-primary)] hover:bg-[var(--fh-primary)]/10 rounded-lg font-medium transition-colors"
-                        >
-                          Ver Detalhes
-                          <ChevronRight size={16} />
-                        </button>
                       </td>
                     </tr>
                   ))}
