@@ -25,6 +25,12 @@ export const alunosApi = {
     return data
   },
 
+  // Buscar aluno por ID do usuário
+  buscarPorIdUsuario: async (idUsuario: string) => {
+    const { data } = await api.get<AlunoDetalhadoResponse>(`/alunos/por-usuario/${idUsuario}`)
+    return data
+  },
+
   // Criar novo aluno
   criar: async (aluno: CriarAlunoRequest) => {
     const { data } = await api.post<AlunoResponse>('/alunos', aluno)
