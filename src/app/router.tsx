@@ -29,6 +29,7 @@ import Estatisticas from '../pages/Estatisticas';
 import EstatisticasAlunos from '../pages/EstatisticasAlunos';
 import EstatisticasPorAluno from '../pages/EstatisticasPorAluno';
 import MeuDesempenho from '../pages/MeuDesempenho';
+import DesempenhoDosDependentes from '../pages/DesempenhoDosDependentes';
 import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
@@ -274,6 +275,14 @@ export default function Router() {
         element={
           <PrivateRoute>
             <MeuDesempenho />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/desempenho-dependentes"
+        element={
+          <PrivateRoute>
+            <DesempenhoDosDependentes />
           </PrivateRoute>
         }
       />
