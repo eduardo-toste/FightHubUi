@@ -313,10 +313,8 @@ export default function LoginPage() {
             className="relative w-full max-w-lg tatame-modal animate-fade-in"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Borda superior do modal */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--fh-primary)] via-[var(--fh-accent)] to-[var(--fh-primary)]" />
-            
-            <div className="relative bg-[var(--fh-card)] rounded-lg shadow-2xl overflow-hidden">
+
+            <div className="relative bg-[var(--fh-card)] rounded-2xl shadow-2xl overflow-hidden">
               {/* Header do Modal */}
               <div className="px-6 py-4 border-b border-[var(--fh-border)] bg-gradient-to-r from-[var(--fh-primary)]/5 to-[var(--fh-accent)]/5">
                 <div className="flex items-center justify-between">
