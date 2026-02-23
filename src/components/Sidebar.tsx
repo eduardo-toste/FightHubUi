@@ -155,10 +155,10 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
 
   return (
     <>
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu Button – hidden while sidebar is open */}
       <button
         onClick={() => setIsMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-lg bg-[var(--fh-card)] border border-[var(--fh-border)] shadow-lg text-[var(--fh-text)]"
+        className={`lg:hidden fixed top-4 left-4 z-40 w-10 h-10 items-center justify-center rounded-lg bg-[var(--fh-card)] border border-[var(--fh-border)] shadow-lg text-[var(--fh-text)] ${isMobileOpen ? 'hidden' : 'flex'}`}
         aria-label="Abrir menu"
       >
         <Menu size={20} />
@@ -179,7 +179,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
           bg-[var(--fh-card)] border-r border-[var(--fh-border)]
           flex flex-col
           transition-all duration-300 ease-in-out
-          z-40
+          z-50 lg:z-40
           ${isCollapsed ? 'w-20' : 'w-72'}
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           shadow-xl lg:shadow-none
