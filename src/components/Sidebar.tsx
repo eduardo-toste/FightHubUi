@@ -64,35 +64,53 @@ const Sidebar: React.FC<SidebarProps> = ({ userName, userRole, onLogout }) => {
   const SidebarContent = () => (
     <>
       {/* Logo Section */}
-      <div className={`flex items-center justify-between mb-8 transition-all duration-300 ${isCollapsed ? 'px-2' : 'px-4'}`}>
-        {!isCollapsed && (
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg">
-              <span className="text-white font-black text-lg">FH</span>
-            </div>
-            <div>
-              <div className="text-xl font-black text-[var(--fh-primary)] leading-tight">
-                FightHub
+      <div className="flex items-center justify-between mb-5">
+        {!isCollapsed ? (
+          <>
+            {/* Wordmark */}
+            <div className="flex flex-col leading-none select-none">
+              <div className="flex items-end gap-[2px]">
+                <span
+                  className="text-[22px] font-light tracking-[0.15em] uppercase text-[var(--fh-text)]"
+                  style={{ letterSpacing: '0.12em' }}
+                >
+                  Fight
+                </span>
+                <span
+                  className="text-[22px] font-black tracking-tight uppercase text-[var(--fh-primary)]"
+                >
+                  Hub
+                </span>
               </div>
-              <div className="text-xs text-[var(--fh-muted)] leading-tight">
-                Jiu-Jitsu
+              {/* Accent underline + tagline */}
+              <div className="flex items-center gap-2 mt-[5px]">
+                <span className="block h-[2px] w-5 rounded-full bg-[var(--fh-primary)] opacity-70" />
+                <span className="text-[9.5px] font-semibold tracking-[0.25em] uppercase text-[var(--fh-muted)]">
+                  Jiu-Jitsu
+                </span>
               </div>
             </div>
+
+            {/* Mobile close */}
+            <button
+              onClick={() => setIsMobileOpen(false)}
+              className="lg:hidden flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-xl hover:bg-[var(--fh-border)] text-[var(--fh-muted)] transition-colors"
+              aria-label="Fechar menu"
+            >
+              <X size={18} />
+            </button>
+          </>
+        ) : (
+          /* Collapsed — monograma FH empilhado */
+          <div className="w-full flex flex-col items-center leading-none select-none">
+            <span className="text-[11px] font-light tracking-widest uppercase text-[var(--fh-text)]">F</span>
+            <span className="text-[13px] font-black tracking-tight uppercase text-[var(--fh-primary)] -mt-[1px]">H</span>
           </div>
         )}
-        {isCollapsed && (
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--fh-primary)] to-[var(--fh-primary-dark)] flex items-center justify-center shadow-lg mx-auto">
-            <span className="text-white font-black text-lg">FH</span>
-          </div>
-        )}
-        {/* Mobile close button */}
-        <button
-          onClick={() => setIsMobileOpen(false)}
-          className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--fh-border)] text-[var(--fh-muted)]"
-        >
-          <X size={20} />
-        </button>
       </div>
+
+      {/* Separator */}
+      <div className={`mb-4 border-t border-[var(--fh-divider)] ${isCollapsed ? 'mx-1' : ''}`} />
 
       {/* Navigation */}
       <nav className="flex flex-col gap-2">
