@@ -1,38 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <defs>
-    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#c2410c;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#9a3412;stop-opacity:1" />
+    <!-- Fundo: gradiente sutil do card escuro da marca -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#1c1c1c" />
+      <stop offset="100%" stop-color="#0f0f0f" />
     </linearGradient>
-    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    <!-- Destaque na borda superior -->
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"  stop-color="#c2410c" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#9a3412" stop-opacity="0.4" />
     </linearGradient>
   </defs>
-  
-  <!-- Background circle with subtle shadow -->
-  <circle cx="50" cy="50" r="48" fill="url(#grad1)" />
-  <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="1" />
-  
-  <!-- Inner circle (Hub concept - represents the center/tatame) -->
-  <circle cx="50" cy="50" r="32" fill="none" stroke="url(#grad2)" stroke-width="2.5" opacity="0.9" />
-  
-  <!-- Central point (core of the hub) -->
-  <circle cx="50" cy="50" r="6" fill="#ffffff" />
-  <circle cx="50" cy="50" r="6" fill="none" stroke="url(#grad2)" stroke-width="1" opacity="0.5" />
-  
-  <!-- Main lines radiating from center (Hub concept - 4 directions) -->
-  <line x1="50" y1="50" x2="50" y2="18" stroke="#ffffff" stroke-width="2.5" opacity="0.95" stroke-linecap="round" />
-  <line x1="50" y1="50" x2="50" y2="82" stroke="#ffffff" stroke-width="2.5" opacity="0.95" stroke-linecap="round" />
-  <line x1="50" y1="50" x2="18" y2="50" stroke="#ffffff" stroke-width="2.5" opacity="0.95" stroke-linecap="round" />
-  <line x1="50" y1="50" x2="82" y2="50" stroke="#ffffff" stroke-width="2.5" opacity="0.95" stroke-linecap="round" />
-  
-  <!-- Diagonal lines (movement/action - represents jiu-jitsu techniques) -->
-  <line x1="50" y1="50" x2="28" y2="28" stroke="#ffffff" stroke-width="2" opacity="0.75" stroke-linecap="round" />
-  <line x1="50" y1="50" x2="72" y2="28" stroke="#ffffff" stroke-width="2" opacity="0.75" stroke-linecap="round" />
-  <line x1="50" y1="50" x2="28" y2="72" stroke="#ffffff" stroke-width="2" opacity="0.75" stroke-linecap="round" />
-  <line x1="50" y1="50" x2="72" y2="72" stroke="#ffffff" stroke-width="2" opacity="0.75" stroke-linecap="round" />
-  
-  <!-- Outer decorative circle (tatame boundary reference) -->
-  <circle cx="50" cy="50" r="40" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.25" />
+
+  <!-- Background rounded square -->
+  <rect width="32" height="32" rx="7" fill="url(#bg)" />
+
+  <!-- Top accent border line -->
+  <rect x="0" y="0" width="32" height="2.5" rx="7" fill="url(#rim)" />
+
+  <!-- "F" — peso leve, branco puro -->
+  <!-- barra vertical -->
+  <rect x="6" y="9" width="2.2" height="14" rx="1.1" fill="#ffffff" opacity="0.92" />
+  <!-- barra horizontal topo -->
+  <rect x="6" y="9" width="8" height="2.2" rx="1.1" fill="#ffffff" opacity="0.92" />
+  <!-- barra horizontal meio -->
+  <rect x="6" y="15" width="6" height="2" rx="1" fill="#ffffff" opacity="0.70" />
+
+  <!-- "H" — peso bold, laranja primário -->
+  <!-- barra vertical esquerda -->
+  <rect x="17" y="9" width="2.8" height="14" rx="1.1" fill="#c2410c" />
+  <!-- barra vertical direita -->
+  <rect x="23.2" y="9" width="2.8" height="14" rx="1.1" fill="#c2410c" />
+  <!-- barra transversal central -->
+  <rect x="17" y="14.6" width="9" height="2.6" rx="1.1" fill="#c2410c" />
 </svg>

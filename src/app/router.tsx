@@ -31,6 +31,7 @@ import EstatisticasPorAluno from '../pages/EstatisticasPorAluno';
 import MeuDesempenho from '../pages/MeuDesempenho';
 import DesempenhoDosDependentes from '../pages/DesempenhoDosDependentes';
 import { useAuth } from '../context/AuthContext';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
   children,
@@ -50,6 +51,8 @@ const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
 };
 
 export default function Router() {
+  usePageTitle();
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
